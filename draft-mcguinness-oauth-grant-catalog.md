@@ -54,7 +54,9 @@ normative:
   RFC9396:
   RFC9449:
   RFC9493:
+  RFC9700:
   RFC9728:
+  RFC7523BIS: I-D.ietf-oauth-rfc7523bis
   OpenID.Enterprise:
     title: "OpenID Connect Enterprise Extensions 1.0 - draft 01"
     target: https://openid.net/specs/openid-connect-enterprise-extensions-1_0.html
@@ -68,13 +70,31 @@ normative:
     date: 2025-09
 
 informative:
+  OpenID.Core:
+    title: "OpenID Connect Core 1.0 incorporating errata set 2"
+    target: https://openid.net/specs/openid-connect-core-1_0.html
+    author:
+      -
+        ins: N. Sakimura
+        name: Nat Sakimura
+      -
+        ins: J. Bradley
+        name: John Bradley
+      -
+        ins: M. Jones
+        name: Michael B. Jones
+      -
+        ins: B. de Medeiros
+        name: Breno de Medeiros
+      -
+        ins: C. Mortimore
+        name: Chuck Mortimore
+    date: 2023-12-15
   RFC6838:
   RFC6839:
-  RFC9700:
   RAR-METADATA: I-D.ietf-oauth-rar-metadata-remediation
   AUTHORITY-METADATA: I-D.zehavi-oauth-authority-metadata
   CIMD: I-D.ietf-oauth-client-id-metadata-document
-  RFC7523BIS: I-D.ietf-oauth-rfc7523bis
 
 --- abstract
 
@@ -182,12 +202,13 @@ question:
 | Protected Resource Metadata {{RFC9728}} | Which authorization servers and capabilities does a protected resource advertise? |
 | Authorization details types metadata {{RAR-METADATA}} | What structure does an authorization details object of a given type have? |
 | Authority metadata {{AUTHORITY-METADATA}} | What does a scope value or authorization details type authorize? |
-| Grant Catalog | Which grants does the Resource Authorization Server accept from this Issuer Relationship? |
+| Relationship View | Which grants does the Resource Authorization Server accept from this Issuer Relationship? |
 | Grant Issuer approval | Which of those grants may the Grant Issuer issue? |
 | Runtime authorization | Is this request allowed now? |
 {: title="Sources of Information Used to Issue a Grant"}
 
-{{composition}} defines how a Grant Issuer combines these sources.
+{{composition}}, {{narrowing}}, and {{optional-metadata}} define how a
+Grant Issuer combines these sources.
 
 ## Applicability {#applicability}
 
@@ -244,7 +265,12 @@ defined by {{RFC9396}}; "resource indicator" as used by {{RFC8707}};
 "protected resource" as used by {{RFC9728}}; and "trust domain" as
 defined in {{Section 2.2 of ID-JAG}}. In this specification, "grant"
 means an authorization grant that a Grant Issuer issues for a client to
-present to a Resource Authorization Server.
+present to a Resource Authorization Server, and "client" means that
+client, the application client. Where the Grant Issuer itself acts as a
+client of the Resource Authorization Server ({{token-request}}), the
+text says so. The issuer tenant of a grant is the tenant of the Grant
+Issuer that issues it, and its target tenant is the Resource
+Authorization Server tenant for which it is issued.
 
 This specification defines the following terms:
 
@@ -261,12 +287,12 @@ tenant identifier:
   comparison ({{Section 6.2.1 of RFC3986}}).
 
 Grant Issuer:
-: An authorization server that consumes a Grant Catalog and issues
+: An authorization server that consumes a Relationship View and issues
   grants that a client presents to a Resource Authorization Server.
 
 Resource Authorization Server:
 : An authorization server that accepts grants issued by a Grant Issuer
-  and publishes a Grant Catalog. This specification uses the term as
+  and publishes Relationship Views. This specification uses the term as
   {{Section 2.1 of ID-JAG}} does, for any Grant Profile.
 
 Grant Profile:
@@ -280,10 +306,9 @@ Grant Profile Definition:
   Profile ({{profile-definitions}}).
 
 Issuer Relationship:
-: The pair of a Grant Issuer's issuer identifier and, when that issuer
-  is multi-tenant, an issuer tenant identifier, that identifies the
-  Grant Issuer side of a catalog relationship
-  ({{relationship-identity}}).
+: The Grant Issuer side of a catalog relationship, identified by the
+  Grant Issuer's issuer identifier and, when that issuer is
+  multi-tenant, an issuer tenant identifier ({{relationship-identity}}).
 
 Onboarding Arrangement:
 : The agreement, established outside this protocol, under which a
@@ -398,8 +423,8 @@ normatively in the sections cited.
 
 * When the `revision` of an entry, or the `target_tenant` or
   `grant_catalog` of a Tenant Object, changes, issuance under approvals
-  made for the previous value stops until an administrator approves the
-  changed object ({{installation}}).
+  made for the previous value stops, and resumes only under an approval
+  made for the new value ({{installation}}).
 
 * A Grant Issuer ignores members it does not understand, and a
   specification that defines a restrictive member also defines a
@@ -493,7 +518,8 @@ A Grant Issuer MUST ignore members it does not understand
 ({{extensibility}}).
 
 Each object is defined by a table of its members, in which "string",
-"object", and "array" denote JSON types. The following members are
+"object", and "array" denote JSON types; the JSON value `null` has none
+of these types. The following members are
 used by several objects:
 
 `id`:
@@ -600,7 +626,7 @@ The following is an example of a Tenant Object:
   "id": "tenant-123",
   "display": "Acme",
   "target_tenant": "customer-acme",
-  "grant_catalog": "standard"
+  "grant_catalog": "read-only"
 }
 ~~~
 
@@ -836,14 +862,20 @@ of the following are true:
 3. The grant conveys the entry's `resource` as its only protected
    resource.
 
-4. For each input in {{tab-inputs}}, if the entry has no member for the
-   input, the grant conveys none of that input. Otherwise, every item of
-   the input that the grant conveys is listed in the member, the grant
-   conveys every listed item whose item requirement is `required`, and
-   the grant conveys at least one item if the member's presence
-   requirement is `required` (the `claims` member has no presence
-   requirement). For grant binding, a bound grant uses exactly one
-   method.
+4. For each input in {{tab-inputs}}:
+
+   * If the entry has no member for the input, the grant conveys none of
+     that input.
+
+   * Otherwise, every item of the input that the grant conveys is listed
+     in the member, and the grant conveys every listed item whose item
+     requirement is `required`.
+
+   * If the member's presence requirement is `required`, the grant
+     conveys at least one item. The `claims` member has no presence
+     requirement.
+
+   For grant binding, a bound grant uses exactly one method.
 
 | Input (Member) | Item | Conveyed When the Grant |
 | --- | --- | --- |
@@ -895,13 +927,14 @@ The Resource Authorization Server MUST change the `revision` of an entry
 whenever it changes the normative semantics of the entry, and MUST NOT
 use, in Relationship Views for the same Issuer Relationship, a
 `revision` value it has previously used for that entry with different
-normative semantics. When normative semantics are compared, the order of
-elements in the `values`, `types`, `claims`, `formats`, and `methods`
-arrays is not significant, an absent item requirement is equivalent to
-the value `optional`, and a Grant Issuer compares only the members it
-understands. A change limited to other members, such as `display`,
-`description`, `documentation_uri`, or `definition_uri`, does not
-require a new revision.
+normative semantics. A counter that increases with each change, or a
+digest of the normative semantics, meets both requirements. When
+normative semantics are compared, the order of elements in the `values`,
+`types`, `claims`, `formats`, and `methods` arrays is not significant,
+an absent item requirement is equivalent to the value `optional`, and a
+Grant Issuer compares only the members it understands. A change limited
+to other members, such as `display`, `description`, `documentation_uri`,
+or `definition_uri`, does not require a new revision.
 
 The combination of the Resource Authorization Server issuer identifier,
 the Issuer Relationship, the Grant Catalog `id`, the entry `id`, and the
@@ -988,9 +1021,9 @@ cannot be used for issuance.
 ## Composition with Public Metadata {#composition}
 
 Public metadata remains authoritative for what it describes, and an
-entry cannot enable a value that public metadata excludes. To compose an
-entry with public metadata, the Grant Issuer performs the following
-steps:
+entry cannot enable a value that public metadata excludes. When it
+installs a Relationship View, the Grant Issuer composes each entry with
+public metadata by performing the following steps:
 
 1. Retrieve and validate the Resource Authorization Server's
    Authorization Server Metadata ({{Section 3.3 of RFC8414}}), and
@@ -998,11 +1031,11 @@ steps:
    `issuer`.
 
 2. Request the Protected Resource Metadata for the entry's `resource`
-   ({{Section 3 of RFC9728}}). If the response has HTTP status code
-   200 (OK), validate the metadata as specified in
-   {{Section 3.3 of RFC9728}}. Any other response leaves this step
-   without effect, because publishing Protected Resource Metadata is
-   optional.
+   ({{Section 3 of RFC9728}}). If the response has HTTP status code 200
+   (OK), validate the metadata as specified in
+   {{Section 3.3 of RFC9728}}. Any other response, or no response,
+   leaves this step without effect, because publishing Protected
+   Resource Metadata is optional.
 
 3. For each member in the following table that the Authorization Server
    Metadata or the validated Protected Resource Metadata contains,
@@ -1063,7 +1096,7 @@ further. If local policy excludes an item that the approved subset
 requires, the Grant Issuer MUST NOT issue a grant using that entry. If
 the client's request omits such an item, the Grant Issuer either adds
 it, when its policy permits issuing values that the client did not
-request ({{Section 3.3 of RFC6749}}), or does not issue a grant using
+request, or does not issue a grant using
 that entry.
 
 For example:
@@ -1099,7 +1132,7 @@ selects the Tenant Object from the client's request and its own
 configuration for the Issuer Relationship, and selects an entry whose
 Grant Profile matches the kind of grant the client requested and whose
 `resource` is the requested protected resource. The catalog defines no
-request parameter for selecting a Resource Authorization Server tenant
+parameter of the client's grant request for selecting a target tenant
 ({{profile-definitions}}). When more than one approved Tenant Object or
 entry could satisfy a request, Grant Issuer policy selects one. The
 Grant Issuer issues a grant for a request that names several resources
@@ -1133,6 +1166,21 @@ using an entry in either of the following cases:
 
 * the Grant Profile requires the Grant Issuer to bind the grant, and the
   entry permits none of the methods that would satisfy that requirement.
+
+The Grant Issuer uses an entry with a Tenant Object only when all of the
+following hold:
+
+1. The Relationship View that contains them is installed
+   ({{installation}}).
+
+2. The entry is usable for issuance ({{validation}}) and does not
+   conflict with public metadata ({{composition}}).
+
+3. If the Tenant Object contains `target_tenant`, the entry's Grant
+   Profile can convey a target tenant ({{tenant-object}}).
+
+4. An approval for the entry and the Tenant Object applies
+   ({{installation}}).
 
 When the Grant Issuer does not issue a grant because no approved entry
 permits the request, it responds to the client as the Grant Profile
@@ -1190,9 +1238,13 @@ completes or fails.
 | An entry changes | A change to an entry MUST NOT, by itself, expand an existing approval. |
 | Only members outside the normative semantics of an entry change ({{revision}}), and every approved `id`, `target_tenant`, `grant_catalog`, and `revision` is unchanged | Approvals that depend on the changed objects continue to apply. |
 | A Tenant Object, Grant Catalog, or entry is withdrawn | The Grant Issuer MUST stop issuing grants that depend on it in its previous form, and suspends issuance under the approvals that depend on it. |
-| The `target_tenant` or `grant_catalog` of a Tenant Object, or the `revision` of an entry, changes | The Grant Issuer MUST NOT issue grants under an approval made for the previous value. Issuance resumes only after an administrator approves the changed object. |
+| The `target_tenant` or `grant_catalog` of a Tenant Object, or the `revision` of an entry, changes | The Grant Issuer MUST NOT issue grants under an approval made for the previous value. Issuance resumes only under an approval made for the new value. |
 | A later complete retrieval contains a withdrawn object again with the approved identifiers, `target_tenant`, `grant_catalog`, and `revision` | The approval applies again without new approval. |
 {: #tab-transitions title="Effects of a Retrieval on Installed State and Approvals"}
+
+A change of `target_tenant`, `grant_catalog`, or `revision` also
+withdraws the previous form of the object, so the withdrawal row applies
+to it as well.
 
 These rules apply to every change of revision, including a change that
 only narrows an entry, such as the removal of a scope value
@@ -1346,16 +1398,19 @@ retrieval protocol:
   "authorization_details_types_metadata_endpoint":
     "https://ras.example/oauth2/authorization-details-types",
   "authorization_grant_catalog_endpoint":
-    "https://ras.example/oauth2/grant-catalog"
+    "https://ras.example/oauth2/grant-catalog",
+  "authorization_grant_client_discovery_endpoint":
+    "https://ras.example/oauth2/grant-catalog/client"
 }
 ~~~
 
 ## Catalog Access Assertion {#assertion}
 
-A catalog access assertion is a JWT authorization grant {{RFC7523}} that
-the Grant Issuer signs on its own behalf, not on behalf of an End-User
-or a client, to obtain a catalog access token. It is a JWS {{RFC7515}}
-with the following JOSE header parameters:
+A catalog access assertion is a JWT that the Grant Issuer signs on its
+own behalf, not on behalf of an end user or a client, and presents as an
+authorization grant {{RFC7523}} to obtain a catalog access token. It is
+not a grant in the sense of this specification ({{conventions}}). It is
+a JWS {{RFC7515}} with the following JOSE header parameters:
 
 `typ`:
 : REQUIRED. The value `oauth-grant-catalog-access+jwt`
@@ -1473,7 +1528,9 @@ the following:
    access token in response to it. The Resource Authorization Server
    retains each accepted `jti` value, across every instance of its token
    endpoint, until the assertion's `exp` time plus the allowance for
-   clock skew has passed.
+   clock skew has passed, and checks and records it in one atomic
+   operation, so that two concurrent requests that carry the same
+   assertion cannot both obtain a catalog access token.
 
 7. The pair of `iss` and, when present, `tenant` identifies an Issuer
    Relationship that an Onboarding Arrangement currently authorizes
@@ -1510,9 +1567,8 @@ Resource Authorization Server with the following parameters:
   metadata member ({{Section 2 of RFC8707}}).
 
 `scope`:
-: REQUIRED. A space-delimited list of scope values that includes
-  `authorization_grant_catalog.read`, the scope value this specification
-  defines for read access to the catalog.
+: REQUIRED. The value `authorization_grant_catalog.read`, the scope
+  value this specification defines for read access to the catalog.
 
 A Resource Authorization Server that supports the OAuth
 retrieval protocol and includes
@@ -1529,8 +1585,9 @@ a key of the Grant Issuer ({{Section 2.2 of RFC7523}}). A Grant Issuer
 that authenticates with a JWT client assertion MUST use the issuer
 identifier of the Resource Authorization Server as the sole value of the
 assertion's `aud` claim, and the Resource Authorization Server MUST
-reject a client assertion that does not contain its issuer identifier
-as the sole audience value ({{RFC7523BIS}}). The Grant Issuer
+reject a catalog access token request whose client assertion does not
+contain its issuer identifier as the sole audience value
+({{RFC7523BIS}}). The Grant Issuer
 MUST NOT use a catalog access assertion as a client assertion, and
 SHOULD sign client assertions with a key that it does not use to sign
 catalog access assertions or grants ({{Section 3.12 of RFC8725}}). When
@@ -1609,7 +1666,7 @@ Server MUST restrict the catalog access token to the catalog resource
 and the `authorization_grant_catalog.read` scope, and MUST associate the
 token with the Issuer Relationship identified by the catalog access
 assertion. The Resource Authorization Server SHOULD issue catalog access
-tokens with a lifetime of a few minutes, and SHOULD NOT issue a refresh
+tokens with a lifetime of a few minutes, and MUST NOT issue a refresh
 token; the Grant Issuer obtains a new catalog access token with a new
 catalog access assertion. The Resource Authorization Server
 MUST NOT issue an access token for the catalog resource, or with the
@@ -1649,7 +1706,10 @@ when the Grant Issuer uses those mechanisms.
 The Grant Issuer retrieves its Relationship View by sending an HTTP GET
 request to the `authorization_grant_catalog_endpoint` URL, presenting
 the catalog access token as specified in {{Section 2.1 of RFC6750}} or,
-for a DPoP-bound token, {{Section 7.1 of RFC9449}}. The Grant Issuer
+for a DPoP-bound token, {{Section 7.1 of RFC9449}}. The Resource
+Authorization Server verifies the DPoP proof for a DPoP-bound token and
+rejects a DPoP-bound token presented as a bearer token
+({{Section 7.2 of RFC9449}}). The Grant Issuer
 MUST send a catalog access token only to the
 `authorization_grant_catalog_endpoint` URL from Authorization Server
 Metadata it has validated ({{Section 3.3 of RFC8414}}), without further
@@ -1665,11 +1725,12 @@ the Issuer Relationship associated with the catalog access token
 content is the Relationship View ({{relationship-view}}). The Resource
 Authorization Server MUST construct the document from one consistent
 state of the Issuer Relationship. The Grant Issuer validates the
-document as specified in {{validation}}.
+document as specified in {{validation}}, and treats a response of any
+other media type as an incomplete retrieval ({{installation}}).
 
 The following is an example of a Relationship View document request and
-response, in which the `entries` of the Grant Catalog are abbreviated;
-{{example-catalog}} shows them in full:
+response, in which the `entries` of each Grant Catalog are abbreviated;
+{{fig-model-example}} and {{example-catalog}} show them in full:
 
 ~~~ http-message
 GET /oauth2/grant-catalog HTTP/1.1
@@ -1696,7 +1757,7 @@ ETag: "view-a24f91"
       "id": "tenant-123",
       "display": "Acme",
       "target_tenant": "customer-acme",
-      "grant_catalog": "standard"
+      "grant_catalog": "read-only"
     },
     {
       "id": "tenant-456",
@@ -1706,6 +1767,11 @@ ETag: "view-a24f91"
     }
   ],
   "grant_catalogs": [
+    {
+      "issuer": "https://ras.example/",
+      "id": "read-only",
+      "entries": [ ... ]
+    },
     {
       "issuer": "https://ras.example/",
       "id": "standard",
@@ -1820,7 +1886,8 @@ format:
 
 `issuer_tenant`:
 : OPTIONAL. The issuer tenant identifier ({{relationship-identity}}) of
-  the subject's tenant, when the Grant Issuer is multi-tenant.
+  the subject's tenant, when the Grant Issuer is multi-tenant
+  ({{id-jag-client}} describes how an ID-JAG client obtains it).
 
 `target_tenant`:
 : The tenant identifier of the Resource Authorization Server tenant in
@@ -1886,8 +1953,10 @@ Client authentication identifies the client; it does not authorize
 disclosure. The Resource Authorization Server MUST NOT include a Tenant
 Object or entry in a client view unless its policy authorizes the client
 to receive acceptance information for the requested Issuer Relationship
-and that Tenant Object, for example because the client is registered
-for use with grants from that Issuer Relationship. A client view
+and that Tenant Object, for example because an administrator authorized
+the client for that Issuer Relationship. Registering a client, including
+through dynamic registration or a Client ID Metadata Document {{CIMD}},
+does not by itself authorize disclosure. A client view
 carries only content from the Relationship View of an Issuer
 Relationship that an Onboarding Arrangement authorizes
 ({{relationship-authorization}}).
@@ -2043,7 +2112,10 @@ Grant binding:
   to the DPoP key or a client certificate
   ({{Section 9.11.1.1 of ID-JAG}}); either method
   satisfies that requirement if the approved subset permits it
-  ({{issuing}}).
+  ({{issuing}}). When the approved subset permits neither, the IdP
+  Authorization Server does not issue an ID-JAG using that entry for
+  such a request ({{issuing}}), so a Resource Authorization Server that
+  verifies DPoP-bound ID-JAGs lists `dpop` in its entries.
 
 Resource selection:
 : ID-JAG does not require the `resource` parameter of the Token Exchange
@@ -2072,7 +2144,7 @@ Narrowed rules:
   Resource Authorization Server that uses those claims lists them in its
   entries. Requiring `target_tenant` in a Tenant Object
   ({{tenant-object}}) is stricter than {{Section 4.4.1 of ID-JAG}},
-  which also lets a Resource Authorization Server identify the recipient
+  which also lets a Resource Authorization Server identify the target
   tenant from its trust relationship with the issuer.
 
 Clients:
@@ -2081,8 +2153,9 @@ Clients:
   as described in {{Section 5.1 of ID-JAG}}; the catalog does not
   provide it ({{clients}}).
 
-The following is an example of the claims of an ID-JAG issued using the
-Tenant Object in {{tenant-object}} and the entry in {{example-catalog}}:
+The following is an example of the claims of an ID-JAG issued for the
+Tenant Object `tenant-456` in {{view-document}}, using the entry in
+{{example-catalog}}:
 
 ~~~ json
 {
@@ -2090,7 +2163,7 @@ Tenant Object in {{tenant-object}} and the entry in {{example-catalog}}:
   "sub": "user-123",
   "tenant": "acme-workforce",
   "aud": "https://ras.example/",
-  "aud_tenant": "customer-acme",
+  "aud_tenant": "customer-acme-eu",
   "client_id": "ras-client-789",
   "resource": "https://api.example/messages",
   "scope": "messages.read",
@@ -2205,7 +2278,8 @@ parameters that section requires, as follows:
   connection, to which the IdP Authorization Server binds the ID-JAG
   when its policy permits ({{Section 9.11.2.1 of ID-JAG}}).
 
-When the subject token is an ID Token that contains a `tenant` claim
+When the subject token is an ID Token {{OpenID.Core}} that contains a
+`tenant` claim
 {{OpenID.Enterprise}} whose value is not `personal` or `organization`
 ({{relationship-identity}}), the client uses that value as
 `issuer_tenant` in its client discovery request; it is the issuer
@@ -2271,8 +2345,8 @@ Retrieval protocols:
   Relationship View through one retrieval protocol and does not combine
   objects retrieved through different ones.
 
-Additional capabilities, such as paging of large Relationship Views or
-delta retrieval, can be defined as extensions that use the same objects.
+Additional capabilities, such as change notification, can be defined as
+extensions that use the same objects.
 
 ## Grant Profile Definitions {#profile-definitions}
 
@@ -2427,9 +2501,13 @@ Issuer that has not refreshed issues grants that the Resource
 Authorization Server rejects after their claims have been disclosed to
 the client. Such grants affect availability and disclosure, not
 authorization. When a relationship ends, catalog disclosure stops
-({{relationship-authorization}}); the maximum age ({{installation}})
-bounds how long the Grant Issuer continues to issue grants under state
-it can no longer refresh.
+({{relationship-authorization}}). The maximum age that the Grant Issuer
+configures ({{installation}}) bounds how long it continues to issue
+grants under state it can no longer refresh, but the Resource
+Authorization Server cannot enforce that bound. To stop issuance at a
+known time, the Resource Authorization Server removes every eligible
+tenant from the relationship, and waits for the Grant Issuer to observe
+the withdrawal, before it ends the relationship.
 
 ## Revision Integrity and Approval {#sec-revision}
 
@@ -2455,6 +2533,21 @@ Relationship is used only for grants whose issuer and issuer tenant
 identify that relationship ({{issuing}}), so that a catalog disclosed to
 one issuer tenant does not determine the grants issued for subjects of
 another.
+
+## Tenant Eligibility {#sec-eligibility}
+
+If a Resource Authorization Server makes a tenant eligible for an Issuer
+Relationship because an administrator of that tenant configured trust in
+the Grant Issuer, anyone who controls a tenant at the Resource
+Authorization Server can add a Tenant Object, with a `display` of their
+choosing, to the Grant Issuer's Relationship View. If an administrator
+of the Grant Issuer approves it, clients obtain grants for that tenant,
+which disclose claims to it. A Resource Authorization Server SHOULD make
+a tenant eligible for an Issuer Relationship only when the Onboarding
+Arrangement records agreement on the Grant Issuer side, for example by
+an administrator of the issuer tenant. An administrator of the Grant
+Issuer identifies a Tenant Object by its `target_tenant`, not by its
+`display` ({{model-conventions}}).
 
 ## Cross-JWT Confusion {#sec-cross-jwt}
 
@@ -2525,11 +2618,9 @@ A client that treats it as one gains nothing: the Grant Issuer issues
 only grants within its approved subsets ({{issuing}}), and the Resource
 Authorization Server validates every grant it receives.
 
-A Grant Issuer does not check the media type of a Relationship View
-document. A client view presented to a Grant Issuer as a Relationship
-View passes validation checks 1 and 2 ({{validation}}) but contains only
-objects of that Relationship View ({{client-view}}), so its effect is
-limited to withdrawing objects.
+A client view has a different media type from a Relationship View
+document ({{client-view}}), so a Grant Issuer does not install one in
+place of a Relationship View ({{view-document}}).
 
 ## Resource Consumption {#sec-resources}
 
