@@ -3377,7 +3377,7 @@ Document History
 
    -01
 
-   *  Editorial restructuring; no requirement changes.
+   *  Editorial restructuring; no normative changes.
 
    -00
 
