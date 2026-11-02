@@ -466,11 +466,11 @@ Table of Contents
        Relationship that an Onboarding Arrangement authorizes
        (Section 7.2).
 
-   2.  Whole views: a Relationship View is delivered complete, and the
-       Grant Issuer installs all of it or none of it.  A failed
-       retrieval is never a withdrawal and leaves earlier state
-       installed; Section 6.3 recommends that the Grant Issuer stop
-       issuance when that state exceeds its configured maximum age.
+   2.  Whole views: a Relationship View is delivered complete
+       (Section 5.2), and the Grant Issuer installs all of it or none of
+       it.  A failed retrieval is never a withdrawal and leaves earlier
+       state installed; Section 6.3 recommends that the Grant Issuer
+       stop issuance when that state exceeds its configured maximum age.
 
    3.  Closed world: a grant issued using an entry conveys a Catalog-
        Governed Input only as the entry permits.  An absent member
@@ -480,7 +480,7 @@ Table of Contents
    4.  One entry per grant: each grant is issued using one Tenant Object
        and one entry, for one audience and one protected resource.
        Inputs permitted by different entries are never combined
-       (Section 5.6).
+       (Section 5.6, Section 6.5).
 
    5.  Independent selections: the catalog has no inheritance, no
        alternatives between sets of items, and no exclusions or
@@ -604,15 +604,16 @@ Table of Contents
                     Table 2: Relationship View Members
 
    The issuer member of issuer_relationship is REQUIRED and contains the
-   issuer identifier of the Grant Issuer.  Its tenant member contains
-   the issuer tenant identifier, and is present if and only if the
-   Issuer Relationship has one (Section 7.1).  The Resource
-   Authorization Server derives this object from the Issuer Relationship
-   that it used to select the Relationship View.  Comparing it with the
-   Issuer Relationship for which the Grant Issuer retrieved the view
-   (Section 6.1) detects errors in routing, caching, or the association
-   of responses with requests; it does not show that the Resource
-   Authorization Server selected the content of the view correctly.
+   issuer identifier of the Grant Issuer.  The tenant member of
+   issuer_relationship contains the issuer tenant identifier, and is
+   present if and only if the Issuer Relationship has one (Section 7.1).
+   The Resource Authorization Server derives this object from the Issuer
+   Relationship that it used to select the Relationship View.  Comparing
+   it with the Issuer Relationship for which the Grant Issuer retrieved
+   the view (Section 6.1) detects errors in routing, caching, or the
+   association of responses with requests; it does not show that the
+   Resource Authorization Server selected the content of the view
+   correctly.
 
    A Relationship View is complete and is not paged.  If the Issuer
    Relationship has no eligible tenants, both arrays are empty.
@@ -739,8 +740,8 @@ Table of Contents
     |                       |          | authorization details types  |
     |                       |          | (Section 5.5.3)              |
     +-----------------------+----------+------------------------------+
-    | claims                | OPTIONAL | Non-empty array; permitted   |
-    |                       |          | claims (Section 5.5.4)       |
+    | claims                | OPTIONAL | Non-empty array of claim     |
+    |                       |          | objects (Section 5.5.4)      |
     +-----------------------+----------+------------------------------+
     | sub_id                | OPTIONAL | Object; permitted subject    |
     |                       |          | identifier formats           |
@@ -1035,7 +1036,7 @@ Table of Contents
        the grant conveys every listed item whose item requirement is
        required, and the grant conveys at least one item if the member's
        presence requirement is required (the claims member has no
-       presence requirement).  A grant that is bound is bound using
+       presence requirement).  For grant binding, a bound grant uses
        exactly one method.
 
    +=========================+=====================+===================+
@@ -1055,9 +1056,9 @@ Table of Contents
    | (claims, Section 5.5.4) | each claim          | claim             |
    |                         | object              |                   |
    +-------------------------+---------------------+-------------------+
-   | Subject identifier      | Each name in        | Conveys a subject |
-   | (sub_id, Section 5.5.5) | formats             | identifier in     |
-   |                         |                     | that format       |
+   | Subject identifier in   | Each name in        | Conveys a subject |
+   | addition to the subject | formats             | identifier in     |
+   | (sub_id, Section 5.5.5) |                     | that format       |
    +-------------------------+---------------------+-------------------+
    | Grant binding           | Each name in        | Is bound using    |
    | (grant_binding,         | methods             | that method       |
@@ -2464,7 +2465,8 @@ Table of Contents
 
    Interoperability considerations:  N/A
 
-   Published specification:  Section 8 of this specification
+   Published specification:  Section 5.2 and Section 8.5 of this
+      specification
 
    Applications that use this media type:  Authorization servers that
       publish an OAuth Authorization Grant Catalog, and authorization
