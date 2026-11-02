@@ -586,8 +586,9 @@ entries whose Grant Profile can convey a target tenant ({{envelope}}).
 
 Several Tenant Objects can reference the same Grant Catalog. Tenant
 Objects for tenants that differ in any input that an entry governs
-({{envelope}}) reference different Grant Catalogs. The data model has no
-defaults, inheritance, partial overrides, or merge rules.
+({{envelope}}) reference different Grant Catalogs. A Tenant Object has
+no default Grant Catalog, and Grant Catalogs have no inheritance,
+partial overrides, or merge rules.
 
 {{installation}} specifies how a change to `target_tenant` or
 `grant_catalog` affects approvals.
@@ -1524,7 +1525,12 @@ policy of the Resource Authorization Server
 it is required, the Grant Issuer is a registered client of the Resource
 Authorization Server and authenticates using the method that the
 Onboarding Arrangement fixes, such as a JWT client assertion signed with
-a key of the Grant Issuer ({{Section 2.2 of RFC7523}}). The Grant Issuer
+a key of the Grant Issuer ({{Section 2.2 of RFC7523}}). A Grant Issuer
+that authenticates with a JWT client assertion MUST use the issuer
+identifier of the Resource Authorization Server as the sole value of the
+assertion's `aud` claim, and the Resource Authorization Server MUST
+reject a client assertion that does not contain its issuer identifier
+as the sole audience value ({{RFC7523BIS}}). The Grant Issuer
 MUST NOT use a catalog access assertion as a client assertion, and
 SHOULD sign client assertions with a key that it does not use to sign
 catalog access assertions or grants ({{Section 3.12 of RFC8725}}). When
