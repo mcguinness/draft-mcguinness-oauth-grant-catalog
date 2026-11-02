@@ -75,7 +75,7 @@ informative:
   RAR-METADATA: I-D.ietf-oauth-rar-metadata-remediation
   AUTHORITY-METADATA: I-D.zehavi-oauth-authority-metadata
   CIMD: I-D.ietf-oauth-client-id-metadata-document
-  
+
 --- abstract
 
 This specification defines the OAuth Authorization Grant Catalog: an
