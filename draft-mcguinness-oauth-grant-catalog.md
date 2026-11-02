@@ -1993,18 +1993,13 @@ Grant binding methods:
   it.
 
 Retrieval protocols:
-: A specification can define another retrieval protocol. A retrieval
-  protocol authenticates the Issuer Relationship
-  ({{relationship-identity}}) to the Resource Authorization Server, and
-  the Resource Authorization Server to the Grant Issuer; delivers,
-  unchanged, a complete Relationship View ({{relationship-view}}) that
-  reflects one consistent state of the Issuer Relationship; and defines
-  its discovery and error responses. A Grant Issuer obtains a
-  Relationship View through one retrieval protocol and does not combine
-  objects retrieved through different ones.
-
-Additional capabilities, such as change notification, can be defined as
-extensions that use the same objects.
+: A specification can define another retrieval protocol. It defines
+  discovery and error responses, authenticates the Issuer Relationship
+  ({{relationship-identity}}) to the Resource Authorization Server and
+  that server to the Grant Issuer, and delivers, unchanged, a complete
+  Relationship View ({{relationship-view}}) that reflects one
+  consistent state of the Issuer Relationship. A Grant Issuer does not
+  combine objects obtained through different retrieval protocols.
 
 ## Grant Profile Definitions {#profile-definitions}
 
@@ -2091,15 +2086,16 @@ Trust in a Grant Issuer's signing keys establishes that the Grant Issuer
 can issue grants, not that it is entitled to learn the Resource
 Authorization Server's configuration for every issuer tenant identifier
 it can name. An Onboarding Arrangement therefore authorizes each Issuer
-Relationship separately ({{relationship-authorization}}). A Grant Issuer
-that uses a multi-tenant issuer signs catalog access assertions for all
-of its tenants with the same keys, so a compromise of those keys or of
-its signing service discloses the catalogs of every Issuer Relationship
-that names the issuer. An Onboarding Arrangement authorizes an issuer
-tenant identifier, not the organization behind it: if an issuer
-reassigned a tenant identifier to another tenant, contrary to its
-definition ({{conventions}}), the new tenant would receive the catalog
-content of the old one.
+Relationship separately ({{relationship-authorization}}). When a
+Resource Authorization Server accepts one signing key for several Issuer
+Relationships, as it can for a multi-tenant issuer, a compromise of that
+key or of the signing service that uses it discloses the catalogs of
+each of those Issuer Relationships. This specification does not require
+any particular arrangement of keys across tenants. An Onboarding
+Arrangement authorizes an issuer tenant identifier, not the organization
+behind it: if an issuer reassigned a tenant identifier to another
+tenant, contrary to its definition ({{conventions}}), the new tenant
+would receive the catalog content of the old one.
 
 ## Protected Discovery and Client Authentication {#sec-protected-discovery}
 
@@ -2176,10 +2172,10 @@ entry. The Grant Issuer detects such a change only when it holds an
 earlier copy of the entry with the same revision ({{validation}}). A
 revision does not bind the Resource Authorization Server to the meaning
 that the Grant Issuer approved, and a grant issued before a change can
-be redeemed after it. Requiring new approval for every revision change
+be redeemed after it. Requiring an approval for the installed revision
 ({{installation}}) avoids relying on a Grant Issuer's comparison of
 two revisions to decide that a change only narrows an entry; an
-incorrect comparison would expand authorization.
+incorrect comparison would expand the approved subset.
 
 ## Tenant Confusion {#sec-tenant}
 
@@ -2644,11 +2640,12 @@ Envelope without alternatives:
   ({{envelope}}) can be evaluated without a rule language, and a
   Grant Issuer cannot misread a rule that does not exist.
 
-Revision rather than digest:
-: A digest changes when presentation text changes and requires
-  canonicalization. A revision tied to the normative semantics
-  ({{revision}}) lets the Grant Issuer retain approvals across
-  presentation changes.
+Opaque revision identifiers:
+: The format leaves the generation of revision values to the Resource
+  Authorization Server, which can use a counter or a digest of the
+  normative semantics, and prescribes no canonicalization. Because a
+  revision is tied to the normative semantics ({{revision}}), the Grant
+  Issuer retains approvals across changes to presentation text.
 
 Optional claims listed explicitly:
 : Exempting some optional claims, such as an email address, from listing
