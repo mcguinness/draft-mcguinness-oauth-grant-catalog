@@ -1955,7 +1955,7 @@ A Resource Authorization Server that publishes entries for this Grant
 Profile MUST include `grant_types_supported` in its Authorization Server
 Metadata; if it lists this Grant Profile in
 `authorization_grant_profiles_supported`, it also includes
-`urn:ietf:params:oauth:grant-type:jwt-bearer` there
+`urn:ietf:params:oauth:grant-type:jwt-bearer` in `grant_types_supported`
 ({{Section 7.2 of ID-JAG}}). For each such entry, the Grant Issuer
 performs the following checks in step 4 of {{composition}}, interpreting
 `grant_types_supported` with the default value defined in
