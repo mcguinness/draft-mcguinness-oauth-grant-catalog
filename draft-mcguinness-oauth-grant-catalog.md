@@ -1692,7 +1692,8 @@ token endpoint ({{Section 3.1 of RFC7523}}), the Grant Issuer is a
 registered client of the Resource Authorization Server. The Grant Issuer
 authenticates using the method that the Onboarding Arrangement fixes,
 such as a JWT client assertion signed with a key of the Grant Issuer
-({{Section 2.2 of RFC7523}}). In that case, the following rules apply:
+({{Section 2.2 of RFC7523}}). The following rules apply to client
+assertions:
 
 * A Grant Issuer that authenticates with a JWT client assertion MUST
   use the issuer identifier of the Resource Authorization Server as the
@@ -2963,6 +2964,11 @@ Grant {{ID-JAG}} and on the JWT authorization grant {{RFC7523}}.
 {:numbered="false"}
 
 RFC Editor: please remove this appendix before publication.
+
+-01
+
+* Editorial restructuring: shorter paragraphs, and bulleted lists for
+  requirements and conditions. No requirement changes.
 
 -00
 
