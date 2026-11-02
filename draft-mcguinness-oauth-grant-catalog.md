@@ -445,7 +445,9 @@ document that carries these objects MUST conform to I-JSON {{RFC7493}}.
 A Grant Issuer MUST ignore members it does not understand
 ({{extensibility}}).
 
-The following members are used by several objects:
+Each object is defined by a table of its members, in which "string",
+"object", and "array" denote JSON types. The following members are
+used by several objects:
 
 `id`:
 : A stable identifier for the object. The value is a non-empty JSON
@@ -484,34 +486,27 @@ carry protocol values, such as `issuer`, `target_tenant`, `profile`,
 
 A Tenant Object binds one Resource Authorization Server tenant that is
 eligible for an Issuer Relationship to the Grant Catalog that applies to
-it. A Tenant Object has the following members:
+it.
 
-`id`:
-: REQUIRED. The identifier of the Tenant Object ({{model-conventions}}).
-  A Tenant Object identifier identifies one logical Resource
-  Authorization Server tenant. The Resource Authorization Server MUST
-  NOT use the identifier of a Tenant Object for a different tenant in
-  any later Relationship View for the same Issuer Relationship.
+| Member | Status | Description |
+| --- | --- | --- |
+| `id` | REQUIRED | Identifier ({{model-conventions}}) |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+| `target_tenant` | OPTIONAL | String; the exact tenant identifier ({{conventions}}) that a grant issued for this tenant conveys as its target tenant ({{envelope}}) |
+| `grant_catalog` | REQUIRED | String; the `id` of the Grant Catalog that applies to this tenant |
+{: title="Tenant Object Members"}
 
-`display`:
-: OPTIONAL. See {{model-conventions}}.
+A Tenant Object identifier identifies one logical Resource
+Authorization Server tenant. The Resource Authorization Server MUST
+NOT use the identifier of a Tenant Object for a different tenant in
+any later Relationship View for the same Issuer Relationship.
 
-`description`:
-: OPTIONAL. See {{model-conventions}}.
-
-`target_tenant`:
-: OPTIONAL. A JSON string containing the exact tenant identifier
-  ({{conventions}}) of the Resource Authorization Server tenant, which a
-  grant issued for this tenant conveys as its target tenant
-  ({{envelope}}); an ID-JAG conveys it in the `aud_tenant` claim
-  ({{jwt-representation}}). The Resource
-  Authorization Server MUST include this member unless its issuer
-  identifier alone identifies the target tenant. A Relationship View
-  MUST NOT contain more than one Tenant Object without this member, or
-  two Tenant Objects with the same value of this member.
-
-`grant_catalog`:
-: REQUIRED. The `id` of the Grant Catalog that applies to this tenant.
+An ID-JAG conveys `target_tenant` in the `aud_tenant` claim
+({{jwt-representation}}). The Resource Authorization Server MUST
+include `target_tenant` unless its issuer identifier alone identifies
+the target tenant. A Relationship View MUST NOT contain more than one
+Tenant Object without `target_tenant`, or two Tenant Objects with the
+same value of `target_tenant`.
 
 The Grant Issuer MUST NOT derive a target tenant identifier from
 the Tenant Object `id`, from the number of Tenant Objects in a
@@ -542,77 +537,41 @@ The following is an example of a Tenant Object:
 
 A Grant Catalog is a complete set of entries. A Retrieval Binding
 delivers a Grant Catalog whole; a Grant Catalog is never paged or
-assembled from parts. A Grant Catalog has the following members:
+assembled from parts.
 
-`issuer`:
-: REQUIRED. The issuer identifier {{RFC8414}} of the Resource
-  Authorization Server, which is the audience of grants issued using the
-  Grant Catalog ({{envelope}}).
+| Member | Status | Description |
+| --- | --- | --- |
+| `issuer` | REQUIRED | String; the issuer identifier {{RFC8414}} of the Resource Authorization Server, which is the audience of grants issued using the Grant Catalog ({{envelope}}) |
+| `id` | REQUIRED | Identifier ({{model-conventions}}) |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+| `entries` | REQUIRED | Array of entries ({{entry}}) |
+{: title="Grant Catalog Members"}
 
-`id`:
-: REQUIRED. The identifier of the Grant Catalog ({{model-conventions}}).
-
-`display`:
-: OPTIONAL. See {{model-conventions}}.
-
-`description`:
-: OPTIONAL. See {{model-conventions}}.
-
-`entries`:
-: REQUIRED. A JSON array of entries ({{entry}}). An empty array
-  indicates that the Resource Authorization Server accepts no grants for
-  the tenants whose Tenant Objects reference this Grant Catalog.
-
-A Grant Catalog can contain entries for several Grant Profiles.
+An empty `entries` array indicates that the Resource Authorization
+Server accepts no grants for the tenants whose Tenant Objects reference
+this Grant Catalog. A Grant Catalog can contain entries for several Grant Profiles.
 
 ## Entry {#entry}
 
 An entry describes the grants of one Grant Profile that the Resource
-Authorization Server accepts for one protected resource. An entry has
-the following members:
+Authorization Server accepts for one protected resource.
 
-`id`:
-: REQUIRED. The identifier of the entry ({{model-conventions}}).
+| Member | Status | Description |
+| --- | --- | --- |
+| `id` | REQUIRED | Identifier ({{model-conventions}}) |
+| `revision` | REQUIRED | String of at most 255 octets in UTF-8; the version of the entry's normative semantics ({{revision}}) |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+| `profile` | REQUIRED | String; the identifier of the Grant Profile of the grants the entry describes |
+| `resource` | REQUIRED | String; the resource indicator ({{Section 2 of RFC8707}}) of the protected resource |
+| `scope` | OPTIONAL | Object; permitted scope values ({{entry-scope}}) |
+| `authorization_details` | OPTIONAL | Object; permitted authorization details types ({{entry-authorization-details}}) |
+| `claims` | OPTIONAL | Non-empty array; permitted claims ({{entry-claims}}) |
+| `sub_id` | OPTIONAL | Object; permitted subject identifier formats ({{entry-sub-id}}) |
+| `grant_binding` | OPTIONAL | Object; permitted grant binding methods ({{entry-grant-binding}}) |
+{: title="Entry Members"}
 
-`revision`:
-: REQUIRED. A JSON string that identifies the version of the entry's
-  normative semantics ({{revision}}). The value is at most 255 octets
-  when encoded in UTF-8.
-
-`display`:
-: OPTIONAL. See {{model-conventions}}.
-
-`description`:
-: OPTIONAL. See {{model-conventions}}.
-
-`profile`:
-: REQUIRED. A JSON string containing the identifier of the Grant
-  Profile of the grants the entry describes.
-
-`resource`:
-: REQUIRED. A JSON string containing the resource indicator
-  ({{Section 2 of RFC8707}}) of the protected resource the entry
-  describes. The value is an absolute URI {{RFC3986}} and MUST NOT
-  contain a fragment component.
-
-`scope`:
-: OPTIONAL. A JSON object describing the scope values the entry permits
-  ({{entry-scope}}).
-
-`authorization_details`:
-: OPTIONAL. A JSON object describing the authorization details types the
-  entry permits ({{entry-authorization-details}}).
-
-`claims`:
-: OPTIONAL. A non-empty JSON array of claim objects ({{entry-claims}}).
-
-`sub_id`:
-: OPTIONAL. A JSON object describing the subject identifier formats the
-  entry permits ({{entry-sub-id}}).
-
-`grant_binding`:
-: OPTIONAL. A JSON object describing the grant binding methods the entry
-  permits ({{entry-grant-binding}}).
+The value of `resource` is an absolute URI {{RFC3986}} and MUST NOT
+contain a fragment component.
 
 {{envelope}} specifies the grants that the `scope`,
 `authorization_details`, `claims`, `sub_id`, and `grant_binding` members
@@ -661,57 +620,41 @@ specifies how a grant satisfies them.
 The `scope` member of an entry is a JSON object with the following
 members:
 
-`requirement`:
-: REQUIRED. The presence requirement ({{requirement}}).
-
-`values`:
-: REQUIRED. A non-empty JSON array of scope value objects.
+| Member | Status | Description |
+| --- | --- | --- |
+| `requirement` | REQUIRED | The presence requirement ({{requirement}}) |
+| `values` | REQUIRED | Non-empty array of scope value objects |
+{: title="Members of the scope Member"}
 
 A scope value object has the following members:
 
-`scope`:
-: REQUIRED. A JSON string containing one scope token, as defined in
-  {{Section 3.3 of RFC6749}}.
-
-`requirement`:
-: OPTIONAL. The item requirement ({{requirement}}).
-
-`display`:
-: OPTIONAL. See {{model-conventions}}.
-
-`description`:
-: OPTIONAL. See {{model-conventions}}.
+| Member | Status | Description |
+| --- | --- | --- |
+| `scope` | REQUIRED | String; one scope token ({{Section 3.3 of RFC6749}}) |
+| `requirement` | OPTIONAL | The item requirement ({{requirement}}) |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+{: title="Scope Value Object Members"}
 
 ### Authorization Details Types {#entry-authorization-details}
 
 The `authorization_details` member of an entry is a JSON object with the
 following members:
 
-`requirement`:
-: REQUIRED. The presence requirement ({{requirement}}).
-
-`types`:
-: REQUIRED. A non-empty JSON array of authorization details type
-  objects.
+| Member | Status | Description |
+| --- | --- | --- |
+| `requirement` | REQUIRED | The presence requirement ({{requirement}}) |
+| `types` | REQUIRED | Non-empty array of authorization details type objects |
+{: title="Members of the authorization_details Member"}
 
 An authorization details type object has the following members:
 
-`type`:
-: REQUIRED. A JSON string containing an authorization details type
-  value ({{Section 2 of RFC9396}}).
-
-`requirement`:
-: OPTIONAL. The item requirement ({{requirement}}).
-
-`documentation_uri`:
-: OPTIONAL. A JSON string containing an absolute URI, using the
-  `https` scheme, of human-readable documentation for the type.
-
-`display`:
-: OPTIONAL. See {{model-conventions}}.
-
-`description`:
-: OPTIONAL. See {{model-conventions}}.
+| Member | Status | Description |
+| --- | --- | --- |
+| `type` | REQUIRED | String; an authorization details type ({{Section 2 of RFC9396}}) |
+| `requirement` | OPTIONAL | The item requirement ({{requirement}}) |
+| `documentation_uri` | OPTIONAL | String; an absolute `https` URI of human-readable documentation for the type |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+{: title="Authorization Details Type Object Members"}
 
 An entry constrains the `type` values of the authorization details
 objects that a grant conveys, not the other members of those objects. A
@@ -742,23 +685,13 @@ Every claim that a grant issued using an entry conveys is therefore
 either a reserved claim of its Grant Profile or a claim that the entry
 lists. A claim object has the following members:
 
-`claim`:
-: REQUIRED. A JSON string naming a claim, in the namespace that the
-  Grant Profile Definition specifies. For JWT authorization grants, the
-  value is a JWT claim name ({{Section 4 of RFC7519}}).
-
-`requirement`:
-: OPTIONAL. The item requirement ({{requirement}}).
-
-`definition_uri`:
-: OPTIONAL. A JSON string containing an absolute URI, using the
-  `https` scheme, that references the definition of the claim.
-
-`display`:
-: OPTIONAL. See {{model-conventions}}.
-
-`description`:
-: OPTIONAL. See {{model-conventions}}.
+| Member | Status | Description |
+| --- | --- | --- |
+| `claim` | REQUIRED | String; a claim name in the namespace that the Grant Profile Definition specifies, which for JWT authorization grants is a JWT claim name ({{Section 4 of RFC7519}}) |
+| `requirement` | OPTIONAL | The item requirement ({{requirement}}) |
+| `definition_uri` | OPTIONAL | String; an absolute `https` URI of the definition of the claim |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+{: title="Claim Object Members"}
 
 The `claim` member of a claim object MUST NOT be a reserved claim name
 of the entry's Grant Profile. Listing a claim does not change the
@@ -779,14 +712,11 @@ that entry for that subject.
 The `sub_id` member of an entry is a JSON object with the following
 members:
 
-`requirement`:
-: REQUIRED. The presence requirement ({{requirement}}).
-
-`formats`:
-: REQUIRED. A non-empty JSON array of unique Subject Identifier Format
-  names, each registered in the "Security Event Identifier Formats"
-  registry ({{Section 8.1 of RFC9493}}), such as `email` or
-  `saml-nameid` ({{Section 3.2.1 of ID-JAG}}).
+| Member | Status | Description |
+| --- | --- | --- |
+| `requirement` | REQUIRED | The presence requirement ({{requirement}}) |
+| `formats` | REQUIRED | Non-empty array of unique format names from the "Security Event Identifier Formats" registry ({{Section 8.1 of RFC9493}}), such as `email` or `saml-nameid` ({{Section 3.2.1 of ID-JAG}}) |
+{: title="Members of the sub_id Member"}
 
 This member describes a subject identifier {{RFC9493}} conveyed in
 addition to the subject of the grant; for an ID-JAG, it is the `sub_id`
@@ -797,13 +727,11 @@ claim ({{jwt-representation}}).
 The `grant_binding` member of an entry is a JSON object with the
 following members:
 
-`requirement`:
-: REQUIRED. The presence requirement ({{requirement}}).
-
-`methods`:
-: REQUIRED. A non-empty JSON array of unique grant binding method names:
-  the methods defined below, or methods that other specifications define
-  ({{extensibility}}).
+| Member | Status | Description |
+| --- | --- | --- |
+| `requirement` | REQUIRED | The presence requirement ({{requirement}}) |
+| `methods` | REQUIRED | Non-empty array of unique grant binding method names, defined below or by other specifications ({{extensibility}}) |
+{: title="Members of the grant_binding Member"}
 
 This specification defines the following grant binding methods:
 
