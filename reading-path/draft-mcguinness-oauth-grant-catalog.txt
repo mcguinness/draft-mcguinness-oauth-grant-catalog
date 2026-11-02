@@ -1419,9 +1419,13 @@ Table of Contents
    |                             | itself, expand an existing         |
    |                             | approval.                          |
    +-----------------------------+------------------------------------+
-   | Only members outside the    | Approvals made for the entry       |
-   | normative semantics of an   | continue to apply.                 |
-   | entry change (Section 4.7)  |                                    |
+   | Only members outside the    | Approvals that depend on the       |
+   | normative semantics of an   | changed objects continue to apply. |
+   | entry change (Section 4.7), |                                    |
+   | and every approved id,      |                                    |
+   | target_tenant,              |                                    |
+   | grant_catalog, and revision |                                    |
+   | is unchanged                |                                    |
    +-----------------------------+------------------------------------+
    | A Tenant Object, Grant      | The Grant Issuer MUST stop issuing |
    | Catalog, or entry is        | grants that depend on it in its    |
@@ -2012,7 +2016,7 @@ Table of Contents
       valid DPoP proof, ID-JAG requires the IdP Authorization Server to
       bind the ID-JAG to the DPoP key or a client certificate
       (Section 9.11.1.1 of [ID-JAG]); either method satisfies that
-      requirement if the approved subset permits it (Section 4.5.6).
+      requirement if the approved subset permits it (Section 5.4).
 
    Resource selection:  ID-JAG does not require the resource parameter
       of the Token Exchange request (Section 4.3 of [ID-JAG]);
@@ -2229,7 +2233,7 @@ Table of Contents
    5.  For each grant binding method the profile supports, how the
        binding is represented in a grant, when the profile requires the
        Grant Issuer to bind a grant, and how the Grant Issuer selects
-       among methods (Section 4.5.6).
+       among methods (Section 5.4).
 
    6.  The composition checks against public metadata that apply to the
        profile, such as checks of the grant types used to redeem its
@@ -2375,7 +2379,7 @@ Table of Contents
    If a Grant Issuer derived a grant's target tenant from a Tenant
    Object identifier, the number of tenants, or the form of an issuer
    identifier, a grant intended for one tenant could be accepted for
-   another (Section 4.3).  Similarly, an entry obtained for one Issuer
+   another (Section 5.4).  Similarly, an entry obtained for one Issuer
    Relationship is used only for grants whose issuer and issuer tenant
    identify that relationship (Section 5.4), so that a catalog disclosed
    to one issuer tenant does not determine the grants issued for
@@ -2452,8 +2456,8 @@ Table of Contents
    decides before issuance which claims the Grant Issuer releases and to
    which Resource Authorization Server tenants.  A Grant Issuer that
    cannot release a required claim for a subject does not issue a grant
-   using that entry (Section 4.5.4) rather than release the claim
-   without approval.
+   using that entry (Section 5.4) rather than release the claim without
+   approval.
 
    The Grant Issuer stores catalog content as configuration, protects
    that content as it protects other relationship-specific

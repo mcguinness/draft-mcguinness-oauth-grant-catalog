@@ -3318,8 +3318,8 @@ completes or fails.<a href="#section-5.5-3" class="pilcrow">¶</a></p>
               <td class="text-left" rowspan="1" colspan="1">A change to an entry <span class="bcp14">MUST NOT</span>, by itself, expand an existing approval.</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Only members outside the normative semantics of an entry change (<a href="#revision" class="auto internal xref">Section 4.7</a>)</td>
-              <td class="text-left" rowspan="1" colspan="1">Approvals made for the entry continue to apply.</td>
+              <td class="text-left" rowspan="1" colspan="1">Only members outside the normative semantics of an entry change (<a href="#revision" class="auto internal xref">Section 4.7</a>), and every approved <code>id</code>, <code>target_tenant</code>, <code>grant_catalog</code>, and <code>revision</code> is unchanged</td>
+              <td class="text-left" rowspan="1" colspan="1">Approvals that depend on the changed objects continue to apply.</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">A Tenant Object, Grant Catalog, or entry is withdrawn</td>
@@ -4055,7 +4055,7 @@ proof, ID-JAG requires the IdP Authorization Server to bind the ID-JAG
 to the DPoP key or a client certificate
 (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.11.1.1" class="relref">Section 9.11.1.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>); either method
 satisfies that requirement if the approved subset permits it
-(<a href="#entry-grant-binding" class="auto internal xref">Section 4.5.6</a>).<a href="#section-7-2.4.1" class="pilcrow">¶</a></p>
+(<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-7-2.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-7-2.5">Resource selection:</dt>
@@ -4371,7 +4371,7 @@ of the <code>claim</code> member.<a href="#section-8.1-2.4.1" class="pilcrow">¶
             <p id="section-8.1-2.5.1">For each grant binding method the profile supports, how the binding
 is represented in a grant, when the profile requires the Grant Issuer
 to bind a grant, and how the Grant Issuer selects among methods
-(<a href="#entry-grant-binding" class="auto internal xref">Section 4.5.6</a>).<a href="#section-8.1-2.5.1" class="pilcrow">¶</a></p>
+(<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-8.1-2.5.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-8.1-2.6">
             <p id="section-8.1-2.6.1">The composition checks against public metadata that apply to the
@@ -4560,7 +4560,7 @@ incorrect comparison would expand authorization.<a href="#section-9.8-1" class="
 <p id="section-9.9-1">If a Grant Issuer derived a grant's target tenant from a Tenant Object
 identifier, the number of tenants, or the form of an issuer identifier,
 a grant intended for one tenant could be accepted for another
-(<a href="#tenant-object" class="auto internal xref">Section 4.3</a>). Similarly, an entry obtained for one Issuer
+(<a href="#issuing" class="auto internal xref">Section 5.4</a>). Similarly, an entry obtained for one Issuer
 Relationship is used only for grants whose issuer and issuer tenant
 identify that relationship (<a href="#issuing" class="auto internal xref">Section 5.4</a>), so that a catalog disclosed to
 one issuer tenant does not determine the grants issued for subjects of
@@ -4654,7 +4654,7 @@ the Resource Authorization Server requires or accepts (<a href="#entry-claims" c
 issuance which claims the Grant Issuer releases and to which Resource
 Authorization Server tenants. A Grant
 Issuer that cannot release a required claim for a subject does not
-issue a grant using that entry (<a href="#entry-claims" class="auto internal xref">Section 4.5.4</a>) rather than release
+issue a grant using that entry (<a href="#issuing" class="auto internal xref">Section 5.4</a>) rather than release
 the claim without approval.<a href="#section-10-3" class="pilcrow">¶</a></p>
 <p id="section-10-4">The Grant Issuer stores catalog content as configuration, protects that
 content as it protects other relationship-specific configuration, and
