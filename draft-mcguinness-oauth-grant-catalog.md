@@ -210,8 +210,6 @@ Binding authenticates the relationship and delivers the catalog
 ({{relationship-authentication}}); this specification defines an OAuth
 Retrieval Binding ({{oauth-binding}}).
 
-## Out of Scope {#out-of-scope}
-
 The following are outside the scope of this specification:
 
 * Enumeration or registration of application clients, and establishment
@@ -294,7 +292,7 @@ Onboarding Arrangement:
 Relationship View:
 : The complete set of Tenant Objects, and the Grant Catalogs they
   reference, that a Resource Authorization Server makes available to one
-  Issuer Relationship at a point in time.
+  Issuer Relationship at a point in time ({{relationship-view}}).
 
 Tenant Object:
 : An object that binds one Resource Authorization Server tenant eligible
@@ -383,10 +381,89 @@ Retrieval Binding:
 Steps (A) through (E) occur when the Grant Issuer is configured and when
 it refreshes the catalog, not for each grant.
 
+# Core Invariants {#invariants}
+
+The following properties hold throughout this specification. Each is
+stated normatively in the section cited; this section collects them so
+that implementers and authors of extensions ({{extensibility}}) can
+check a design against them. A catalog is input to policy authoring, not
+an authorization decision ({{introduction}}).
+
+1. Relationship scoping: the Resource Authorization Server determines a
+   Relationship View solely from the authenticated Issuer Relationship,
+   and discloses it only to an Issuer Relationship that an Onboarding
+   Arrangement authorizes ({{relationship-authorization}}).
+
+2. Whole views: a Relationship View is delivered complete
+   ({{relationship-view}}), and the Grant Issuer installs all of it or
+   none of it. A failed retrieval is never a withdrawal and leaves
+   earlier state installed; {{installation}} recommends that the Grant
+   Issuer stop issuance when that state exceeds its configured maximum
+   age.
+
+3. Closed world: a grant issued using an entry conveys a
+   Catalog-Governed Input only as the entry permits. An absent member
+   permits nothing, and every claim is either reserved by the Grant
+   Profile or listed in the entry ({{envelope}}, {{entry-claims}}).
+
+4. One entry per grant: each grant is issued using one Tenant Object and
+   one entry, for one audience and one protected resource. Inputs
+   permitted by different entries are never combined ({{envelope}},
+   {{issuing}}).
+
+5. Independent selections: the catalog has no inheritance, no
+   alternatives between sets of items, and no exclusions or conditions
+   beyond those this specification states. A Resource Authorization
+   Server that accepts only some combinations publishes separate entries
+   ({{tenant-object}}, {{envelope}}).
+
+6. Narrowing only: approval and runtime policy only narrow an entry. A
+   new or changed entry, public metadata, and authority metadata never
+   broaden an approval ({{narrowing}}, {{reconciliation}},
+   {{authority-metadata}}).
+
+7. Public metadata prevails: an entry cannot enable a value that public
+   metadata excludes ({{composition}}).
+
+8. Revisions pin approvals: a change to the normative semantics of an
+   entry changes its `revision`. When the `revision` of an entry, or the
+   `target_tenant` or `grant_catalog` of a Tenant Object, changes,
+   issuance under approvals made for the previous value stops until an
+   administrator approves the changed object ({{revision}},
+   {{reconciliation}}).
+
+9. Safe extension: a Grant Issuer ignores members it does not
+   understand. A specification that defines a restrictive member also
+   defines a mechanism that prevents Grant Issuers that do not implement
+   that member from using the entry ({{extensibility}}).
+
 # Catalog Data Model {#data-model}
 
 The objects in this section describe what a Resource Authorization
-Server accepts in grants from one Issuer Relationship.
+Server accepts in grants from one Issuer Relationship. {{fig-model}}
+shows their structure, without the `display` and `description` members.
+A Tenant Object references a Grant Catalog by its `id`. The `scope`,
+`authorization_details`, `claims`, `sub_id`, and `grant_binding` members
+of an entry govern the inputs listed in {{tab-inputs}}.
+
+~~~ ascii-art
+Relationship View
+ |-- issuer
+ |-- issuer_relationship
+ |-- tenants[]: Tenant Object
+ |    |-- id
+ |    |-- target_tenant
+ |    `-- grant_catalog        (the id of a Grant Catalog)
+ `-- grant_catalogs[]: Grant Catalog
+      |-- issuer
+      |-- id
+      `-- entries[]: entry
+           |-- id, revision
+           |-- profile, resource
+           `-- scope, authorization_details, claims,
+               sub_id, grant_binding
+~~~
+{: #fig-model title="Structure of a Relationship View"}
 
 ## Common Conventions {#model-conventions}
 
@@ -395,7 +472,9 @@ document that carries these objects MUST conform to I-JSON {{RFC7493}}.
 A Grant Issuer MUST ignore members it does not understand
 ({{extensibility}}).
 
-The following members are used by several objects:
+Each object is defined by a table of its members, in which "string",
+"object", and "array" denote JSON types. The following members are
+used by several objects:
 
 `id`:
 : A stable identifier for the object. The value is a non-empty JSON
@@ -403,7 +482,9 @@ The following members are used by several objects:
   opaque and case-sensitive, and are compared using simple string
   comparison ({{Section 6.2.1 of RFC3986}}). The length limit bounds the
   identifiers that a Grant Issuer retains with each approval
-  ({{reconciliation}}). Uniqueness is specified in {{identifiers}}.
+  ({{reconciliation}}). Tenant Object identifiers and Grant Catalog
+  identifiers are each unique within a Relationship View, and entry
+  identifiers are unique within a Grant Catalog.
 
 `display`:
 : OPTIONAL. A JSON string containing a short, human-readable name for
@@ -419,50 +500,72 @@ Language negotiation for these values is outside the scope of this
 specification.
 
 Where this specification describes a member as an array of unique
-values, the array MUST NOT contain the same value twice. Members that
-carry protocol values, such as `issuer`, `target_tenant`, `profile`,
-`resource`, `scope`, `type`, `claim`, and the names in `formats` and
-`methods`, are compared using simple string comparison
-({{Section 6.2.1 of RFC3986}}).
+values, the array MUST NOT contain the same value twice. Within an
+entry, each `scope` value within a `values` array, each `type` value
+within a `types` array, and each `claim` value within a `claims` array
+is unique and identifies an item. Members that carry protocol values,
+such as `issuer`, `target_tenant`, `profile`, `resource`, `scope`,
+`type`, `claim`, and the names in `formats` and `methods`, are compared
+using simple string comparison ({{Section 6.2.1 of RFC3986}}).
+
+## Relationship View {#relationship-view}
+
+A Relationship View is a JSON object with the following members:
+
+| Member | Status | Description |
+| --- | --- | --- |
+| `issuer` | REQUIRED | String; the issuer identifier of the Resource Authorization Server |
+| `issuer_relationship` | REQUIRED | Object; the Issuer Relationship that the Relationship View serves |
+| `tenants` | REQUIRED | Array containing every Tenant Object ({{tenant-object}}) eligible for the Issuer Relationship |
+| `grant_catalogs` | REQUIRED | Array containing each Grant Catalog ({{grant-catalog}}) that a Tenant Object references, each exactly once |
+{: title="Relationship View Members"}
+
+The `issuer` member of `issuer_relationship` is REQUIRED and contains
+the issuer identifier of the Grant Issuer. The `tenant` member of
+`issuer_relationship` contains
+the issuer tenant identifier, and is present if and only if the Issuer
+Relationship has one ({{relationship-identity}}). The Resource
+Authorization Server derives this object from the Issuer Relationship
+that it used to select the Relationship View. Comparing it with the
+Issuer Relationship for which the Grant Issuer retrieved the view
+({{validation}}) detects errors in routing, caching, or the association
+of responses with requests; it does not show that the Resource
+Authorization Server selected the content of the view correctly.
+
+A Relationship View is complete and is not paged. If the Issuer
+Relationship has no eligible tenants, both arrays are empty.
 
 ## Tenant Object {#tenant-object}
 
 A Tenant Object binds one Resource Authorization Server tenant that is
 eligible for an Issuer Relationship to the Grant Catalog that applies to
-it. A Tenant Object has the following members:
+it.
 
-`id`:
-: REQUIRED. The identifier of the Tenant Object ({{model-conventions}}).
-  A Tenant Object identifier identifies one logical Resource
-  Authorization Server tenant. The Resource Authorization Server MUST
-  NOT use the identifier of a Tenant Object for a different tenant in
-  any later Relationship View for the same Issuer Relationship.
+| Member | Status | Description |
+| --- | --- | --- |
+| `id` | REQUIRED | Identifier ({{model-conventions}}) |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+| `target_tenant` | OPTIONAL | String; the exact tenant identifier ({{conventions}}) that a grant issued for this tenant conveys as its target tenant ({{envelope}}) |
+| `grant_catalog` | REQUIRED | String; the `id` of the Grant Catalog that applies to this tenant |
+{: title="Tenant Object Members"}
 
-`display`:
-: OPTIONAL. See {{model-conventions}}.
+A Tenant Object identifier identifies one logical Resource
+Authorization Server tenant. The Resource Authorization Server MUST
+NOT use the identifier of a Tenant Object for a different tenant in
+any later Relationship View for the same Issuer Relationship.
 
-`description`:
-: OPTIONAL. See {{model-conventions}}.
-
-`target_tenant`:
-: OPTIONAL. A JSON string containing the exact tenant identifier
-  ({{conventions}}) of the Resource Authorization Server tenant, which a
-  grant issued for this tenant conveys as its target tenant
-  ({{permitted}}); an ID-JAG conveys it in the `aud_tenant` claim
-  ({{jwt-representation}}). The Resource
-  Authorization Server MUST include this member unless its issuer
-  identifier alone identifies the target tenant. A Relationship View
-  MUST NOT contain more than one Tenant Object without this member, or
-  two Tenant Objects with the same value of this member.
-
-`grant_catalog`:
-: REQUIRED. The `id` of the Grant Catalog that applies to this tenant.
+An ID-JAG conveys `target_tenant` in the `aud_tenant` claim
+({{jwt-representation}}). The Resource Authorization Server MUST
+include `target_tenant` unless its issuer identifier alone identifies
+the target tenant. A Relationship View MUST NOT contain more than one
+Tenant Object without `target_tenant`, or two Tenant Objects with the
+same value of `target_tenant`.
 
 The Grant Issuer MUST NOT derive a target tenant identifier from
 the Tenant Object `id`, from the number of Tenant Objects in a
 Relationship View, or from the form of an issuer identifier. A Tenant
 Object that contains `target_tenant` is usable only with entries whose
-Grant Profile can convey a target tenant ({{permitted}}).
+Grant Profile can convey a target tenant ({{envelope}}).
 
 Several Tenant Objects can reference the same Grant Catalog. Tenant
 Objects for tenants that differ in any Catalog-Governed Input reference
@@ -487,84 +590,46 @@ The following is an example of a Tenant Object:
 
 A Grant Catalog is a complete set of entries. A Retrieval Binding
 delivers a Grant Catalog whole; a Grant Catalog is never paged or
-assembled from parts. A Grant Catalog has the following members:
+assembled from parts.
 
-`issuer`:
-: REQUIRED. The issuer identifier {{RFC8414}} of the Resource
-  Authorization Server, which is the audience of grants issued using the
-  Grant Catalog ({{permitted}}).
+| Member | Status | Description |
+| --- | --- | --- |
+| `issuer` | REQUIRED | String; the issuer identifier {{RFC8414}} of the Resource Authorization Server, which is the audience of grants issued using the Grant Catalog ({{envelope}}) |
+| `id` | REQUIRED | Identifier ({{model-conventions}}) |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+| `entries` | REQUIRED | Array of entries ({{entry}}) |
+{: title="Grant Catalog Members"}
 
-`id`:
-: REQUIRED. The identifier of the Grant Catalog ({{model-conventions}}).
-
-`display`:
-: OPTIONAL. See {{model-conventions}}.
-
-`description`:
-: OPTIONAL. See {{model-conventions}}.
-
-`entries`:
-: REQUIRED. A JSON array of entries ({{entry}}). An empty array
-  indicates that the Resource Authorization Server accepts no grants for
-  the tenants whose Tenant Objects reference this Grant Catalog.
-
-A Grant Catalog can contain entries for several Grant Profiles.
+An empty `entries` array indicates that the Resource Authorization
+Server accepts no grants for the tenants whose Tenant Objects reference
+this Grant Catalog. A Grant Catalog can contain entries for several
+Grant Profiles.
 
 ## Entry {#entry}
 
 An entry describes the grants of one Grant Profile that the Resource
-Authorization Server accepts for one protected resource. An entry has
-the following members:
+Authorization Server accepts for one protected resource.
 
-`id`:
-: REQUIRED. The identifier of the entry ({{model-conventions}}).
+| Member | Status | Description |
+| --- | --- | --- |
+| `id` | REQUIRED | Identifier ({{model-conventions}}) |
+| `revision` | REQUIRED | String of at most 255 octets in UTF-8; the version of the entry's normative semantics ({{revision}}) |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+| `profile` | REQUIRED | String; the identifier of the Grant Profile of the grants the entry describes |
+| `resource` | REQUIRED | String; the resource indicator ({{Section 2 of RFC8707}}) of the protected resource |
+| `scope` | OPTIONAL | Object; permitted scope values ({{entry-scope}}) |
+| `authorization_details` | OPTIONAL | Object; permitted authorization details types ({{entry-authorization-details}}) |
+| `claims` | OPTIONAL | Non-empty array of claim objects ({{entry-claims}}) |
+| `sub_id` | OPTIONAL | Object; permitted subject identifier formats ({{entry-sub-id}}) |
+| `grant_binding` | OPTIONAL | Object; permitted grant binding methods ({{entry-grant-binding}}) |
+{: title="Entry Members"}
 
-`revision`:
-: REQUIRED. A JSON string that identifies the version of the entry's
-  normative semantics ({{revision}}). The value is at most 255 octets
-  when encoded in UTF-8.
+The value of `resource` is an absolute URI {{RFC3986}} and MUST NOT
+contain a fragment component.
 
-`display`:
-: OPTIONAL. See {{model-conventions}}.
-
-`description`:
-: OPTIONAL. See {{model-conventions}}.
-
-`profile`:
-: REQUIRED. A JSON string containing the identifier of the Grant
-  Profile of the grants the entry describes.
-
-`resource`:
-: REQUIRED. A JSON string containing the resource indicator
-  ({{Section 2 of RFC8707}}) of the protected resource the entry
-  describes. The value is an absolute URI {{RFC3986}} and MUST NOT
-  contain a fragment component.
-
-`scope`:
-: OPTIONAL. A JSON object describing the scope values the entry permits
-  ({{entry-scope}}). If this member is absent, grants issued using the
-  entry convey no scope values.
-
-`authorization_details`:
-: OPTIONAL. A JSON object describing the authorization details types the
-  entry permits ({{entry-authorization-details}}). If this member is
-  absent, grants issued using the entry convey no authorization details.
-
-`claims`:
-: OPTIONAL. A non-empty JSON array of claim objects ({{entry-claims}}).
-  If this member is absent, the entry permits no Catalog-Governed
-  Claims.
-
-`sub_id`:
-: OPTIONAL. A JSON object describing the subject identifier formats the
-  entry permits ({{entry-sub-id}}). If this member is absent, grants
-  issued using the entry convey no subject identifier of the kind this
-  member describes.
-
-`grant_binding`:
-: OPTIONAL. A JSON object describing the grant binding methods the entry
-  permits ({{entry-grant-binding}}). If this member is absent, grants
-  issued using the entry are not bound.
+{{envelope}} specifies the grants that the `scope`,
+`authorization_details`, `claims`, `sub_id`, and `grant_binding` members
+permit, including when they are absent.
 
 The `profile` member identifies the Grant Profile, not the grant type
 used to redeem the grant, because several Grant Profiles share the JWT
@@ -573,7 +638,7 @@ bearer grant type `urn:ietf:params:oauth:grant-type:jwt-bearer`
 
 A Grant Catalog can contain entries for several resources, and several
 entries can name the same resource when they describe different grants
-({{combinations}}). A client that needs access to several resources
+({{envelope}}). A client that needs access to several resources
 obtains a separate grant for each.
 
 ### Requirement Levels {#requirement}
@@ -601,65 +666,49 @@ A member whose presence requirement is `optional` MUST NOT contain an
 item whose item requirement is `required`. The `formats` of the
 `sub_id` member and the `methods` of the `grant_binding` member are
 alternatives and have no item requirement: a presence requirement of
-`required` means that a grant uses one of them. {{combinations}}
-specifies how items combine.
+`required` means that a grant uses one of them. {{envelope}}
+specifies how a grant satisfies them.
 
 ### Scope {#entry-scope}
 
 The `scope` member of an entry is a JSON object with the following
 members:
 
-`requirement`:
-: REQUIRED. The presence requirement ({{requirement}}).
-
-`values`:
-: REQUIRED. A non-empty JSON array of scope value objects.
+| Member | Status | Description |
+| --- | --- | --- |
+| `requirement` | REQUIRED | The presence requirement ({{requirement}}) |
+| `values` | REQUIRED | Non-empty array of scope value objects |
+{: title="Members of the scope Member"}
 
 A scope value object has the following members:
 
-`scope`:
-: REQUIRED. A JSON string containing one scope token, as defined in
-  {{Section 3.3 of RFC6749}}.
-
-`requirement`:
-: OPTIONAL. The item requirement ({{requirement}}).
-
-`display`:
-: OPTIONAL. See {{model-conventions}}.
-
-`description`:
-: OPTIONAL. See {{model-conventions}}.
+| Member | Status | Description |
+| --- | --- | --- |
+| `scope` | REQUIRED | String; one scope token ({{Section 3.3 of RFC6749}}) |
+| `requirement` | OPTIONAL | The item requirement ({{requirement}}) |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+{: title="Scope Value Object Members"}
 
 ### Authorization Details Types {#entry-authorization-details}
 
 The `authorization_details` member of an entry is a JSON object with the
 following members:
 
-`requirement`:
-: REQUIRED. The presence requirement ({{requirement}}).
-
-`types`:
-: REQUIRED. A non-empty JSON array of authorization details type
-  objects.
+| Member | Status | Description |
+| --- | --- | --- |
+| `requirement` | REQUIRED | The presence requirement ({{requirement}}) |
+| `types` | REQUIRED | Non-empty array of authorization details type objects |
+{: title="Members of the authorization_details Member"}
 
 An authorization details type object has the following members:
 
-`type`:
-: REQUIRED. A JSON string containing an authorization details type
-  value ({{Section 2 of RFC9396}}).
-
-`requirement`:
-: OPTIONAL. The item requirement ({{requirement}}).
-
-`documentation_uri`:
-: OPTIONAL. A JSON string containing an absolute URI, using the
-  `https` scheme, of human-readable documentation for the type.
-
-`display`:
-: OPTIONAL. See {{model-conventions}}.
-
-`description`:
-: OPTIONAL. See {{model-conventions}}.
+| Member | Status | Description |
+| --- | --- | --- |
+| `type` | REQUIRED | String; an authorization details type ({{Section 2 of RFC9396}}) |
+| `requirement` | OPTIONAL | The item requirement ({{requirement}}) |
+| `documentation_uri` | OPTIONAL | String; an absolute `https` URI of human-readable documentation for the type |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+{: title="Authorization Details Type Object Members"}
 
 An entry constrains the `type` values of the authorization details
 objects that a grant conveys, not the other members of those objects. A
@@ -690,23 +739,13 @@ Every claim that a grant issued using an entry conveys is therefore
 either a reserved claim of its Grant Profile or a claim that the entry
 lists. A claim object has the following members:
 
-`claim`:
-: REQUIRED. A JSON string naming a claim, in the namespace that the
-  Grant Profile Definition specifies. For JWT authorization grants, the
-  value is a JWT claim name ({{Section 4 of RFC7519}}).
-
-`requirement`:
-: OPTIONAL. The item requirement ({{requirement}}).
-
-`definition_uri`:
-: OPTIONAL. A JSON string containing an absolute URI, using the
-  `https` scheme, that references the definition of the claim.
-
-`display`:
-: OPTIONAL. See {{model-conventions}}.
-
-`description`:
-: OPTIONAL. See {{model-conventions}}.
+| Member | Status | Description |
+| --- | --- | --- |
+| `claim` | REQUIRED | String; a claim name in the namespace that the Grant Profile Definition specifies, which for JWT authorization grants is a JWT claim name ({{Section 4 of RFC7519}}) |
+| `requirement` | OPTIONAL | The item requirement ({{requirement}}) |
+| `definition_uri` | OPTIONAL | String; an absolute `https` URI of the definition of the claim |
+| `display`, `description` | OPTIONAL | See {{model-conventions}} |
+{: title="Claim Object Members"}
 
 The `claim` member of a claim object MUST NOT be a reserved claim name
 of the entry's Grant Profile. Listing a claim does not change the
@@ -727,14 +766,11 @@ that entry for that subject.
 The `sub_id` member of an entry is a JSON object with the following
 members:
 
-`requirement`:
-: REQUIRED. The presence requirement ({{requirement}}).
-
-`formats`:
-: REQUIRED. A non-empty JSON array of unique Subject Identifier Format
-  names, each registered in the "Security Event Identifier Formats"
-  registry ({{Section 8.1 of RFC9493}}), such as `email` or
-  `saml-nameid` ({{Section 3.2.1 of ID-JAG}}).
+| Member | Status | Description |
+| --- | --- | --- |
+| `requirement` | REQUIRED | The presence requirement ({{requirement}}) |
+| `formats` | REQUIRED | Non-empty array of unique format names from the "Security Event Identifier Formats" registry ({{Section 8.1 of RFC9493}}), such as `email` or `saml-nameid` ({{Section 3.2.1 of ID-JAG}}) |
+{: title="Members of the sub_id Member"}
 
 This member describes a subject identifier {{RFC9493}} conveyed in
 addition to the subject of the grant; for an ID-JAG, it is the `sub_id`
@@ -745,13 +781,11 @@ claim ({{jwt-representation}}).
 The `grant_binding` member of an entry is a JSON object with the
 following members:
 
-`requirement`:
-: REQUIRED. The presence requirement ({{requirement}}).
-
-`methods`:
-: REQUIRED. A non-empty JSON array of unique grant binding method names:
-  the methods defined below, or methods that other specifications define
-  ({{extensibility}}).
+| Member | Status | Description |
+| --- | --- | --- |
+| `requirement` | REQUIRED | The presence requirement ({{requirement}}) |
+| `methods` | REQUIRED | Non-empty array of unique grant binding method names, defined below or by other specifications ({{extensibility}}) |
+{: title="Members of the grant_binding Member"}
 
 This specification defines the following grant binding methods:
 
@@ -780,19 +814,64 @@ The catalog does not describe client authentication to the Resource
 Authorization Server or sender-constraining of the access token it
 issues; both are separate from grant binding.
 
-## Identifier Uniqueness {#identifiers}
+## Authorization Envelope {#envelope}
 
-Identifiers are unique as follows:
+An entry defines an Authorization Envelope: the set of grants that the
+Resource Authorization Server is prepared to accept for one protected
+resource from the Issuer Relationship. Grant Issuer policy and the
+runtime request narrow it ({{narrowing}}).
 
-* Tenant Object identifiers and Grant Catalog identifiers are each
-  unique within a Relationship View.
+A grant is within the Authorization Envelope of an entry, for a Tenant
+Object that references the Grant Catalog containing the entry, when all
+of the following are true:
 
-* Entry identifiers are unique within a Grant Catalog.
+1. The grant conveys the `issuer` of the Grant Catalog as its only
+   audience.
 
-The following protocol values are unique within their collections and
-identify items within an entry: each `scope` value within a `values`
-array, each `type` value within a `types` array, and each `claim` value
-within a `claims` array.
+2. If the Tenant Object contains `target_tenant`, the grant conveys that
+   value as its target tenant. Otherwise, the grant conveys no target
+   tenant.
+
+3. The grant conveys the entry's `resource` as its only protected
+   resource.
+
+4. For each input in {{tab-inputs}}, if the entry has no member for the
+   input, the grant conveys none of that input. Otherwise, every item of
+   the input that the grant conveys is listed in the member, the grant
+   conveys every listed item whose item requirement is `required`, and
+   the grant conveys at least one item if the member's presence
+   requirement is `required` (the `claims` member has no presence
+   requirement). For grant binding, a bound grant uses exactly one
+   method.
+
+| Input (Member) | Item | Conveyed When the Grant |
+| --- | --- | --- |
+| Scope values (`scope`, {{entry-scope}}) | The `scope` of each scope value object | Conveys that scope value |
+| Authorization details (`authorization_details`, {{entry-authorization-details}}) | The `type` of each authorization details type object | Conveys at least one authorization details object of that type |
+| Catalog-Governed Claims (`claims`, {{entry-claims}}) | The `claim` of each claim object | Conveys that claim |
+| Subject identifier in addition to the subject (`sub_id`, {{entry-sub-id}}) | Each name in `formats` | Conveys a subject identifier in that format |
+| Grant binding (`grant_binding`, {{entry-grant-binding}}) | Each name in `methods` | Is bound using that method |
+{: #tab-inputs title="Inputs Governed by Members of an Entry"}
+
+When a Grant Issuer issues a grant using an entry, the Grant Issuer MUST
+ensure that the grant is within the Authorization Envelope of the subset
+of that entry approved for the Tenant Object ({{narrowing}}). The Grant
+Issuer issues each grant using exactly one entry, and MUST NOT combine
+inputs permitted by different entries in one grant.
+
+The inputs are independent: any selection of items that one member
+permits is permitted together with any selection that each other member
+permits.
+
+The catalog expresses no alternatives between sets of items, no
+exclusions, and no conditions, either within a member or between
+members. When the Resource Authorization Server accepts only some
+combinations, such as one scope value or another but not both, a scope
+value only together with a particular claim, or an authorization details
+type that cannot be combined with a scope value, it publishes separate
+entries whose Authorization Envelopes each contain only accepted
+combinations ({{example-alternatives}}). A Grant Issuer does not infer a
+rule that an entry does not state.
 
 ## Entry Revision {#revision}
 
@@ -833,7 +912,7 @@ The combination of the Resource Authorization Server issuer identifier,
 the Issuer Relationship, the Grant Catalog `id`, the entry `id`, and the
 `revision` identifies one set of normative semantics ({{validation}}).
 Grant Catalog identifiers are unique only within a Relationship View
-({{identifiers}}), so the Grant Catalogs offered to two Issuer
+({{model-conventions}}), so the Grant Catalogs offered to two Issuer
 Relationships can share an identifier and differ in content.
 
 The `revision` member is neither a digest nor an integrity mechanism. It
@@ -841,194 +920,34 @@ lets the Grant Issuer determine whether an approval made for an earlier
 copy of an entry still applies ({{reconciliation}}). The Retrieval
 Binding handles caching of representations.
 
-# Authorization Envelope {#envelope}
-
-An entry defines an Authorization Envelope: the set of grants that the
-Resource Authorization Server is prepared to accept for one protected
-resource from the Issuer Relationship. Grant Issuer policy and the
-runtime request narrow it ({{narrowing}}).
-
-## Permitted Grants {#permitted}
-
-A grant is within the Authorization Envelope of an entry, for a Tenant
-Object that references the Grant Catalog containing the entry, when all
-of the following are true:
-
-1. The grant conveys the `issuer` of the Grant Catalog as its only
-   audience.
-
-2. If the Tenant Object contains `target_tenant`, the grant conveys that
-   value as its target tenant. Otherwise, the grant conveys no target
-   tenant.
-
-3. The grant conveys the entry's `resource` as its only protected
-   resource.
-
-4. If the entry has no `scope` member, the grant conveys no scope
-   values. Otherwise, every scope value the grant conveys is the `scope`
-   of a scope value object of the entry, the grant conveys every scope
-   value whose item requirement is `required`, and the grant
-   conveys at least one scope value if the presence requirement is
-   `required`.
-
-5. If the entry has no `authorization_details` member, the grant conveys
-   no authorization details. Otherwise, the `type` of every
-   authorization details object the grant conveys is the `type` of an
-   authorization details type object of the entry, the grant conveys at
-   least one object of each type whose item requirement is
-   `required`, and the grant conveys at least one object if the
-   presence requirement is `required`.
-
-6. Every Catalog-Governed Claim the grant conveys is listed in the
-   entry's `claims` member, and the grant conveys every claim listed
-   with an item requirement of `required`.
-
-7. If the entry has no `sub_id` member, the grant conveys no subject
-   identifier of the kind that member describes. Otherwise, a subject
-   identifier the grant conveys uses one of the listed formats, and the
-   grant conveys one if the presence requirement is `required`.
-
-8. If the entry has no `grant_binding` member, the grant is not bound.
-   Otherwise, a binding the grant conveys uses exactly one of the listed
-   methods, and the grant is bound if the presence requirement is
-   `required`.
-
-When a Grant Issuer issues a grant using an entry, the Grant Issuer MUST
-ensure that the grant is within the Authorization Envelope of the subset
-of that entry approved for the Tenant Object ({{narrowing}}). The Grant
-Issuer issues each grant using exactly one entry, and MUST NOT combine
-inputs permitted by different entries in one grant.
-
-## Combinations Across Members {#combinations}
-
-The Authorization Envelope of an entry is the product of the selections
-each member permits. The permitted selections for a member are all of
-its `required` items together with any subset of its `optional` items,
-subject to the presence requirement. Any selection permitted by one
-member is permitted together with any selection permitted by each other
-member.
-
-The catalog expresses no alternatives between sets of items, no
-exclusions, and no conditions, either within a member or between
-members. When the Resource Authorization Server accepts only some
-combinations, such as one scope value or another but not both, a scope
-value only together with a particular claim, or an authorization details
-type that cannot be combined with a scope value, it publishes separate
-entries whose Authorization Envelopes each contain only accepted
-combinations ({{example-alternatives}}). A Grant Issuer does not infer a
-rule that an entry does not state.
-
-## Approval and Runtime Narrowing {#narrowing}
-
-An administrator of the Grant Issuer approves a subset of an entry for
-use with a Tenant Object that references the entry's Grant Catalog. An
-approved subset is an Authorization Envelope contained in the entry's
-Authorization Envelope. It retains every requirement of the entry and
-can add requirements of its own: an administrator can remove `optional`
-items, subject identifier formats, and binding methods, and can make an
-`optional` member or item `required`. For example, for an entry whose
-`grant_binding` member has the `requirement` `optional` and the methods
-`dpop` and `mtls`, an administrator can approve a subset in which
-binding is required and `dpop` is the only method. How a Grant Issuer
-records approval, and whether it approves entries for particular
-clients or subjects, is a matter of Grant Issuer policy.
-
-The rules in {{entry-claims}} and {{entry-grant-binding}} that refer to
-what an entry requires or permits apply to the approved subset.
-
-At runtime, the Grant Issuer applies subject, client, consent, and other
-local policy, and the client's request, to narrow the approved subset
-further. If local policy excludes an item that the approved subset
-requires, the Grant Issuer MUST NOT issue a grant using that entry. If
-the client's request omits such an item, the Grant Issuer either adds
-it, when its policy permits issuing values that the client did not
-request ({{Section 3.3 of RFC6749}}), or does not issue a grant using
-that entry.
-
-For example:
-
-~~~ ascii-art
-Publicly advertised scopes:  messages.read, messages.write,
-                             messages.admin
-Catalog entry:               messages.read, messages.write
-Approved by policy:          messages.read
-Requested by the client:     messages.read, messages.write
-Issued in the grant:         messages.read
-~~~
-{: title="Narrowing of Scope Values"}
-
-The Grant Issuer cannot issue `messages.admin` merely because public
-metadata advertises it, and cannot issue `messages.write` merely because
-the catalog permits it. The same narrowing applies to authorization
-details types, claims, subject identifier formats, and grant binding.
-
-## Issuing a Grant {#issuing}
-
-After authenticating the client and the subject and applying its policy,
-the Grant Issuer issues a grant as specified by the Grant Profile, using
-one approved Tenant Object and one approved entry. The Grant Issuer
-selects the Tenant Object from the client's request and its own
-configuration for the Issuer Relationship, and selects an entry whose
-Grant Profile matches the kind of grant the client requested and whose
-`resource` is the requested protected resource. The catalog defines no
-request parameter for selecting a Resource Authorization Server tenant
-({{profile-definitions}}). When more than one approved Tenant Object or
-entry could satisfy a request, Grant Issuer policy selects one. The
-Grant Issuer issues a grant for a request that names several resources
-only if its policy reduces the request to one of them, and for a request
-that names none only if its policy determines one ({{permitted}}).
-
-The Grant Issuer MUST NOT issue a grant using an entry obtained for an
-Issuer Relationship unless the grant identifies its issuer by the issuer
-identifier of that relationship and, when the relationship has an issuer
-tenant, identifies that issuer tenant, as the Grant Profile Definition
-specifies ({{profile-definitions}}).
-
-When the Grant Issuer does not issue a grant because no approved entry
-permits the request, it responds to the client as the Grant Profile
-Definition specifies.
-
-## Clients {#clients}
-
-The catalog does not enumerate or register application clients, or
-establish client identifier mappings. Views specific to one application
-client are an open issue ({{open-issues}}).
-A Relationship View is relationship-wide and does not establish
-eligibility for a particular application client: a Resource
-Authorization Server can permit a grant configuration for one
-application client and reject an otherwise equivalent configuration for
-another. The Grant Profile Definition of a Grant Profile whose grants
-identify the client by its client identifier at the Resource
-Authorization Server specifies how the Grant Issuer obtains that
-identifier, as {{id-jag}} does for ID-JAG; such an
-identifier can be shared across trust domains {{CIMD}}.
-
-# Catalog Processing {#processing}
+# Grant Issuer Processing {#processing}
 
 ## Validating a Relationship View {#validation}
 
 Before installing any part of a Relationship View, the Grant Issuer MUST
 verify the following:
 
-1. The `issuer` of every Grant Catalog, and any issuer identifier the
-   Retrieval Binding conveys, is identical to the issuer identifier of
+1. The `issuer` of the Relationship View and of every Grant Catalog, and
+   any other issuer identifier that the Retrieval Binding conveys, is
+   identical to the issuer identifier of
    the Resource Authorization Server with which the Grant Issuer
    associates the Issuer Relationship, using simple string comparison
    ({{Section 6.2.1 of RFC3986}}).
 
-2. The Issuer Relationship that the Retrieval Binding identifies with
-   the Relationship View is the one for which the Grant Issuer retrieved
-   it: the issuer identifiers are identical, and the issuer tenant
-   identifiers are identical or are both absent.
+2. The `issuer_relationship` of the Relationship View identifies the
+   Issuer Relationship for which the Grant Issuer retrieved it: its
+   `issuer` is identical to that relationship's issuer identifier, and
+   its `tenant` is identical to that relationship's issuer tenant
+   identifier, or both are absent.
 
-3. Every document conforms to I-JSON {{RFC7493}}. The structures that
-   the Retrieval Binding defines, every Tenant Object, and every Grant
+3. Every document conforms to I-JSON {{RFC7493}}. The Relationship
+   View, the structures that the Retrieval Binding defines, every Tenant
+   Object, and every Grant
    Catalog other than the contents of its entries satisfy their
    definitions: every REQUIRED member is present, and every member
    defined by this specification has the specified JSON type and meets
    the constraints stated for it. Tenant Object, Grant Catalog, and
-   entry identifiers satisfy {{model-conventions}} and are unique as
-   specified in {{identifiers}}.
+   entry identifiers satisfy {{model-conventions}}.
 
 4. The `grant_catalog` of every Tenant Object identifies a Grant Catalog
    in the Relationship View, and every Grant Catalog in the Relationship
@@ -1055,9 +974,9 @@ entry:
 
 2. A member of the entry other than its `id`, or a member of an object
    within the entry, does not satisfy its definition in {{entry}} or
-   {{identifiers}}: a REQUIRED member is absent, a member has a JSON
-   type other than the one specified, or a constraint stated for the
-   member is not met.
+   {{model-conventions}}: a REQUIRED member is absent, a member has a
+   JSON type other than the one specified, or a constraint stated for
+   the member is not met.
 
 3. The entry contains a member for a Catalog-Governed Input that its
    Grant Profile Definition states the Grant Profile cannot convey
@@ -1201,6 +1120,91 @@ results from the end of the Issuer Relationship, does not extend it
 needs issuance to stop sooner first removes every eligible tenant from
 the relationship; the Grant Issuer observes that removal at its next
 refresh as a withdrawal.
+
+## Approval and Runtime Narrowing {#narrowing}
+
+An administrator of the Grant Issuer approves a subset of an entry for
+use with a Tenant Object that references the entry's Grant Catalog. An
+approved subset is an Authorization Envelope contained in the entry's
+Authorization Envelope. It retains every requirement of the entry and
+can add requirements of its own: an administrator can remove `optional`
+items, subject identifier formats, and binding methods, and can make an
+`optional` member or item `required`. For example, for an entry whose
+`grant_binding` member has the `requirement` `optional` and the methods
+`dpop` and `mtls`, an administrator can approve a subset in which
+binding is required and `dpop` is the only method. How a Grant Issuer
+records approval, and whether it approves entries for particular
+clients or subjects, is a matter of Grant Issuer policy.
+
+The rules in {{entry-claims}} and {{entry-grant-binding}} that refer to
+what an entry requires or permits apply to the approved subset.
+
+At runtime, the Grant Issuer applies subject, client, consent, and other
+local policy, and the client's request, to narrow the approved subset
+further. If local policy excludes an item that the approved subset
+requires, the Grant Issuer MUST NOT issue a grant using that entry. If
+the client's request omits such an item, the Grant Issuer either adds
+it, when its policy permits issuing values that the client did not
+request ({{Section 3.3 of RFC6749}}), or does not issue a grant using
+that entry.
+
+For example:
+
+~~~ ascii-art
+Publicly advertised scopes:  messages.read, messages.write,
+                             messages.admin
+Catalog entry:               messages.read, messages.write
+Approved by policy:          messages.read
+Requested by the client:     messages.read, messages.write
+Issued in the grant:         messages.read
+~~~
+{: title="Narrowing of Scope Values"}
+
+The Grant Issuer cannot issue `messages.admin` merely because public
+metadata advertises it, and cannot issue `messages.write` merely because
+the catalog permits it. The same narrowing applies to authorization
+details types, claims, subject identifier formats, and grant binding.
+
+## Issuing a Grant {#issuing}
+
+After authenticating the client and the subject and applying its policy,
+the Grant Issuer issues a grant as specified by the Grant Profile, using
+one approved Tenant Object and one approved entry. The Grant Issuer
+selects the Tenant Object from the client's request and its own
+configuration for the Issuer Relationship, and selects an entry whose
+Grant Profile matches the kind of grant the client requested and whose
+`resource` is the requested protected resource. The catalog defines no
+request parameter for selecting a Resource Authorization Server tenant
+({{profile-definitions}}). When more than one approved Tenant Object or
+entry could satisfy a request, Grant Issuer policy selects one. The
+Grant Issuer issues a grant for a request that names several resources
+only if its policy reduces the request to one of them, and for a request
+that names none only if its policy determines one ({{envelope}}).
+
+The Grant Issuer MUST NOT issue a grant using an entry obtained for an
+Issuer Relationship unless the grant identifies its issuer by the issuer
+identifier of that relationship and, when the relationship has an issuer
+tenant, identifies that issuer tenant, as the Grant Profile Definition
+specifies ({{profile-definitions}}).
+
+When the Grant Issuer does not issue a grant because no approved entry
+permits the request, it responds to the client as the Grant Profile
+Definition specifies.
+
+### Clients {#clients}
+
+The catalog does not enumerate or register application clients, or
+establish client identifier mappings. Views specific to one application
+client are an open issue ({{open-issues}}).
+A Relationship View is relationship-wide and does not establish
+eligibility for a particular application client: a Resource
+Authorization Server can permit a grant configuration for one
+application client and reject an otherwise equivalent configuration for
+another. The Grant Profile Definition of a Grant Profile whose grants
+identify the client by its client identifier at the Resource
+Authorization Server specifies how the Grant Issuer obtains that
+identifier, as {{id-jag}} does for ID-JAG; such an
+identifier can be shared across trust domains {{CIMD}}.
 
 ## Policy Reconciliation {#reconciliation}
 
@@ -1637,43 +1641,11 @@ The Resource Authorization Server determines the Relationship View from
 the Issuer Relationship associated with the catalog access token
 ({{relationship-authorization}}) and responds with HTTP status code 200
 (OK) and a Relationship View document of media type
-`application/oauth-grant-catalog+json` ({{iana-media-types}}). The
-Resource Authorization Server MUST construct the document from one
-consistent state of the Issuer Relationship. The document is a JSON
-object with the following members:
-
-`issuer`:
-: REQUIRED. The issuer identifier of the Resource Authorization Server.
-
-`issuer_relationship`:
-: REQUIRED. A JSON object that identifies the Issuer Relationship that
-  the Relationship View serves. Its `issuer` member is REQUIRED and
-  contains the issuer identifier of the Grant Issuer. Its `tenant`
-  member contains the issuer tenant identifier, and is present if and
-  only if the Issuer Relationship has one ({{relationship-identity}}).
-  The Resource Authorization Server derives this object from the Issuer
-  Relationship that it used to select the Relationship View.
-
-`tenants`:
-: REQUIRED. A JSON array containing every Tenant Object
-  ({{tenant-object}}) eligible for the Issuer Relationship.
-
-`grant_catalogs`:
-: REQUIRED. A JSON array containing each Grant Catalog
-  ({{grant-catalog}}) that a Tenant Object references, each exactly
-  once.
-
-The document contains the complete Relationship View and is not paged.
-If the Issuer Relationship has no eligible tenants, both arrays are
-empty.
-
-The Grant Issuer validates the document as specified in {{validation}}:
-`issuer` is the issuer identifier that the binding conveys (check 1),
-and `issuer_relationship` identifies the Issuer Relationship with the
-view (check 2). Check 2 detects errors in routing, caching, or the
-association of responses with requests; it does not show that the
-Resource Authorization Server selected the content of the view
-correctly.
+`application/oauth-grant-catalog+json` ({{iana-media-types}}), whose
+content is the Relationship View ({{relationship-view}}). The Resource
+Authorization Server MUST construct the document from one consistent
+state of the Issuer Relationship. The Grant Issuer validates the
+document as specified in {{validation}}.
 
 The following is an example of a Relationship View document request and
 response, in which the `entries` of the Grant Catalog are abbreviated;
@@ -1792,7 +1764,7 @@ A Grant Profile Definition specifies the following:
 1. The Grant Profile identifier used in the `profile` member of an
    entry.
 
-2. How a grant of the profile conveys each input in {{permitted}}. A
+2. How a grant of the profile conveys each input in {{envelope}}. A
    Grant Profile to which the catalog applies conveys the audience and
    the protected resource.
    Where the profile cannot convey another input, the Grant Profile
@@ -1915,7 +1887,7 @@ Tenant Object in {{tenant-object}} and the entry in {{example-catalog}}:
 
 ## Representation of Inputs {#jwt-representation}
 
-An ID-JAG conveys the inputs of {{permitted}} as follows.
+An ID-JAG conveys the inputs of {{envelope}} as follows.
 
 | Input | JWT Representation |
 | --- | --- |
@@ -2018,11 +1990,9 @@ Retrieval Bindings:
 : A specification can define another Retrieval Binding. A Retrieval
   Binding authenticates the Issuer Relationship
   ({{relationship-identity}}) to the Resource Authorization Server, and
-  the Resource Authorization Server to the Grant Issuer; identifies,
-  with the Relationship View it delivers, the issuer identifier of the
-  Resource Authorization Server and the Issuer Relationship; carries the
-  objects of {{data-model}} unchanged; delivers a complete Relationship
-  View that reflects one consistent state of the Issuer Relationship;
+  the Resource Authorization Server to the Grant Issuer; delivers,
+  unchanged, a complete Relationship View ({{relationship-view}}) that
+  reflects one consistent state of the Issuer Relationship;
   and defines its discovery and error responses. A Grant Issuer obtains
   a Relationship View through one Retrieval Binding and does not combine
   objects retrieved through different ones.
@@ -2038,8 +2008,8 @@ and {{RFC9700}}, and of the Grant Profile of each entry, such as
 
 ## Catalog Is Not an Authorization Decision {#sec-not-authorization}
 
-A catalog does not authorize any request ({{introduction}}). Nor is it an
-exhaustive list of the grants that the Resource Authorization Server
+A catalog does not authorize any request ({{introduction}}). Nor is it
+an exhaustive list of the grants that the Resource Authorization Server
 accepts: the Resource Authorization Server can accept grants issued
 under other arrangements, or under an entry that it has since withdrawn,
 as its policy determines.
@@ -2302,7 +2272,7 @@ Interoperability considerations:
 : N/A
 
 Published specification:
-: {{oauth-binding}} of this specification
+: {{relationship-view}} and {{view-document}} of this specification
 
 Applications that use this media type:
 : Authorization servers that publish an OAuth Authorization Grant
@@ -2476,7 +2446,7 @@ A Resource Authorization Server accepts ID-JAGs for the protected
 resource `https://api.example/reports` that carry either the scope value
 `reports.read` or `reports.export`, but not both, and requires the
 `department` claim only with `reports.export`. A single entry cannot
-express either rule ({{combinations}}), so the Resource Authorization
+express either rule ({{envelope}}), so the Resource Authorization
 Server publishes two entries:
 
 ~~~ json
@@ -2527,7 +2497,7 @@ Server publishes two entries:
 An ID-JAG issued using `reports-read` does not contain the `department`
 claim, which that entry does not list ({{entry-claims}}), and no ID-JAG
 contains both scope values, because each grant is issued using exactly
-one entry ({{permitted}}).
+one entry ({{envelope}}).
 
 # Example Approval Lifecycle {#example-lifecycle}
 
@@ -2596,7 +2566,7 @@ Authority in public metadata, eligibility in the catalog:
 
 Envelope without alternatives:
 : An Authorization Envelope that is a product of independent selections
-  ({{combinations}}) can be evaluated without a rule language, and a
+  ({{envelope}}) can be evaluated without a rule language, and a
   Grant Issuer cannot misread a rule that does not exist.
 
 Revision rather than digest:
@@ -2613,7 +2583,7 @@ Optional claims listed explicitly:
   verified.
 
 One resource per grant:
-: Limiting a grant to one protected resource ({{permitted}}) avoids
+: Limiting a grant to one protected resource ({{envelope}}) avoids
   rules for how scope values and authorization details apply across
   resources, and keeps each approval about one resource. A client that
   needs several resources obtains several grants.
@@ -2681,7 +2651,9 @@ No client inventory:
   extension members that a Grant Issuer must implement to use it, so
   that restrictive extensions can be defined without a distinct Grant
   Profile identifier ({{extensibility}}). It is to be added before the
-  format stabilizes, or with the first restrictive extension.
+  format stabilizes, or with the first restrictive extension. A related
+  question is whether every extension is to preserve the invariants in
+  {{invariants}} for a Grant Issuer that does not implement it.
 
 * Implementation experience: evidence that a Resource Authorization
   Server can generate entries and revisions from the configuration it
