@@ -1864,9 +1864,10 @@ Arrangement authorizes (<a href="#relationship-authorization" class="auto intern
 </li>
         <li id="section-4-2.2">
           <p id="section-4-2.2.1">Whole views: a Relationship View is delivered complete, and the Grant
-Issuer installs all of it or none of it. A failed retrieval leaves
-earlier state in force, subject to a maximum age, and is never
-treated as a withdrawal (<a href="#installation" class="auto internal xref">Section 6.3</a>).<a href="#section-4-2.2.1" class="pilcrow">¶</a></p>
+Issuer installs all of it or none of it. A failed retrieval is never
+a withdrawal and leaves earlier state installed; <a href="#installation" class="auto internal xref">Section 6.3</a>
+recommends that the Grant Issuer stop issuance when that state
+exceeds its configured maximum age.<a href="#section-4-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-4-2.3">
           <p id="section-4-2.3.1">Closed world: a grant issued using an entry conveys a
@@ -1880,8 +1881,9 @@ one entry, for one audience and one protected resource. Inputs
 permitted by different entries are never combined (<a href="#envelope" class="auto internal xref">Section 5.6</a>).<a href="#section-4-2.4.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-4-2.5">
-          <p id="section-4-2.5.1">No logic in entries: the catalog has no defaults, inheritance,
-alternatives, exclusions, or conditions. A Resource Authorization
+          <p id="section-4-2.5.1">Independent selections: the catalog has no inheritance, no
+alternatives between sets of items, and no exclusions or conditions
+beyond those this specification states. A Resource Authorization
 Server that accepts only some combinations publishes separate entries
 (<a href="#tenant-object" class="auto internal xref">Section 5.3</a>, <a href="#envelope" class="auto internal xref">Section 5.6</a>).<a href="#section-4-2.5.1" class="pilcrow">¶</a></p>
 </li>
@@ -1905,9 +1907,9 @@ administrator approves the changed object (<a href="#revision" class="auto inter
 </li>
         <li id="section-4-2.9">
           <p id="section-4-2.9.1">Safe extension: a Grant Issuer ignores members it does not
-understand, and an extension member that narrows an entry also
-prevents Grant Issuers that do not implement it from using the entry
-(<a href="#extensibility" class="auto internal xref">Section 11</a>).<a href="#section-4-2.9.1" class="pilcrow">¶</a></p>
+understand. A specification that defines a restrictive member also
+defines a mechanism that prevents Grant Issuers that do not implement
+that member from using the entry (<a href="#extensibility" class="auto internal xref">Section 11</a>).<a href="#section-4-2.9.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
 </section>
