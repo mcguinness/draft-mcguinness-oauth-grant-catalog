@@ -119,23 +119,29 @@ Publishing this information would advertise issuer-specific trust
 relationships, which {{Section 9.7 of ID-JAG}} warns can disclose
 deployment-sensitive information; that section also prohibits using the
 `authorization_grant_profiles_supported` metadata member to disclose
-issuer allow lists. Administrators of a Grant Issuer therefore copy
-these values from the Resource Authorization Server's documentation
-into local configuration by hand.
+issuer allow lists. Deployments therefore communicate these
+values through documentation or implementation-specific configuration,
+and administrators of a Grant Issuer copy them into local configuration
+by hand.
 
-This specification makes that configuration available as authenticated
-metadata, called the catalog. The Resource Authorization Server
-publishes entries that describe the grants it accepts from one Grant
-Issuer. An administrator of the Grant Issuer approves a subset of each
-entry it uses, and the Grant Issuer issues grants within that subset. A
-revision on each entry lets the Grant Issuer detect changes that need
-review.
+This specification defines a common, authenticated representation of
+that configuration, called the catalog, which a Resource Authorization
+Server publishes and a Grant Issuer uses to configure issuance and to
+detect changes. The Resource Authorization Server publishes entries that
+describe the grants it accepts from one Grant Issuer. An administrator
+of the Grant Issuer approves a subset of each entry it uses, and the
+Grant Issuer issues grants within that subset. A revision on each entry
+lets the Grant Issuer detect changes that need review.
 
 The catalog supports configuration and grant construction. It does not
 establish trust between the servers or register clients, and it is
 input to policy authoring, not an authorization decision: the Resource
 Authorization Server applies its current policy to every grant it
-processes, whether or not the grant was issued using a catalog.
+processes, whether or not the grant was issued using a catalog. A grant
+constructed from an entry can still be rejected, for example because of
+the client, the subject, the contents of authorization details objects,
+or that policy. The catalog states how to construct a grant that avoids
+preventable failures, not whether a particular request will succeed.
 
 ## Motivating Example {#motivating-example}
 
@@ -158,9 +164,12 @@ with the application, a Relationship View that lists the enterprise's
 tenant and one entry stating these values ({{fig-model-example}}). The
 administrator approves the entry instead of typing its values. When the
 application later changes the entry, the identity provider detects the
-new revision and asks for review instead of continuing under the old
-approval. {{example-alternatives}} shows a richer case, with scope
-values that cannot be combined in one grant.
+new revision and stops issuing under the old approval until an
+administrator reviews the change; when the application removes the
+tenant, the identity provider stops issuing for it. Copied values would
+instead go on being used after they no longer match.
+{{example-alternatives}} shows a richer case, with scope values that
+cannot be combined in one grant.
 
 The catalog replaces copied grant configuration; the rest of the
 integration is unchanged: establishing the relationship (the Onboarding
