@@ -59,7 +59,7 @@ normative:
   RFC7523BIS: I-D.ietf-oauth-rfc7523bis
   OpenID.Enterprise:
     title: "OpenID Connect Enterprise Extensions 1.0 - draft 01"
-    target: https://openid.net/specs/openid-connect-enterprise-extensions-1_0.html
+    target: https://openid.net/specs/openid-connect-enterprise-extensions-1_0-01.html
     author:
       -
         ins: D. Hardt
