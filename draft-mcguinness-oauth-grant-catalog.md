@@ -2967,8 +2967,7 @@ RFC Editor: please remove this appendix before publication.
 
 -01
 
-* Editorial restructuring: shorter paragraphs, and bulleted lists for
-  requirements and conditions. No requirement changes.
+* Editorial restructuring; no requirement changes.
 
 -00
 
