@@ -2683,20 +2683,24 @@ No client inventory:
 # Open Issues {#open-issues}
 {:numbered="false"}
 
+RFC Editor: please remove this appendix before publication.
+
 * Reapproval: every revision change suspends issuance until an
-  administrator approves the changed entry ({{installation}}), even
-  when the change only adds an item that no approval includes
+  administrator approves the changed entry ({{installation}}), even when
+  the change only adds an item that no approval includes
   ({{example-lifecycle}}). The essential invariant is that no change
   expands an approval. Whether issuance can continue while the approved
   subset remains within the changed entry's Authorization Envelope, and
   what a Resource Authorization Server would publish to make that safe,
-  are open.
+  are open. Tracked as [issue
+  #12](https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/12).
 
 * Token path: a catalog access token is issued only in response to a
   catalog access assertion ({{token-response}}). Whether other token
   requests that establish the same Issuer Relationship with the same
   guarantees can also obtain one, so that existing authorization
-  infrastructure can be used, is open.
+  infrastructure can be used, is open. Tracked as [issue
+  #13](https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/13).
 
 * Client-specific views for the Grant Issuer: a Relationship View is
   relationship-wide ({{clients}}). Whether Resource Authorization
@@ -2714,6 +2718,8 @@ No client inventory:
   state, revision comparisons, and approvals would be scoped to that
   context, and those approvals would apply only to grants identifying
   that client. The view would only narrow what the relationship permits.
+  Tracked as [issue
+  #14](https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/14).
 
 * Client-facing discovery: an application client retrieving its own
   view, the protected discovery mechanism that {{Section 9.7 of ID-JAG}}
@@ -2729,25 +2735,29 @@ No client inventory:
   restriction for one client that is narrower than an entry, and the
   Grant Issuer can issue a grant using a different entry from the one
   the client used. Whether that contract is useful, and how it relates
-  to the Grant Issuer's approvals, are open.
+  to the Grant Issuer's approvals, are open. Tracked as [issue
+  #15](https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/15).
 
 * Freshness and termination: a Grant Issuer stops issuing under state it
   cannot refresh only after a maximum age that it configures, which is a
   recommendation ({{installation}}), so the Resource Authorization
   Server has no deadline it can rely on after it ends a relationship
   ({{sec-stale}}). Whether to require a maximum age, or to let the
-  Resource Authorization Server publish one, is open.
+  Resource Authorization Server publish one, is open. Tracked as [issue
+  #16](https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/16).
 
 * Supporting metadata: how a Grant Issuer uses authorization details
   schemas to enforce policy, including retaining a schema and requiring
   new approval when it changes; how it matches authority metadata
   entries to the items of an entry; and how it uses declared attenuation
-  when narrowing a request ({{optional-metadata}}).
+  when narrowing a request ({{optional-metadata}}). Tracked as [issue
+  #17](https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/17).
 
 * Registries: whether to establish registries for catalog members and
   grant binding methods, and with what registration policy, is open; a
   registry of members would record which members are part of the
-  normative semantics of an entry.
+  normative semantics of an entry. Tracked as [issue
+  #18](https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/18).
 
 * Must-understand extensions: a mechanism by which an entry marks the
   extension members that a Grant Issuer must implement to use it, so
@@ -2755,12 +2765,15 @@ No client inventory:
   Profile identifier ({{extensibility}}). It is to be added before the
   format stabilizes, or with the first restrictive extension. A related
   question is whether every extension is to preserve the principles in
-  {{overview}} for a Grant Issuer that does not implement it.
+  {{overview}} for a Grant Issuer that does not implement it. Tracked as
+  [issue
+  #19](https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/19).
 
 * Implementation experience: evidence that a Resource Authorization
   Server can generate entries and revisions from the configuration it
   enforces, and that independent Grant Issuers configure the same
-  integration from one catalog with less manual work.
+  integration from one catalog with less manual work. Tracked as [issue
+  #20](https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/20).
 
 # Acknowledgments
 {:numbered="false"}
@@ -2770,6 +2783,8 @@ Grant {{ID-JAG}} and on the JWT authorization grant {{RFC7523}}.
 
 # Document History
 {:numbered="false"}
+
+RFC Editor: please remove this appendix before publication.
 
 -00
 
