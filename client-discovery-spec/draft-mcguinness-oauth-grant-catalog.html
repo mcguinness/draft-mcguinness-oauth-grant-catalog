@@ -4153,7 +4153,13 @@ restricts the client view to entries for that protected resource.<a href="#secti
 <p id="section-7.2-4">The client authenticates using the method it uses at the token endpoint
 of the Resource Authorization Server (<span><a href="https://rfc-editor.org/rfc/rfc6749#section-2.3" class="relref">Section 2.3</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>), such
 as a JWT client assertion (<span><a href="https://rfc-editor.org/rfc/rfc7523#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>) or mutual TLS
-<span>[<a href="#RFC8705" class="cite xref">RFC8705</a>]</span>. When <code>target_tenant</code> is present, the Resource Authorization
+<span>[<a href="#RFC8705" class="cite xref">RFC8705</a>]</span>. A client that authenticates with a JWT client assertion
+<span class="bcp14">MUST</span> use the issuer identifier of the Resource Authorization Server as
+the sole value of the assertion's <code>aud</code> claim, and the Resource
+Authorization Server <span class="bcp14">MUST</span> reject a client assertion that does not
+contain its issuer identifier as the sole audience value, as
+<span>[<a href="#RFC7523BIS" class="cite xref">RFC7523BIS</a>]</span> specifies for client authentication. When
+<code>target_tenant</code> is present, the Resource Authorization
 Server authenticates the client against its registration in that
 tenant, as it does at its token endpoint. The Resource Authorization
 Server <span class="bcp14">MUST</span> authenticate the client, and <span class="bcp14">MUST NOT</span> disclose any part of a
@@ -4294,7 +4300,8 @@ Cache-Control: no-store
 <span class="bcp14">MUST NOT</span> use a client view that fails any of these checks:<a href="#section-7.5-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-7.5-2">
 <li id="section-7.5-2.1">
-            <p id="section-7.5-2.1.1">The <code>issuer</code> is identical to the issuer identifier in the validated
+            <p id="section-7.5-2.1.1">The <code>issuer</code> of the client view and the <code>issuer</code> of every Grant
+Catalog in it are identical to the issuer identifier in the validated
 Authorization Server Metadata from which the client obtained the
 client discovery endpoint (<span><a href="https://rfc-editor.org/rfc/rfc8414#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>).<a href="#section-7.5-2.1.1" class="pilcrow">¶</a></p>
 </li>
@@ -5500,6 +5507,10 @@ requests no registration for <code>authorization_grant_catalog.read</code>
 <dt id="RFC6839">[RFC6839]</dt>
         <dd>
 <span class="refAuthor">Hansen, T.</span> and <span class="refAuthor">A. Melnikov</span>, <span class="refTitle">"Additional Media Type Structured Syntax Suffixes"</span>, <span class="seriesInfo">RFC 6839</span>, <span class="seriesInfo">DOI 10.17487/RFC6839</span>, <time datetime="2013-01" class="refDate">January 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6839">https://www.rfc-editor.org/rfc/rfc6839</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7523BIS">[RFC7523BIS]</dt>
+        <dd>
+<span class="refAuthor">Jones, M. B.</span>, <span class="refAuthor">Campbell, B.</span>, <span class="refAuthor">Mortimore, C.</span>, and <span class="refAuthor">F. Skokan</span>, <span class="refTitle">"Updates to OAuth 2.0 JSON Web Token (JWT) Client Authentication and Assertion-Based Authorization Grants"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-oauth-rfc7523bis-11</span>, <time datetime="2026-04-28" class="refDate">28 April 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-rfc7523bis-11">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-rfc7523bis-11</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9700">[RFC9700]</dt>
       <dd>
