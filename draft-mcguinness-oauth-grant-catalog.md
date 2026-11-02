@@ -1523,9 +1523,7 @@ the following:
    access token in response to it. The Resource Authorization Server
    retains each accepted `jti` value, across every instance of its token
    endpoint, until the assertion's `exp` time plus the allowance for
-   clock skew has passed. It checks and records the `jti` value in one
-   atomic operation, so that two concurrent requests that carry the same
-   assertion cannot both obtain a catalog access token.
+   clock skew has passed.
 
 7. The pair of `iss` and, when present, `tenant` identifies an Issuer
    Relationship that an Onboarding Arrangement currently authorizes
@@ -1632,14 +1630,21 @@ The Resource Authorization Server processes the request as follows:
 4. It verifies that the `resource` parameter is identical to its
    `authorization_grant_catalog_endpoint` metadata value.
 
-5. It verifies that the `scope` parameter includes
+5. It verifies that the `scope` parameter is
    `authorization_grant_catalog.read`.
 
 6. If the Onboarding Arrangement requires client authentication, it
    authenticates the client and verifies that the Onboarding
    Arrangement associates the authenticated client with the `iss` claim
    of the catalog access assertion. It does not accept as a client
-   assertion any JWT whose `typ` is `oauth-grant-catalog-access+jwt`.
+      assertion any JWT whose `typ` is `oauth-grant-catalog-access+jwt`.
+
+7. It records the assertion's `jti` value as accepted and issues the
+   catalog access token. It checks that the value is still unused and
+   records it in one atomic operation, so that two concurrent requests
+   that carry the same assertion cannot both obtain a catalog access
+   token, and a request rejected by an earlier step does not consume
+   the value.
 
 When the Onboarding Arrangement requires client authentication, the
 Resource Authorization Server MUST NOT issue a catalog access token on
@@ -1820,8 +1825,8 @@ The token endpoint returns errors as specified in
 * `invalid_target` ({{Section 2 of RFC8707}}), if the `resource`
   parameter is missing or is not the catalog resource.
 
-* `invalid_scope`, if the `scope` parameter is missing or does not
-  include `authorization_grant_catalog.read`.
+* `invalid_scope`, if the `scope` parameter is missing or is not
+  `authorization_grant_catalog.read`.
 
 The catalog endpoint returns errors as specified in
 {{Section 3 of RFC6750}}, or {{Section 7.1 of RFC9449}} for a DPoP-bound
