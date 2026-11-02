@@ -3077,100 +3077,62 @@ Open Issues
 
    RFC Editor: please remove this appendix before publication.
 
-   *  Reapproval: when the revision of an entry changes to one for which
-      no approval already applies, issuance stops until an administrator
-      approves the changed entry (Section 5.5), even when the change
-      only adds an item that no approval includes (Appendix C).  The
-      essential invariant is that no change expands an approval.
-      Whether issuance can continue while the approved subset remains
-      within the changed entry's Authorization Envelope, and what a
-      Resource Authorization Server would publish to make that safe, are
-      open.  Tracked as issue #12 (https://github.com/mcguinness/draft-
-      mcguinness-oauth-grant-catalog/issues/12).
+   *  Reapproval: whether issuance can continue under an existing
+      approval when an entry changes to a revision whose Authorization
+      Envelope still contains the approved subset, and what a Resource
+      Authorization Server would publish to make that safe (Section 5.5,
+      Appendix C).  Tracked as issue #12 (https://github.com/mcguinness/
+      draft-mcguinness-oauth-grant-catalog/issues/12).
 
-   *  Token path: a catalog access token is issued only in response to a
-      catalog access assertion (Section 6.6).  Whether other token
-      requests that establish the same Issuer Relationship with the same
-      guarantees can also obtain one, so that existing authorization
-      infrastructure can be used, is open.  Tracked as issue #13
+   *  Token path: whether token requests other than one carrying a
+      catalog access assertion can obtain a catalog access token when
+      they establish the same Issuer Relationship with the same
+      guarantees (Section 6.6).  Tracked as issue #13
       (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
       catalog/issues/13).
 
-   *  Client-specific views for the Grant Issuer: a Relationship View is
-      relationship-wide (Section 5.4.1).  Whether Resource Authorization
-      Servers restrict grant configurations by client often enough to
-      need an optional view, retrieved by the Grant Issuer, for one
-      identified client is open.  Such a view would keep two parties
-      distinct: the application client it describes, identified by its
-      client identifier at the Resource Authorization Server, and the
-      Issuer Relationship that retrieves it.  The Issuer Relationship
-      would need authorization to inspect that client's configuration;
-      Section 9.7 of [ID-JAG] requires client authentication for client-
-      facing discovery.  The client context would include the target
-      tenant where needed to identify the client registration
-      (Section 6.2 of [ID-JAG]), and the response would identify that
-      context for comparison with the request.  Installed state,
-      revision comparisons, and approvals would be scoped to that
-      context, and those approvals would apply only to grants
-      identifying that client.  The view would only narrow what the
-      relationship permits.  Tracked as issue #14
+   *  Client-specific views for the Grant Issuer: whether the Grant
+      Issuer needs an optional view for one identified application
+      client, and how such a view would authorize inspection of that
+      client's configuration and scope approvals to that client
+      (Section 5.4.1).  Tracked as issue #14
       (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
       catalog/issues/14).
 
-   *  Client-facing discovery: an application client retrieving its own
-      view, the protected discovery mechanism that Section 9.7 of
-      [ID-JAG] permits, is a different consumer from the Grant Issuer.
-      A design considered for this draft has the client authenticate at
-      a discovery endpoint of the Resource Authorization Server, name
-      the Grant Issuer, issuer tenant, and resource, and receive the
-      Tenant Objects and entries of that Relationship View that it is
-      authorized to learn about, with the same response for unknown and
-      unauthorized contexts.  Each Grant Profile would map an entry to
-      request parameters, because members such as a required claim
-      constrain the grant rather than the request.  Such a view selects
-      whole entries, so it cannot express a restriction for one client
-      that is narrower than an entry, and the Grant Issuer can issue a
-      grant using a different entry from the one the client used.
-      Whether that contract is useful, and how it relates to the Grant
-      Issuer's approvals, are open.  Tracked as issue #15
+   *  Client-facing discovery: whether to define the protected discovery
+      mechanism that Section 9.7 of [ID-JAG] permits, through which an
+      application client retrieves the entries that apply to it.  A view
+      of whole entries cannot express a restriction for one client that
+      is narrower than an entry.  Tracked as issue #15
       (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
       catalog/issues/15).
 
-   *  Freshness and termination: a Grant Issuer stops issuing under
-      state it cannot refresh only after a maximum age that it
-      configures, which is a recommendation (Section 5.5), so the
-      Resource Authorization Server has no deadline it can rely on after
-      it ends a relationship (Section 9.7).  Whether to require a
-      maximum age, or to let the Resource Authorization Server publish
-      one, is open.  Tracked as issue #16
+   *  Freshness and termination: whether to require a maximum age, or
+      let the Resource Authorization Server publish one, so that it has
+      a deadline after which a Grant Issuer stops issuing under state it
+      cannot refresh (Section 5.5, Section 9.7).  Tracked as issue #16
       (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
       catalog/issues/16).
 
    *  Supporting metadata: how a Grant Issuer uses authorization details
-      schemas to enforce policy, including retaining a schema and
-      requiring new approval when it changes; how it matches authority
-      metadata entries to the items of an entry; and how it uses
-      declared attenuation when narrowing a request (Section 5.6).
-      Tracked as issue #17 (https://github.com/mcguinness/draft-
-      mcguinness-oauth-grant-catalog/issues/17).
+      schemas and authority metadata to enforce or narrow policy
+      (Section 5.6).  Tracked as issue #17
+      (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
+      catalog/issues/17).
 
    *  Registries: whether to establish registries for catalog members
-      and grant binding methods, and with what registration policy, is
-      open; a registry of members would record which members are part of
-      the normative semantics of an entry.  Tracked as issue #18
+      and grant binding methods, including which members are part of the
+      normative semantics of an entry.  Tracked as issue #18
       (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
       catalog/issues/18).
 
-   *  Must-understand extensions: a mechanism by which an entry marks
-      the extension members that a Grant Issuer must implement to use
-      it, so that restrictive extensions can be defined without a
-      distinct Grant Profile identifier (Section 8).  It is to be added
-      before the format stabilizes, or with the first restrictive
-      extension.  A related question is whether every extension is to
-      preserve the principles in Section 3 for a Grant Issuer that does
-      not implement it.  Tracked as issue #19
-      (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
-      catalog/issues/19).
+   *  Must-understand extensions: a mechanism, to be added before the
+      format stabilizes, by which an entry marks extension members that
+      a Grant Issuer must implement, so that restrictive extensions need
+      no distinct Grant Profile identifier (Section 8); and whether
+      every extension is to preserve the principles in Section 3.
+      Tracked as issue #19 (https://github.com/mcguinness/draft-
+      mcguinness-oauth-grant-catalog/issues/19).
 
    *  Implementation experience: evidence that a Resource Authorization
       Server can generate entries and revisions from the configuration
