@@ -101,15 +101,13 @@ Several OAuth specifications define authorization grants that one
 authorization server issues for a client to present to another
 authorization server, typically in another trust domain. The Identity
 Assertion JWT Authorization Grant (ID-JAG) {{ID-JAG}}, which an identity
-provider issues, is one example. In each case the issuing
-authorization server, called the Grant Issuer in this specification,
-decides which tenants of the receiving authorization server, protected
-resources, scope values, authorization details types {{RFC9396}},
-claims, subject identifiers, and grant bindings to place in a grant. The
+provider issues, is one example. The issuing authorization server,
+called the Grant Issuer in this specification, has to know which
+tenants, protected resources, scope values, authorization details types
+{{RFC9396}}, claims, subject identifiers, and grant bindings the
 receiving authorization server, called the Resource Authorization
-Server, rejects a grant that falls outside what it accepts, so the Grant
-Issuer's configuration has to match the Resource Authorization Server's
-configuration for that Grant Issuer.
+Server, accepts from it, because the Resource Authorization Server
+rejects a grant that falls outside what it accepts.
 
 Public metadata does not convey this information. OAuth 2.0
 Authorization Server Metadata {{RFC8414}} and OAuth 2.0 Protected
@@ -120,46 +118,47 @@ Publishing it would advertise issuer-specific trust relationships, which
 {{Section 9.7 of ID-JAG}} warns can disclose deployment-sensitive
 information; that section also prohibits using the
 `authorization_grant_profiles_supported` metadata member to disclose
-issuer allow lists. Administrators of a Grant Issuer therefore learn
-what a Resource Authorization Server accepts from its documentation and
-reproduce those values by hand.
+issuer allow lists. Administrators of a Grant Issuer therefore copy
+these values from the Resource Authorization Server's documentation
+into local configuration by hand.
 
-This specification defines how a Resource Authorization Server describes
-in advance, to an authenticated Grant Issuer, the grants it is prepared
-to accept from that Grant Issuer, and how the Grant Issuer uses that
-description, called the catalog in this specification. A catalog is
-input to policy authoring, not an authorization decision: the Resource
-Authorization Server applies its current policy to every grant it
-processes, whether or not the grant was issued using a catalog.
+This specification makes that configuration available as authenticated
+metadata, called the catalog. The Resource Authorization Server
+publishes entries that describe the grants it accepts from one Grant
+Issuer. An administrator of the Grant Issuer approves a subset of those
+entries, and the Grant Issuer issues grants within that subset. A
+revision on each entry lets the Grant Issuer detect changes that need
+review.
+
+The catalog supports configuration and grant construction. It does not
+establish trust between the servers, register clients, or grant access.
+A catalog is input to policy authoring, not an authorization decision:
+the Resource Authorization Server applies its current policy to every
+grant it processes, whether or not the grant was issued using a catalog.
 
 ## Motivating Example {#motivating-example}
 
 An enterprise uses its identity provider for single sign-on to a
-software-as-a-service application, in which it has two tenants, Acme
-and Acme Europe. It wants an AI assistant, a client registered at the
-application, to use ID-JAG to call the application's reports API on
-behalf of employees.
+software-as-a-service application. It wants an AI assistant, a client
+registered at the application, to use ID-JAG to read messages through
+the application's Messages API on behalf of employees.
 
 Today, an administrator of the identity provider reads the application's
 documentation and enters the following by hand: the application's issuer
-identifier and the identifiers of both tenants; the resource identifier
-of the reports API; the scope values `reports.read` and
-`reports.export`, and the rule that the application accepts either in a
-grant but not both; the requirement for a `department` claim with
-`reports.export`; and the subject identifier formats and grant bindings
-that the application accepts. A mistake surfaces only when the
-application rejects an ID-JAG, after the ID-JAG has disclosed its claims
-to the client.
+identifier and the identifier of the enterprise's tenant; the resource
+identifier of the Messages API; the scope value `messages.read`; and the
+requirement that each ID-JAG be bound to a DPoP key. A mistake surfaces
+only when the application rejects an ID-JAG, after the ID-JAG has
+disclosed its claims to the client.
 
 With a catalog, the identity provider retrieves, under its relationship
-with the application, a Relationship View that lists both tenants with
-their target tenant identifiers and contains entries that state these
-values ({{example-alternatives}} shows entries for the reports API). The
-administrator approves values from those entries instead of typing them,
-for example `reports.read` for both tenants and `reports.export` for
-Acme only. When the application later changes an entry, the identity
-provider detects the new revision and asks for review instead of
-continuing under the old approval.
+with the application, a Relationship View that lists the enterprise's
+tenant and one entry stating these values ({{fig-model-example}}). The
+administrator approves the entry instead of typing its values. When the
+application later changes the entry, the identity provider detects the
+new revision and asks for review instead of continuing under the old
+approval. {{example-alternatives}} shows a richer case, with scope
+values that cannot be combined in one grant.
 
 The rest of the integration is unchanged: establishing the relationship
 (the Onboarding Arrangement), registering the client at the application
@@ -170,18 +169,18 @@ authorization decisions.
 
 ## Relationship to Other Metadata {#other-metadata}
 
-Each source of information used to issue a grant describes something
-different:
+Each source of information used to issue a grant answers a different
+question:
 
-| Source | Describes |
+| Source | Question It Answers |
 | --- | --- |
-| Authorization Server Metadata {{RFC8414}} | Protocol capabilities of the Resource Authorization Server |
-| Protected Resource Metadata {{RFC9728}} | Capabilities of one protected resource |
-| Authorization details types metadata {{RAR-METADATA}} | The structure of an authorization details type |
-| Authority metadata {{AUTHORITY-METADATA}} | What a scope value or authorization details type authorizes |
-| Grant Catalog | What the Resource Authorization Server accepts from one Issuer Relationship |
-| Grant Issuer policy | The subset that an administrator of the Grant Issuer approves |
-| Runtime authorization | The decision for one request |
+| Authorization Server Metadata {{RFC8414}} | Where are the Resource Authorization Server's endpoints, and which protocol features does it support? |
+| Protected Resource Metadata {{RFC9728}} | Which authorization servers and capabilities does a protected resource advertise? |
+| Authorization details types metadata {{RAR-METADATA}} | What structure does an authorization details object of a given type have? |
+| Authority metadata {{AUTHORITY-METADATA}} | What does a scope value or authorization details type authorize? |
+| Grant Catalog | Which grants does the Resource Authorization Server accept from this Issuer Relationship? |
+| Grant Issuer approval | Which of those grants may the Grant Issuer issue? |
+| Runtime authorization | Is this request allowed now? |
 {: title="Sources of Information Used to Issue a Grant"}
 
 {{composition}} defines how a Grant Issuer combines these sources.
@@ -2477,7 +2476,10 @@ resource `https://api.example/reports` that carry either the scope value
 `reports.read` or `reports.export`, but not both, and requires the
 `department` claim only with `reports.export`. A single entry cannot
 express either rule ({{envelope}}), so the Resource Authorization
-Server publishes two entries:
+Server publishes two entries. An administrator of the Grant Issuer
+approves each entry separately for each Tenant Object; for example, it
+can approve the `reports.read` entry for two tenants and the
+`reports.export` entry for only one of them:
 
 ~~~ json
 {
