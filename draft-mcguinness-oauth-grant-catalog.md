@@ -382,7 +382,8 @@ normatively in the sections cited.
   ({{relationship-authorization}}), and the Grant Issuer installs all of
   a Relationship View or none of it ({{installation}}). A client view
   contains only objects of that Relationship View, disclosed to a client
-  that the Resource Authorization Server authorizes ({{client-view}}).
+  that the Resource Authorization Server authorizes ({{client-view}},
+  {{client-disclosure}}).
 
 * A grant is issued using one Tenant Object and one entry, and conveys
   an input that the entry governs only as the entry permits; every claim
@@ -1260,14 +1261,14 @@ declares only to select a value within the approved subset.
 
 # Retrieving a Catalog {#oauth-binding}
 
-Before disclosing catalog content, the Resource Authorization Server
-establishes, through a retrieval protocol ({{extensibility}}), which
-Issuer Relationship the disclosure serves, and verifies that the
-relationship is authorized and current. {{relationship-identity}} and
-{{relationship-authorization}} apply to every retrieval protocol. The
-remaining subsections define the OAuth retrieval protocol, which
-requires only public metadata and an Onboarding Arrangement, and is the
-same for every Grant Profile.
+Before disclosing catalog content to a Grant Issuer, the Resource
+Authorization Server establishes, through a retrieval protocol
+({{extensibility}}), which Issuer Relationship the disclosure serves,
+and verifies that the relationship is authorized and current.
+{{relationship-identity}} and {{relationship-authorization}} apply to
+every retrieval protocol. The remaining subsections define the OAuth
+retrieval protocol, which requires only public metadata and an
+Onboarding Arrangement, and is the same for every Grant Profile.
 
 ## Relationship Identity {#relationship-identity}
 
@@ -1303,7 +1304,8 @@ Relationship.
 The Resource Authorization Server MUST verify that the Issuer
 Relationship is authorized each time it discloses catalog content.
 Ending an Issuer Relationship therefore stops disclosure, even under a
-credential issued before the relationship ended.
+credential issued before the relationship ended. {{client-disclosure}}
+specifies disclosure to an application client.
 
 ## Authorization Server Metadata {#as-metadata}
 
@@ -1835,17 +1837,28 @@ MUST use the issuer identifier of the Resource Authorization Server as
 the sole value of the assertion's `aud` claim, and the Resource
 Authorization Server MUST reject a client assertion that does not
 contain its issuer identifier as the sole audience value, as
-{{RFC7523BIS}} specifies for client authentication. When
-`target_tenant` is present, the Resource Authorization
-Server authenticates the client against its registration in that
-tenant, as it does at its token endpoint. The Resource Authorization
-Server MUST authenticate the client, and MUST NOT disclose any part of a
-client view to a client that it has not authenticated. Because a client
-view depends on the identity of the client, a public client cannot use
-client discovery.
+{{RFC7523BIS}} specifies for client authentication. When the Resource
+Authorization Server uses client identifiers that are unique only within
+a tenant, it authenticates the client against its registration in the
+tenant that `target_tenant` identifies, as it does at its token
+endpoint, and responds to a `target_tenant` that identifies no tenant as
+it does to failed client authentication. Otherwise, `target_tenant` only
+restricts the client view, and a value that identifies no Tenant Object
+of the requested Issuer Relationship yields a client view with no Tenant
+Objects ({{client-disclosure}}). The Resource Authorization Server MUST
+authenticate the client, and MUST NOT disclose any part of a client view
+to a client that it has not authenticated. When the Resource
+Authorization Server rejects replayed client assertions at its token
+endpoint ({{Section 3 of RFC7523}}), it applies the same check, with the
+same record of `jti` values, at the client discovery endpoint. Because a
+client view depends on the identity of the client, a public client
+cannot use client discovery.
 
-The following is an example of a client discovery request (line breaks
-for display purposes only):
+The following is an example of a client discovery request, from a client
+whose identifier at the Resource Authorization Server is
+`assistant-456`. The Resource Authorization Server in this example uses
+globally unique client identifiers, so the request omits
+`target_tenant` (line breaks for display purposes only):
 
 ~~~ http-message
 POST /oauth2/grant-catalog/client HTTP/1.1
@@ -1855,7 +1868,7 @@ Content-Type: application/x-www-form-urlencoded
 issuer=https%3A%2F%2Fidp.example%2F
 &issuer_tenant=org-acme
 &resource=https%3A%2F%2Fapi.example%2Fmessages
-&client_id=ras-client-789
+&client_id=assistant-456
 &client_assertion_type=
  urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
 &client_assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6ImFwcC1rZXktMSJ9...
@@ -1876,20 +1889,20 @@ Relationship that an Onboarding Arrangement authorizes
 The Resource Authorization Server MUST respond with a client view that
 contains no Tenant Objects and no Grant Catalogs when the requested
 Grant Issuer is unknown to it, when no Onboarding Arrangement authorizes
-the requested Issuer Relationship, when the client is not authorized
-for it, and when `issuer_tenant` is absent for a multi-tenant Grant
-Issuer. The response is then the same as when the Resource
-Authorization Server accepts no grants for the client, so it does not
-reveal which Grant Issuers and tenants the Resource Authorization Server
-trusts.
+the requested Issuer Relationship, when the client is not authorized for
+it, and when `issuer_tenant` is absent for a multi-tenant Grant Issuer
+or present for one that is not multi-tenant. The response is then the
+same as when the Resource Authorization Server accepts no grants for the
+client, so it does not reveal which Grant Issuers and tenants the
+Resource Authorization Server trusts.
 
 ## Client View {#client-view}
 
 The Resource Authorization Server responds with HTTP status code 200
 (OK), the `Cache-Control: no-store` header field
-({{Section 5.2 of RFC9111}}), and a client view: a JSON object of media
-type `application/json` that has the members of a Relationship View
-({{relationship-view}}) and the following member:
+({{Section 5.2.2.5 of RFC9111}}), and a client view: a JSON object of
+media type `application/json` that has the members of a Relationship
+View ({{relationship-view}}) and the following member:
 
 `client_id`:
 : REQUIRED. The client identifier of the authenticated client at the
@@ -1897,26 +1910,31 @@ type `application/json` that has the members of a Relationship View
 
 In a client view:
 
-* `issuer_relationship` identifies the requested Issuer Relationship.
-  Its `tenant` member is present only when the request contained
-  `issuer_tenant`.
+* `issuer_relationship` has the `issuer` parameter as its `issuer`
+  member and, if and only if the request contained `issuer_tenant`, that
+  value as its `tenant` member.
 
 * `tenants` contains only the Tenant Objects for which the client is
   authorized ({{client-disclosure}}) and, when the request contained
   `target_tenant`, only the Tenant Object with that `target_tenant`.
 
+* `grant_catalogs` contains each Grant Catalog that a Tenant Object in
+  the client view references, each exactly once.
+
 * Each Grant Catalog contains only the entries that apply to the client
   and, when the request contained `resource`, only the entries with
-  that `resource`.
+  that `resource`. An empty `entries` array means that no entry applies
+  to the client.
 
 A client view only selects from the Relationship View for the requested
 Issuer Relationship. Each Tenant Object and each entry in a client view
-MUST be identical to one in that Relationship View at the time of the
-response, and each Grant Catalog MUST have the `issuer` and `id` of the
-Grant Catalog with that `id` in that Relationship View. A Resource
-Authorization Server that accepts a narrower configuration from one
-client than an entry permits publishes a separate entry for it in the
-Relationship View ({{envelope}}).
+MUST have the same members and values as one in that Relationship View,
+taken from one consistent state of the Issuer Relationship, and each
+Grant Catalog MUST have the `issuer` and `id` of the Grant Catalog with
+that `id` in that Relationship View. A client view therefore cannot
+express a restriction narrower than an entry. A Resource Authorization
+Server that accepts less from one client than an entry permits enforces
+that restriction when it processes the client's grants.
 
 A client view is not a Relationship View document: a Grant Issuer does
 not install one, and a client does not approve or reconcile its entries.
@@ -1935,7 +1953,7 @@ Cache-Control: no-store
     "issuer": "https://idp.example/",
     "tenant": "org-acme"
   },
-  "client_id": "ras-client-789",
+  "client_id": "assistant-456",
   "tenants": [
     {
       "id": "tenant-123",
@@ -1978,9 +1996,15 @@ The client constructs its request to the Grant Issuer from one entry, as
 the Grant Profile Definition of the entry specifies ({{id-jag-client}}
 for ID-JAG). The `claims` and `sub_id` members of the entry and the
 `target_tenant` of the Tenant Object describe the grant that the Grant
-Issuer produces, not the client's request. When the Grant Issuer refuses
-the request or the Resource Authorization Server rejects the grant, the
-client can retrieve a client view again.
+Issuer produces, not the client's request. The Grant Issuer selects the
+entry that it uses for a grant ({{issuing}}), which need not be the
+entry from which the client constructed its request. A client view
+without a usable entry does not show that the Resource Authorization
+Server would reject a grant; it can also mean that the client is not
+authorized to learn about that Issuer Relationship
+({{client-disclosure}}). When the Grant Issuer refuses the request or
+the Resource Authorization Server rejects the grant, the client can
+retrieve a client view again.
 
 ## Error Responses {#client-discovery-errors}
 
@@ -2146,7 +2170,8 @@ performs the following checks in step 4 of {{composition}}, interpreting
 
 A client that uses a client view ({{client-discovery}}) constructs its
 Token Exchange request to the IdP Authorization Server
-({{Section 4.3 of ID-JAG}}) from one entry as follows:
+({{Section 4.3 of ID-JAG}}) from one entry, in addition to the
+parameters that section requires, as follows:
 
 * `audience` is the `issuer` of the Grant Catalog that contains the
   entry.
@@ -2165,16 +2190,22 @@ Token Exchange request to the IdP Authorization Server
   `authorization_details` when the entry has no `authorization_details`
   member.
 
-* When the entry requires grant binding, the client uses one of the
-  listed methods: for `dpop`, it includes a DPoP proof in the request
-  ({{Section 9.11.1.1 of ID-JAG}}); for `mtls`, it presents its
-  certificate on a mutually authenticated TLS connection
-  ({{Section 9.11.2.1 of ID-JAG}}).
+* The client includes a DPoP proof in the request only when the entry's
+  `grant_binding` member lists `dpop`, because the IdP Authorization
+  Server binds the ID-JAG to the key of a valid proof
+  ({{Section 9.11.1.1 of ID-JAG}}). When the entry requires grant
+  binding, the client uses one of the listed methods: for `dpop`, a DPoP
+  proof; for `mtls`, its certificate on a mutually authenticated TLS
+  connection, to which the IdP Authorization Server binds the ID-JAG
+  when its policy permits ({{Section 9.11.2.1 of ID-JAG}}).
 
-The client obtains `issuer_tenant` for its client discovery request
-from the `tenant` claim of the subject's identity assertion, which is
-the issuer tenant of an ID-JAG issued for that subject
-({{Section 6.4 of ID-JAG}}). The client does not request claims or a
+When the subject token is an ID Token that contains a `tenant` claim
+{{OpenID.Enterprise}} whose value is not `personal` or `organization`
+({{relationship-identity}}), the client uses that value as
+`issuer_tenant` in its client discovery request; it is the issuer
+tenant of an ID-JAG issued for that subject ({{Section 6.4 of ID-JAG}}).
+Otherwise, the client obtains the issuer tenant identifier from its own
+configuration. The client does not request claims or a
 subject identifier; the IdP Authorization Server determines them. The
 client does not select the Resource Authorization Server tenant: the IdP
 Authorization Server determines the `aud_tenant` claim from the
@@ -2470,12 +2501,18 @@ Client discovery discloses acceptance information to an application
 client. A client could use it to learn which Grant Issuers and tenants
 the Resource Authorization Server trusts, which
 {{Section 9.7 of ID-JAG}} treats as deployment-sensitive. Client
-authentication, disclosure authorization, and the uniform empty
-response limit disclosure to clients that the Resource Authorization
-Server authorizes, and make an unknown context indistinguishable from an
+authentication, disclosure authorization, and the uniform empty response
+limit disclosure to clients that the Resource Authorization Server
+authorizes, and make an unknown context indistinguishable from an
 unauthorized one ({{client-disclosure}}). An authorized client still
 learns the Tenant Objects and entries that apply to it, including their
-`display` and `description` members.
+`display` and `description` members. A client that the Resource
+Authorization Server authorizes for many Issuer Relationships, such as
+an application that many organizations use, learns the Tenant Objects of
+each; the disclosure policy of the Resource Authorization Server
+determines how far that extends. Differences in processing time can also
+reveal whether a Grant Issuer is known, so a Resource Authorization
+Server processes the cases listed in {{client-disclosure}} alike.
 
 A client view is not an authorization decision ({{client-discovery}}).
 A client that treats it as one gains nothing: the Grant Issuer issues
@@ -2495,7 +2532,8 @@ of the responses it accepts, and treats a response that exceeds its
 limits as an incomplete retrieval ({{installation}}). A Resource
 Authorization Server can limit the rate at which it accepts catalog
 access assertions and requests to the catalog endpoint from an Issuer
-Relationship.
+Relationship, and requests to the client discovery endpoint from a
+client.
 
 # Privacy Considerations {#privacy}
 
@@ -2925,7 +2963,10 @@ Signed relationship assertion:
   relationships permitted to an authenticated client would instead leave
   each Resource Authorization Server to define its own selector and
   mapping, and a client credential authorized for many issuer tenants
-  would carry the same broad authority ({{sec-relationship}}).
+  would carry the same broad authority ({{sec-relationship}}). Client
+  discovery ({{client-discovery}}) does authorize a selector against an
+  authenticated client, because its response describes only what
+  applies to that client ({{sec-client-discovery}}).
 
 No client inventory:
 : Client identifiers can be shared across trust domains ({{CIMD}}) or
