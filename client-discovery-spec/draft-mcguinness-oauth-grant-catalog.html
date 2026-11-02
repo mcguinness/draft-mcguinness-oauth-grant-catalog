@@ -1863,7 +1863,8 @@ solely from the authenticated Issuer Relationship
 (<a href="#relationship-authorization" class="auto internal xref">Section 6.2</a>), and the Grant Issuer installs all of
 a Relationship View or none of it (<a href="#installation" class="auto internal xref">Section 5.5</a>). A client view
 contains only objects of that Relationship View, disclosed to a client
-that the Resource Authorization Server authorizes (<a href="#client-view" class="auto internal xref">Section 7.4</a>).<a href="#section-3-6.1.1" class="pilcrow">¶</a></p>
+that the Resource Authorization Server authorizes (<a href="#client-view" class="auto internal xref">Section 7.4</a>,
+<a href="#client-disclosure" class="auto internal xref">Section 7.3</a>).<a href="#section-3-6.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-6.2">
           <p id="section-3-6.2.1">A grant is issued using one Tenant Object and one entry, and conveys
@@ -3458,14 +3459,14 @@ declares only to select a value within the approved subset.<a href="#section-5.6
       <h2 id="name-retrieving-a-catalog">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-retrieving-a-catalog" class="section-name selfRef">Retrieving a Catalog</a>
       </h2>
-<p id="section-6-1">Before disclosing catalog content, the Resource Authorization Server
-establishes, through a retrieval protocol (<a href="#extensibility" class="auto internal xref">Section 9</a>), which
-Issuer Relationship the disclosure serves, and verifies that the
-relationship is authorized and current. <a href="#relationship-identity" class="auto internal xref">Section 6.1</a> and
-<a href="#relationship-authorization" class="auto internal xref">Section 6.2</a> apply to every retrieval protocol. The
-remaining subsections define the OAuth retrieval protocol, which
-requires only public metadata and an Onboarding Arrangement, and is the
-same for every Grant Profile.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">Before disclosing catalog content to a Grant Issuer, the Resource
+Authorization Server establishes, through a retrieval protocol
+(<a href="#extensibility" class="auto internal xref">Section 9</a>), which Issuer Relationship the disclosure serves,
+and verifies that the relationship is authorized and current.
+<a href="#relationship-identity" class="auto internal xref">Section 6.1</a> and <a href="#relationship-authorization" class="auto internal xref">Section 6.2</a> apply to
+every retrieval protocol. The remaining subsections define the OAuth
+retrieval protocol, which requires only public metadata and an
+Onboarding Arrangement, and is the same for every Grant Profile.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <div id="relationship-identity">
 <section id="section-6.1">
         <h3 id="name-relationship-identity">
@@ -3504,7 +3505,8 @@ Relationship.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 <p id="section-6.2-3">The Resource Authorization Server <span class="bcp14">MUST</span> verify that the Issuer
 Relationship is authorized each time it discloses catalog content.
 Ending an Issuer Relationship therefore stops disclosure, even under a
-credential issued before the relationship ended.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
+credential issued before the relationship ended. <a href="#client-disclosure" class="auto internal xref">Section 7.3</a>
+specifies disclosure to an application client.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="as-metadata">
@@ -4158,16 +4160,27 @@ as a JWT client assertion (<span><a href="https://rfc-editor.org/rfc/rfc7523#sec
 the sole value of the assertion's <code>aud</code> claim, and the Resource
 Authorization Server <span class="bcp14">MUST</span> reject a client assertion that does not
 contain its issuer identifier as the sole audience value, as
-<span>[<a href="#RFC7523BIS" class="cite xref">RFC7523BIS</a>]</span> specifies for client authentication. When
-<code>target_tenant</code> is present, the Resource Authorization
-Server authenticates the client against its registration in that
-tenant, as it does at its token endpoint. The Resource Authorization
-Server <span class="bcp14">MUST</span> authenticate the client, and <span class="bcp14">MUST NOT</span> disclose any part of a
-client view to a client that it has not authenticated. Because a client
-view depends on the identity of the client, a public client cannot use
-client discovery.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
-<p id="section-7.2-5">The following is an example of a client discovery request (line breaks
-for display purposes only):<a href="#section-7.2-5" class="pilcrow">¶</a></p>
+<span>[<a href="#RFC7523BIS" class="cite xref">RFC7523BIS</a>]</span> specifies for client authentication. When the Resource
+Authorization Server uses client identifiers that are unique only within
+a tenant, it authenticates the client against its registration in the
+tenant that <code>target_tenant</code> identifies, as it does at its token
+endpoint, and responds to a <code>target_tenant</code> that identifies no tenant as
+it does to failed client authentication. Otherwise, <code>target_tenant</code> only
+restricts the client view, and a value that identifies no Tenant Object
+of the requested Issuer Relationship yields a client view with no Tenant
+Objects (<a href="#client-disclosure" class="auto internal xref">Section 7.3</a>). The Resource Authorization Server <span class="bcp14">MUST</span>
+authenticate the client, and <span class="bcp14">MUST NOT</span> disclose any part of a client view
+to a client that it has not authenticated. When the Resource
+Authorization Server rejects replayed client assertions at its token
+endpoint (<span><a href="https://rfc-editor.org/rfc/rfc7523#section-3" class="relref">Section 3</a> of [<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>), it applies the same check, with the
+same record of <code>jti</code> values, at the client discovery endpoint. Because a
+client view depends on the identity of the client, a public client
+cannot use client discovery.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
+<p id="section-7.2-5">The following is an example of a client discovery request, from a client
+whose identifier at the Resource Authorization Server is
+<code>assistant-456</code>. The Resource Authorization Server in this example uses
+globally unique client identifiers, so the request omits
+<code>target_tenant</code> (line breaks for display purposes only):<a href="#section-7.2-5" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-7.2-6">
 <pre>
 POST /oauth2/grant-catalog/client HTTP/1.1
@@ -4177,7 +4190,7 @@ Content-Type: application/x-www-form-urlencoded
 issuer=https%3A%2F%2Fidp.example%2F
 &amp;issuer_tenant=org-acme
 &amp;resource=https%3A%2F%2Fapi.example%2Fmessages
-&amp;client_id=ras-client-789
+&amp;client_id=assistant-456
 &amp;client_assertion_type=
  urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
 &amp;client_assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6ImFwcC1rZXktMSJ9...
@@ -4202,12 +4215,12 @@ Relationship that an Onboarding Arrangement authorizes
 <p id="section-7.3-2">The Resource Authorization Server <span class="bcp14">MUST</span> respond with a client view that
 contains no Tenant Objects and no Grant Catalogs when the requested
 Grant Issuer is unknown to it, when no Onboarding Arrangement authorizes
-the requested Issuer Relationship, when the client is not authorized
-for it, and when <code>issuer_tenant</code> is absent for a multi-tenant Grant
-Issuer. The response is then the same as when the Resource
-Authorization Server accepts no grants for the client, so it does not
-reveal which Grant Issuers and tenants the Resource Authorization Server
-trusts.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+the requested Issuer Relationship, when the client is not authorized for
+it, and when <code>issuer_tenant</code> is absent for a multi-tenant Grant Issuer
+or present for one that is not multi-tenant. The response is then the
+same as when the Resource Authorization Server accepts no grants for the
+client, so it does not reveal which Grant Issuers and tenants the
+Resource Authorization Server trusts.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="client-view">
@@ -4217,9 +4230,9 @@ trusts.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-7.4-1">The Resource Authorization Server responds with HTTP status code 200
 (OK), the <code>Cache-Control: no-store</code> header field
-(<span><a href="https://rfc-editor.org/rfc/rfc9111#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC9111" class="cite xref">RFC9111</a>]</span>), and a client view: a JSON object of media
-type <code>application/json</code> that has the members of a Relationship View
-(<a href="#relationship-view" class="auto internal xref">Section 4.2</a>) and the following member:<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+(<span><a href="https://rfc-editor.org/rfc/rfc9111#section-5.2.2.5" class="relref">Section 5.2.2.5</a> of [<a href="#RFC9111" class="cite xref">RFC9111</a>]</span>), and a client view: a JSON object of
+media type <code>application/json</code> that has the members of a Relationship
+View (<a href="#relationship-view" class="auto internal xref">Section 4.2</a>) and the following member:<a href="#section-7.4-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-7.4-2">
           <dt id="section-7.4-2.1">
 <code>client_id</code>:</dt>
@@ -4232,9 +4245,9 @@ Resource Authorization Server.<a href="#section-7.4-2.2.1" class="pilcrow">¶</a
 <p id="section-7.4-3">In a client view:<a href="#section-7.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.4-4.1">
-            <p id="section-7.4-4.1.1"><code>issuer_relationship</code> identifies the requested Issuer Relationship.
-Its <code>tenant</code> member is present only when the request contained
-<code>issuer_tenant</code>.<a href="#section-7.4-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.4-4.1.1"><code>issuer_relationship</code> has the <code>issuer</code> parameter as its <code>issuer</code>
+member and, if and only if the request contained <code>issuer_tenant</code>, that
+value as its <code>tenant</code> member.<a href="#section-7.4-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.4-4.2">
             <p id="section-7.4-4.2.1"><code>tenants</code> contains only the Tenant Objects for which the client is
@@ -4242,19 +4255,25 @@ authorized (<a href="#client-disclosure" class="auto internal xref">Section 7.3<
 <code>target_tenant</code>, only the Tenant Object with that <code>target_tenant</code>.<a href="#section-7.4-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.4-4.3">
-            <p id="section-7.4-4.3.1">Each Grant Catalog contains only the entries that apply to the client
+            <p id="section-7.4-4.3.1"><code>grant_catalogs</code> contains each Grant Catalog that a Tenant Object in
+the client view references, each exactly once.<a href="#section-7.4-4.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.4-4.4">
+            <p id="section-7.4-4.4.1">Each Grant Catalog contains only the entries that apply to the client
 and, when the request contained <code>resource</code>, only the entries with
-that <code>resource</code>.<a href="#section-7.4-4.3.1" class="pilcrow">¶</a></p>
+that <code>resource</code>. An empty <code>entries</code> array means that no entry applies
+to the client.<a href="#section-7.4-4.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-7.4-5">A client view only selects from the Relationship View for the requested
 Issuer Relationship. Each Tenant Object and each entry in a client view
-<span class="bcp14">MUST</span> be identical to one in that Relationship View at the time of the
-response, and each Grant Catalog <span class="bcp14">MUST</span> have the <code>issuer</code> and <code>id</code> of the
-Grant Catalog with that <code>id</code> in that Relationship View. A Resource
-Authorization Server that accepts a narrower configuration from one
-client than an entry permits publishes a separate entry for it in the
-Relationship View (<a href="#envelope" class="auto internal xref">Section 4.6</a>).<a href="#section-7.4-5" class="pilcrow">¶</a></p>
+<span class="bcp14">MUST</span> have the same members and values as one in that Relationship View,
+taken from one consistent state of the Issuer Relationship, and each
+Grant Catalog <span class="bcp14">MUST</span> have the <code>issuer</code> and <code>id</code> of the Grant Catalog with
+that <code>id</code> in that Relationship View. A client view therefore cannot
+express a restriction narrower than an entry. A Resource Authorization
+Server that accepts less from one client than an entry permits enforces
+that restriction when it processes the client's grants.<a href="#section-7.4-5" class="pilcrow">¶</a></p>
 <p id="section-7.4-6">A client view is not a Relationship View document: a Grant Issuer does
 not install one, and a client does not approve or reconcile its entries.<a href="#section-7.4-6" class="pilcrow">¶</a></p>
 <p id="section-7.4-7">The following is an example of a client view, in which the entry is
@@ -4271,7 +4290,7 @@ Cache-Control: no-store
     "issuer": "https://idp.example/",
     "tenant": "org-acme"
   },
-  "client_id": "ras-client-789",
+  "client_id": "assistant-456",
   "tenants": [
     {
       "id": "tenant-123",
@@ -4322,9 +4341,15 @@ an entry that does not satisfy its definition (<a href="#entry" class="auto inte
 the Grant Profile Definition of the entry specifies (<a href="#id-jag-client" class="auto internal xref">Section 8.4</a>
 for ID-JAG). The <code>claims</code> and <code>sub_id</code> members of the entry and the
 <code>target_tenant</code> of the Tenant Object describe the grant that the Grant
-Issuer produces, not the client's request. When the Grant Issuer refuses
-the request or the Resource Authorization Server rejects the grant, the
-client can retrieve a client view again.<a href="#section-7.5-4" class="pilcrow">¶</a></p>
+Issuer produces, not the client's request. The Grant Issuer selects the
+entry that it uses for a grant (<a href="#issuing" class="auto internal xref">Section 5.4</a>), which need not be the
+entry from which the client constructed its request. A client view
+without a usable entry does not show that the Resource Authorization
+Server would reject a grant; it can also mean that the client is not
+authorized to learn about that Issuer Relationship
+(<a href="#client-disclosure" class="auto internal xref">Section 7.3</a>). When the Grant Issuer refuses the request or
+the Resource Authorization Server rejects the grant, the client can
+retrieve a client view again.<a href="#section-7.5-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="client-discovery-errors">
@@ -4590,7 +4615,8 @@ performs the following checks in step 4 of <a href="#composition" class="auto in
         </h3>
 <p id="section-8.4-1">A client that uses a client view (<a href="#client-discovery" class="auto internal xref">Section 7</a>) constructs its
 Token Exchange request to the IdP Authorization Server
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-4.3" class="relref">Section 4.3</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>) from one entry as follows:<a href="#section-8.4-1" class="pilcrow">¶</a></p>
+(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-4.3" class="relref">Section 4.3</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>) from one entry, in addition to the
+parameters that section requires, as follows:<a href="#section-8.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.4-2.1">
             <p id="section-8.4-2.1.1"><code>audience</code> is the <code>issuer</code> of the Grant Catalog that contains the
@@ -4614,17 +4640,23 @@ object when the presence requirement is <code>required</code>. The client omits
 member.<a href="#section-8.4-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-2.5">
-            <p id="section-8.4-2.5.1">When the entry requires grant binding, the client uses one of the
-listed methods: for <code>dpop</code>, it includes a DPoP proof in the request
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.11.1.1" class="relref">Section 9.11.1.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>); for <code>mtls</code>, it presents its
-certificate on a mutually authenticated TLS connection
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.11.2.1" class="relref">Section 9.11.2.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>).<a href="#section-8.4-2.5.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-2.5.1">The client includes a DPoP proof in the request only when the entry's
+<code>grant_binding</code> member lists <code>dpop</code>, because the IdP Authorization
+Server binds the ID-JAG to the key of a valid proof
+(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.11.1.1" class="relref">Section 9.11.1.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>). When the entry requires grant
+binding, the client uses one of the listed methods: for <code>dpop</code>, a DPoP
+proof; for <code>mtls</code>, its certificate on a mutually authenticated TLS
+connection, to which the IdP Authorization Server binds the ID-JAG
+when its policy permits (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.11.2.1" class="relref">Section 9.11.2.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>).<a href="#section-8.4-2.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-8.4-3">The client obtains <code>issuer_tenant</code> for its client discovery request
-from the <code>tenant</code> claim of the subject's identity assertion, which is
-the issuer tenant of an ID-JAG issued for that subject
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-6.4" class="relref">Section 6.4</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>). The client does not request claims or a
+<p id="section-8.4-3">When the subject token is an ID Token that contains a <code>tenant</code> claim
+<span>[<a href="#OpenID.Enterprise" class="cite xref">OpenID.Enterprise</a>]</span> whose value is not <code>personal</code> or <code>organization</code>
+(<a href="#relationship-identity" class="auto internal xref">Section 6.1</a>), the client uses that value as
+<code>issuer_tenant</code> in its client discovery request; it is the issuer
+tenant of an ID-JAG issued for that subject (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-6.4" class="relref">Section 6.4</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>).
+Otherwise, the client obtains the issuer tenant identifier from its own
+configuration. The client does not request claims or a
 subject identifier; the IdP Authorization Server determines them. The
 client does not select the Resource Authorization Server tenant: the IdP
 Authorization Server determines the <code>aud_tenant</code> claim from the
@@ -5000,12 +5032,18 @@ not cover later changes to them.<a href="#section-10.11-2" class="pilcrow">¶</a
 client. A client could use it to learn which Grant Issuers and tenants
 the Resource Authorization Server trusts, which
 <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.7" class="relref">Section 9.7</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span> treats as deployment-sensitive. Client
-authentication, disclosure authorization, and the uniform empty
-response limit disclosure to clients that the Resource Authorization
-Server authorizes, and make an unknown context indistinguishable from an
+authentication, disclosure authorization, and the uniform empty response
+limit disclosure to clients that the Resource Authorization Server
+authorizes, and make an unknown context indistinguishable from an
 unauthorized one (<a href="#client-disclosure" class="auto internal xref">Section 7.3</a>). An authorized client still
 learns the Tenant Objects and entries that apply to it, including their
-<code>display</code> and <code>description</code> members.<a href="#section-10.12-1" class="pilcrow">¶</a></p>
+<code>display</code> and <code>description</code> members. A client that the Resource
+Authorization Server authorizes for many Issuer Relationships, such as
+an application that many organizations use, learns the Tenant Objects of
+each; the disclosure policy of the Resource Authorization Server
+determines how far that extends. Differences in processing time can also
+reveal whether a Grant Issuer is known, so a Resource Authorization
+Server processes the cases listed in <a href="#client-disclosure" class="auto internal xref">Section 7.3</a> alike.<a href="#section-10.12-1" class="pilcrow">¶</a></p>
 <p id="section-10.12-2">A client view is not an authorization decision (<a href="#client-discovery" class="auto internal xref">Section 7</a>).
 A client that treats it as one gains nothing: the Grant Issuer issues
 only grants within its approved subsets (<a href="#issuing" class="auto internal xref">Section 5.4</a>), and the Resource
@@ -5027,7 +5065,8 @@ of the responses it accepts, and treats a response that exceeds its
 limits as an incomplete retrieval (<a href="#installation" class="auto internal xref">Section 5.5</a>). A Resource
 Authorization Server can limit the rate at which it accepts catalog
 access assertions and requests to the catalog endpoint from an Issuer
-Relationship.<a href="#section-10.13-1" class="pilcrow">¶</a></p>
+Relationship, and requests to the client discovery endpoint from a
+client.<a href="#section-10.13-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -5792,7 +5831,10 @@ catalog describes. Authorizing a tenant selector against the
 relationships permitted to an authenticated client would instead leave
 each Resource Authorization Server to define its own selector and
 mapping, and a client credential authorized for many issuer tenants
-would carry the same broad authority (<a href="#sec-relationship" class="auto internal xref">Section 10.3</a>).<a href="#appendix-D-1.18.1" class="pilcrow">¶</a></p>
+would carry the same broad authority (<a href="#sec-relationship" class="auto internal xref">Section 10.3</a>). Client
+discovery (<a href="#client-discovery" class="auto internal xref">Section 7</a>) does authorize a selector against an
+authenticated client, because its response describes only what
+applies to that client (<a href="#sec-client-discovery" class="auto internal xref">Section 10.12</a>).<a href="#appendix-D-1.18.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="appendix-D-1.19">No client inventory:</dt>
