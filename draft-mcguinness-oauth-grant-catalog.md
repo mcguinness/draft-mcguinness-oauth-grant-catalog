@@ -74,6 +74,7 @@ informative:
   RAR-METADATA: I-D.ietf-oauth-rar-metadata-remediation
   AUTHORITY-METADATA: I-D.zehavi-oauth-authority-metadata
   CIMD: I-D.ietf-oauth-client-id-metadata-document
+  RFC7523BIS: I-D.ietf-oauth-rfc7523bis
 
 --- abstract
 
@@ -1829,7 +1830,13 @@ The requested Issuer Relationship is the one that `issuer` and
 The client authenticates using the method it uses at the token endpoint
 of the Resource Authorization Server ({{Section 2.3 of RFC6749}}), such
 as a JWT client assertion ({{Section 2.2 of RFC7523}}) or mutual TLS
-{{RFC8705}}. When `target_tenant` is present, the Resource Authorization
+{{RFC8705}}. A client that authenticates with a JWT client assertion
+MUST use the issuer identifier of the Resource Authorization Server as
+the sole value of the assertion's `aud` claim, and the Resource
+Authorization Server MUST reject a client assertion that does not
+contain its issuer identifier as the sole audience value, as
+{{RFC7523BIS}} specifies for client authentication. When
+`target_tenant` is present, the Resource Authorization
 Server authenticates the client against its registration in that
 tenant, as it does at its token endpoint. The Resource Authorization
 Server MUST authenticate the client, and MUST NOT disclose any part of a
@@ -1951,7 +1958,8 @@ Cache-Control: no-store
 Before using a client view, the client MUST verify the following, and
 MUST NOT use a client view that fails any of these checks:
 
-1. The `issuer` is identical to the issuer identifier in the validated
+1. The `issuer` of the client view and the `issuer` of every Grant
+   Catalog in it are identical to the issuer identifier in the validated
    Authorization Server Metadata from which the client obtained the
    client discovery endpoint ({{Section 3.3 of RFC8414}}).
 
