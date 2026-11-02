@@ -1176,7 +1176,7 @@ completes or fails.
 | A retrieval is incomplete | The Grant Issuer MUST NOT install any state from that retrieval, and does not treat it as a withdrawal. State installed from an earlier retrieval remains in force, subject to the maximum age below. |
 | A Tenant Object or entry appears | The appearance of a new Tenant Object or entry MUST NOT, by itself, cause the Grant Issuer to issue grants using it. |
 | An entry changes | A change to an entry MUST NOT, by itself, expand an existing approval. |
-| Only members outside the normative semantics of an entry change ({{revision}}) | Approvals made for the entry continue to apply. |
+| Only members outside the normative semantics of an entry change ({{revision}}), and every approved `id`, `target_tenant`, `grant_catalog`, and `revision` is unchanged | Approvals that depend on the changed objects continue to apply. |
 | A Tenant Object, Grant Catalog, or entry is withdrawn | The Grant Issuer MUST stop issuing grants that depend on it in its previous form, and suspends issuance under the approvals that depend on it. |
 | The `target_tenant` or `grant_catalog` of a Tenant Object, or the `revision` of an entry, changes | The Grant Issuer MUST NOT issue grants under an approval made for the previous value. Issuance resumes only after an administrator approves the changed object. |
 | A later complete retrieval contains a withdrawn object again with the approved identifiers, `target_tenant`, `grant_catalog`, and `revision` | The approval applies again without new approval. |
@@ -1778,7 +1778,7 @@ Grant binding:
   to the DPoP key or a client certificate
   ({{Section 9.11.1.1 of ID-JAG}}); either method
   satisfies that requirement if the approved subset permits it
-  ({{entry-grant-binding}}).
+  ({{issuing}}).
 
 Resource selection:
 : ID-JAG does not require the `resource` parameter of the Token Exchange
@@ -1985,7 +1985,7 @@ A Grant Profile Definition specifies the following:
 5. For each grant binding method the profile supports, how the binding
    is represented in a grant, when the profile requires the Grant Issuer
    to bind a grant, and how the Grant Issuer selects among methods
-   ({{entry-grant-binding}}).
+   ({{issuing}}).
 
 6. The composition checks against public metadata that apply to the
    profile, such as checks of the grant types used to redeem its grants
@@ -2132,7 +2132,7 @@ incorrect comparison would expand authorization.
 If a Grant Issuer derived a grant's target tenant from a Tenant Object
 identifier, the number of tenants, or the form of an issuer identifier,
 a grant intended for one tenant could be accepted for another
-({{tenant-object}}). Similarly, an entry obtained for one Issuer
+({{issuing}}). Similarly, an entry obtained for one Issuer
 Relationship is used only for grants whose issuer and issuer tenant
 identify that relationship ({{issuing}}), so that a catalog disclosed to
 one issuer tenant does not determine the grants issued for subjects of
@@ -2211,7 +2211,7 @@ the Resource Authorization Server requires or accepts ({{entry-claims}},
 issuance which claims the Grant Issuer releases and to which Resource
 Authorization Server tenants. A Grant
 Issuer that cannot release a required claim for a subject does not
-issue a grant using that entry ({{entry-claims}}) rather than release
+issue a grant using that entry ({{issuing}}) rather than release
 the claim without approval.
 
 The Grant Issuer stores catalog content as configuration, protects that
