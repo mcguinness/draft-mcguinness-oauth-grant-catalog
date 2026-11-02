@@ -4366,20 +4366,16 @@ it.<a href="#section-8-2.8.1" class="pilcrow">¶</a></p>
         <dd class="break"></dd>
 <dt id="section-8-2.9">Retrieval protocols:</dt>
         <dd style="margin-left: 1.5em" id="section-8-2.10">
-          <p id="section-8-2.10.1">A specification can define another retrieval protocol. A retrieval
-protocol authenticates the Issuer Relationship
-(<a href="#relationship-identity" class="auto internal xref">Section 6.1</a>) to the Resource Authorization Server, and
-the Resource Authorization Server to the Grant Issuer; delivers,
-unchanged, a complete Relationship View (<a href="#relationship-view" class="auto internal xref">Section 4.2</a>) that
-reflects one consistent state of the Issuer Relationship; and defines
-its discovery and error responses. A Grant Issuer obtains a
-Relationship View through one retrieval protocol and does not combine
-objects retrieved through different ones.<a href="#section-8-2.10.1" class="pilcrow">¶</a></p>
+          <p id="section-8-2.10.1">A specification can define another retrieval protocol. It defines
+discovery and error responses, authenticates the Issuer Relationship
+(<a href="#relationship-identity" class="auto internal xref">Section 6.1</a>) to the Resource Authorization Server and
+that server to the Grant Issuer, and delivers, unchanged, a complete
+Relationship View (<a href="#relationship-view" class="auto internal xref">Section 4.2</a>) that reflects one
+consistent state of the Issuer Relationship. A Grant Issuer does not
+combine objects obtained through different retrieval protocols.<a href="#section-8-2.10.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-8-3">Additional capabilities, such as change notification, can be defined as
-extensions that use the same objects.<a href="#section-8-3" class="pilcrow">¶</a></p>
 <div id="profile-definitions">
 <section id="section-8.1">
         <h3 id="name-grant-profile-definitions">
