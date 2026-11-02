@@ -2037,7 +2037,7 @@ and {{RFC9700}}, and of the Grant Profile of each entry, such as
 
 ## Catalog Is Not an Authorization Decision {#sec-not-authorization}
 
-A catalog does not authorize any request ({{permitted}}). Nor is it an
+A catalog does not authorize any request ({{introduction}}). Nor is it an
 exhaustive list of the grants that the Resource Authorization Server
 accepts: the Resource Authorization Server can accept grants issued
 under other arrangements, or under an entry that it has since withdrawn,
