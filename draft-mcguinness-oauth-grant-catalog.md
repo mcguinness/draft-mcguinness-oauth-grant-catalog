@@ -1018,12 +1018,14 @@ public metadata as follows:
    verify that its issuer identifier is identical to the Grant Catalog
    `issuer`.
 
-2. Request the Protected Resource Metadata for the entry's `resource`
-   ({{Section 3 of RFC9728}}). If the response has HTTP status code 200
-   (OK), validate the metadata as specified in
-   {{Section 3.3 of RFC9728}}. Any other response, or no response,
-   leaves this step without effect, because publishing Protected
-   Resource Metadata is optional.
+2. If the entry's `resource` is a URL that uses the `https` scheme
+   ({{Section 1.2 of RFC9728}}), request its Protected Resource Metadata
+   using the `oauth-protected-resource` well-known URI suffix
+   ({{Section 3 of RFC9728}}); otherwise, this step has no effect. If
+   the response has HTTP status code 200 (OK), validate the metadata as
+   specified in {{Section 3.3 of RFC9728}}. Any other response, or no
+   response, leaves this step without effect, because publishing
+   Protected Resource Metadata is optional.
 
 3. For each member in the following table that the Authorization Server
    Metadata or the validated Protected Resource Metadata contains,
@@ -2685,14 +2687,15 @@ No client inventory:
 
 RFC Editor: please remove this appendix before publication.
 
-* Reapproval: every revision change suspends issuance until an
-  administrator approves the changed entry ({{installation}}), even when
-  the change only adds an item that no approval includes
-  ({{example-lifecycle}}). The essential invariant is that no change
-  expands an approval. Whether issuance can continue while the approved
-  subset remains within the changed entry's Authorization Envelope, and
-  what a Resource Authorization Server would publish to make that safe,
-  are open. Tracked as [issue
+* Reapproval: when the revision of an entry changes to one for which no
+  approval already applies, issuance stops until an administrator
+  approves the changed entry ({{installation}}), even when the change
+  only adds an item that no approval includes ({{example-lifecycle}}).
+  The essential invariant is that no change expands an approval. Whether
+  issuance can continue while the approved subset remains within the
+  changed entry's Authorization Envelope, and what a Resource
+  Authorization Server would publish to make that safe, are open.
+  Tracked as [issue
   #12](https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/12).
 
 * Token path: a catalog access token is issued only in response to a
