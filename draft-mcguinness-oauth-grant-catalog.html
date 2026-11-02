@@ -3299,17 +3299,16 @@ Definition specifies.<a href="#section-5.4-10" class="pilcrow">¶</a></p>
 <a href="#section-5.4.1" class="section-number selfRef">5.4.1. </a><a href="#name-clients" class="section-name selfRef">Clients</a>
           </h4>
 <p id="section-5.4.1-1">The catalog does not enumerate or register application clients, or
-establish client identifier mappings. Views specific to one application
-client are an open issue (<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>).
-A Relationship View is relationship-wide and does not establish
-eligibility for a particular application client: a Resource
-Authorization Server can permit a grant configuration for one
-application client and reject an otherwise equivalent configuration for
-another. The Grant Profile Definition of a Grant Profile whose grants
-identify the client by its client identifier at the Resource
-Authorization Server specifies how the Grant Issuer obtains that
-identifier, as <a href="#id-jag" class="auto internal xref">Section 7</a> does for ID-JAG. Such an identifier can be
-shared across trust domains <span>[<a href="#CIMD" class="cite xref">CIMD</a>]</span>.<a href="#section-5.4.1-1" class="pilcrow">¶</a></p>
+establish client identifier mappings. This document does not define
+views specific to one application client. A Relationship View is
+relationship-wide and does not establish eligibility for a particular
+application client: a Resource Authorization Server can permit a grant
+configuration for one application client and reject an otherwise
+equivalent configuration for another. The Grant Profile Definition of a
+Grant Profile whose grants identify the client by its client identifier
+at the Resource Authorization Server specifies how the Grant Issuer
+obtains that identifier, as <a href="#id-jag" class="auto internal xref">Section 7</a> does for ID-JAG. Such an
+identifier can be shared across trust domains <span>[<a href="#CIMD" class="cite xref">CIMD</a>]</span>.<a href="#section-5.4.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3421,8 +3420,8 @@ details type authorizes. Such metadata is advisory. It cannot broaden an
 entry or an approval, it does not cause an entry to conflict with public
 metadata, and its absence, or a failure to retrieve it, does not affect
 the validity of an entry. How a Grant Issuer uses schemas or authority
-descriptions to enforce or narrow policy is an open issue
-(<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>).<a href="#section-5.6-1" class="pilcrow">¶</a></p>
+descriptions to enforce or narrow policy is not specified in this
+document.<a href="#section-5.6-1" class="pilcrow">¶</a></p>
 <p id="section-5.6-2">The Grant Issuer <span class="bcp14">MUST NOT</span> send a credential obtained through a retrieval
 protocol when dereferencing a <code>schema_uri</code>, <code>documentation_uri</code>, or
 <code>definition_uri</code>.<a href="#section-5.6-2" class="pilcrow">¶</a></p>
@@ -3880,8 +3879,7 @@ token; the Grant Issuer obtains a new catalog access token with a new
 catalog access assertion. The Resource Authorization Server
 <span class="bcp14">MUST NOT</span> issue an access token for the catalog resource, or with the
 <code>authorization_grant_catalog.read</code> scope, in response to any token
-request other than one specified in <a href="#token-request" class="auto internal xref">Section 6.5</a>; whether to allow
-others is an open issue (<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>).<a href="#section-6.6-1" class="pilcrow">¶</a></p>
+request other than one specified in <a href="#token-request" class="auto internal xref">Section 6.5</a>.<a href="#section-6.6-1" class="pilcrow">¶</a></p>
 <p id="section-6.6-2">The following is an example of a catalog access token response:<a href="#section-6.6-2" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-6.6-3">
 <pre>
@@ -5445,8 +5443,8 @@ same broad authority (<a href="#sec-relationship" class="auto internal xref">Sec
 established by registration, and a client inventory (<a href="#clients" class="auto internal xref">Section 5.4.1</a>)
 would require additional disclosure policy and synchronization of
 client registration state. A view for one identified client that the
-Issuer Relationship is authorized to inspect discloses no inventory
-(<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>).<a href="#appendix-D-1.20.1" class="pilcrow">¶</a></p>
+Issuer Relationship is authorized to inspect would disclose no
+inventory, and could be defined later.<a href="#appendix-D-1.20.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
@@ -5468,61 +5466,28 @@ would publish to make that safe (<a href="#installation" class="auto internal xr
 #12</a>.<a href="#appendix-E-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-E-2.2">
-          <p id="appendix-E-2.2.1">Token path: whether token requests other than one carrying a catalog
-access assertion can obtain a catalog access token when they establish
-the same Issuer Relationship with the same guarantees
-(<a href="#token-response" class="auto internal xref">Section 6.6</a>). Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/13">issue
-#13</a>.<a href="#appendix-E-2.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-E-2.3">
-          <p id="appendix-E-2.3.1">Client-specific views for the Grant Issuer: whether the Grant Issuer
-needs an optional view for one identified application client, and how
-such a view would authorize inspection of that client's configuration
-and scope approvals to that client (<a href="#clients" class="auto internal xref">Section 5.4.1</a>). Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/14">issue
-#14</a>.<a href="#appendix-E-2.3.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-E-2.4">
-          <p id="appendix-E-2.4.1">Client-facing discovery: whether to define the protected discovery
+          <p id="appendix-E-2.2.1">Client-facing discovery: whether to define the protected discovery
 mechanism that <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.7" class="relref">Section 9.7</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span> permits, through which an
 application client retrieves the entries that apply to it. A view of
 whole entries cannot express a restriction for one client that is
 narrower than an entry. Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/15">issue
-#15</a>.<a href="#appendix-E-2.4.1" class="pilcrow">¶</a></p>
+#15</a>.<a href="#appendix-E-2.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-2.5">
-          <p id="appendix-E-2.5.1">Freshness and termination: whether to require a maximum age, or let
+        <li class="normal" id="appendix-E-2.3">
+          <p id="appendix-E-2.3.1">Freshness and termination: whether to require a maximum age, or let
 the Resource Authorization Server publish one, so that it has a
 deadline after which a Grant Issuer stops issuing under state it
 cannot refresh (<a href="#installation" class="auto internal xref">Section 5.5</a>, <a href="#sec-stale" class="auto internal xref">Section 9.7</a>). Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/16">issue
-#16</a>.<a href="#appendix-E-2.5.1" class="pilcrow">¶</a></p>
+#16</a>.<a href="#appendix-E-2.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-2.6">
-          <p id="appendix-E-2.6.1">Supporting metadata: how a Grant Issuer uses authorization details
-schemas and authority metadata to enforce or narrow policy
-(<a href="#optional-metadata" class="auto internal xref">Section 5.6</a>). Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/17">issue
-#17</a>.<a href="#appendix-E-2.6.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-E-2.7">
-          <p id="appendix-E-2.7.1">Registries: whether to establish registries for catalog members and
-grant binding methods, including which members are part of the
-normative semantics of an entry. Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/18">issue
-#18</a>.<a href="#appendix-E-2.7.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-E-2.8">
-          <p id="appendix-E-2.8.1">Must-understand extensions: a mechanism, to be added before the format
+        <li class="normal" id="appendix-E-2.4">
+          <p id="appendix-E-2.4.1">Must-understand extensions: a mechanism, to be added before the format
 stabilizes, by which an entry marks extension members that a Grant
 Issuer must implement, so that restrictive extensions need no distinct
 Grant Profile identifier (<a href="#extensibility" class="auto internal xref">Section 8</a>); and whether every
 extension is to preserve the principles in <a href="#overview" class="auto internal xref">Section 3</a>. Tracked as
 <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/19">issue
-#19</a>.<a href="#appendix-E-2.8.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-E-2.9">
-          <p id="appendix-E-2.9.1">Implementation experience: evidence that a Resource Authorization
-Server can generate entries and revisions from the configuration it
-enforces, and that independent Grant Issuers configure the same
-integration from one catalog with less manual work. Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/20">issue
-#20</a>.<a href="#appendix-E-2.9.1" class="pilcrow">¶</a></p>
+#19</a>.<a href="#appendix-E-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>

@@ -1401,17 +1401,16 @@ Table of Contents
 5.4.1.  Clients
 
    The catalog does not enumerate or register application clients, or
-   establish client identifier mappings.  Views specific to one
-   application client are an open issue (Appendix "Open Issues").  A
-   Relationship View is relationship-wide and does not establish
-   eligibility for a particular application client: a Resource
-   Authorization Server can permit a grant configuration for one
-   application client and reject an otherwise equivalent configuration
-   for another.  The Grant Profile Definition of a Grant Profile whose
-   grants identify the client by its client identifier at the Resource
-   Authorization Server specifies how the Grant Issuer obtains that
-   identifier, as Section 7 does for ID-JAG.  Such an identifier can be
-   shared across trust domains [CIMD].
+   establish client identifier mappings.  This document does not define
+   views specific to one application client.  A Relationship View is
+   relationship-wide and does not establish eligibility for a particular
+   application client: a Resource Authorization Server can permit a
+   grant configuration for one application client and reject an
+   otherwise equivalent configuration for another.  The Grant Profile
+   Definition of a Grant Profile whose grants identify the client by its
+   client identifier at the Resource Authorization Server specifies how
+   the Grant Issuer obtains that identifier, as Section 7 does for ID-
+   JAG.  Such an identifier can be shared across trust domains [CIMD].
 
 5.5.  Installation and Reconciliation
 
@@ -1521,7 +1520,7 @@ Table of Contents
    cause an entry to conflict with public metadata, and its absence, or
    a failure to retrieve it, does not affect the validity of an entry.
    How a Grant Issuer uses schemas or authority descriptions to enforce
-   or narrow policy is an open issue (Appendix "Open Issues").
+   or narrow policy is not specified in this document.
 
    The Grant Issuer MUST NOT send a credential obtained through a
    retrieval protocol when dereferencing a schema_uri,
@@ -1870,8 +1869,7 @@ Table of Contents
    Authorization Server MUST NOT issue an access token for the catalog
    resource, or with the authorization_grant_catalog.read scope, in
    response to any token request other than one specified in
-   Section 6.5; whether to allow others is an open issue (Appendix "Open
-   Issues").
+   Section 6.5.
 
    The following is an example of a catalog access token response:
 
@@ -3070,8 +3068,8 @@ Appendix D.  Design Rationale
       inventory (Section 5.4.1) would require additional disclosure
       policy and synchronization of client registration state.  A view
       for one identified client that the Issuer Relationship is
-      authorized to inspect discloses no inventory (Appendix "Open
-      Issues").
+      authorized to inspect would disclose no inventory, and could be
+      defined later.
 
 Open Issues
 
@@ -3083,21 +3081,6 @@ Open Issues
       Authorization Server would publish to make that safe (Section 5.5,
       Appendix C).  Tracked as issue #12 (https://github.com/mcguinness/
       draft-mcguinness-oauth-grant-catalog/issues/12).
-
-   *  Token path: whether token requests other than one carrying a
-      catalog access assertion can obtain a catalog access token when
-      they establish the same Issuer Relationship with the same
-      guarantees (Section 6.6).  Tracked as issue #13
-      (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
-      catalog/issues/13).
-
-   *  Client-specific views for the Grant Issuer: whether the Grant
-      Issuer needs an optional view for one identified application
-      client, and how such a view would authorize inspection of that
-      client's configuration and scope approvals to that client
-      (Section 5.4.1).  Tracked as issue #14
-      (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
-      catalog/issues/14).
 
    *  Client-facing discovery: whether to define the protected discovery
       mechanism that Section 9.7 of [ID-JAG] permits, through which an
@@ -3114,18 +3097,6 @@ Open Issues
       (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
       catalog/issues/16).
 
-   *  Supporting metadata: how a Grant Issuer uses authorization details
-      schemas and authority metadata to enforce or narrow policy
-      (Section 5.6).  Tracked as issue #17
-      (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
-      catalog/issues/17).
-
-   *  Registries: whether to establish registries for catalog members
-      and grant binding methods, including which members are part of the
-      normative semantics of an entry.  Tracked as issue #18
-      (https://github.com/mcguinness/draft-mcguinness-oauth-grant-
-      catalog/issues/18).
-
    *  Must-understand extensions: a mechanism, to be added before the
       format stabilizes, by which an entry marks extension members that
       a Grant Issuer must implement, so that restrictive extensions need
@@ -3133,13 +3104,6 @@ Open Issues
       every extension is to preserve the principles in Section 3.
       Tracked as issue #19 (https://github.com/mcguinness/draft-
       mcguinness-oauth-grant-catalog/issues/19).
-
-   *  Implementation experience: evidence that a Resource Authorization
-      Server can generate entries and revisions from the configuration
-      it enforces, and that independent Grant Issuers configure the same
-      integration from one catalog with less manual work.  Tracked as
-      issue #20 (https://github.com/mcguinness/draft-mcguinness-oauth-
-      grant-catalog/issues/20).
 
 Acknowledgments
 
