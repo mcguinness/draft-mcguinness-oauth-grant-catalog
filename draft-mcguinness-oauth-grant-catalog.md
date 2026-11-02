@@ -449,7 +449,6 @@ Grant Issuer still approves a subset before the entry is used
   ],
   "grant_catalogs": [
     {
-      "authorization_server": "https://ras.example/",
       "id": "read-only",
       "entries": [
         {
@@ -486,7 +485,6 @@ Relationship View
  |    |-- target_tenant
  |    `-- grant_catalog        (the id of a Grant Catalog)
  `-- grant_catalogs[]: Grant Catalog
-      |-- authorization_server
       |-- id
       `-- entries[]: entry
            |-- id, revision
@@ -625,7 +623,6 @@ assembled from parts.
 
 | Member | Status | Description |
 | --- | --- | --- |
-| `authorization_server` | REQUIRED | String; the issuer identifier {{RFC8414}} of the Resource Authorization Server, which is the audience of grants issued using the Grant Catalog ({{envelope}}) |
 | `id` | REQUIRED | Identifier ({{model-conventions}}) |
 | `display`, `description` | OPTIONAL | See {{model-conventions}} |
 | `entries` | REQUIRED | Array of entries ({{entry}}) |
@@ -839,9 +836,8 @@ A grant is within the Authorization Envelope of an entry, for a Tenant
 Object that references the Grant Catalog containing the entry, when all
 of the following are true:
 
-1. The grant conveys the `authorization_server` of the Grant Catalog as
-   its only
-   audience.
+1. The grant conveys the `authorization_server` of the Relationship View
+   that contains the Grant Catalog as its only audience.
 
 2. If the Tenant Object contains `target_tenant`, the grant conveys that
    value as its target tenant. Otherwise, the grant conveys no target
@@ -943,10 +939,9 @@ protocol handles caching of representations.
 Before installing any part of a Relationship View, the Grant Issuer MUST
 verify the following:
 
-1. The `authorization_server` of the Relationship View and of every
-   Grant Catalog, and
-   any other issuer identifier that the retrieval protocol conveys, are
-   identical to the issuer identifier of the Resource Authorization
+1. The `authorization_server` of the Relationship View, and any other
+   issuer identifier that the retrieval protocol conveys, are identical
+   to the issuer identifier of the Resource Authorization
    Server with which the Grant Issuer associates the Issuer
    Relationship, using simple string comparison
    ({{Section 6.2.1 of RFC3986}}).
@@ -1017,8 +1012,8 @@ public metadata as follows:
 
 1. Retrieve and validate the Resource Authorization Server's
    Authorization Server Metadata ({{Section 3.3 of RFC8414}}), and
-   verify that its issuer identifier is identical to the Grant Catalog
-   `authorization_server`.
+   verify that its issuer identifier is identical to the
+   `authorization_server` of the Relationship View.
 
 2. If the entry's `resource` is a URL that uses the `https` scheme
    ({{Section 1.2 of RFC9728}}), request its Protected Resource Metadata
@@ -1725,12 +1720,10 @@ ETag: "view-a24f91"
   ],
   "grant_catalogs": [
     {
-      "authorization_server": "https://ras.example/",
       "id": "read-only",
       "entries": [ ... ]
     },
     {
-      "authorization_server": "https://ras.example/",
       "id": "standard",
       "display": "Standard API access",
       "entries": [ ... ]
@@ -2445,16 +2438,16 @@ requests no registration for `authorization_grant_catalog.read`
 
 # Example Grant Catalog {#example-catalog}
 
-The following Grant Catalog has one entry for the ID-JAG profile
-({{id-jag}}). Every ID-JAG issued using the entry is bound to a DPoP key
-and contains the scope value `messages.read`, the `email` claim, and a
-`sub_id` claim in the `saml-nameid` format; it can also contain the
-scope value `messages.write` and authorization details objects of type
-`message_channel`.
+The following Grant Catalog, from a Relationship View whose
+`authorization_server` is `https://ras.example/`, has one entry for the
+ID-JAG profile ({{id-jag}}). Every ID-JAG issued using the entry is
+bound to a DPoP key and contains the scope value `messages.read`, the
+`email` claim, and a `sub_id` claim in the `saml-nameid` format; it can
+also contain the scope value `messages.write` and authorization details
+objects of type `message_channel`.
 
 ~~~ json
 {
-  "authorization_server": "https://ras.example/",
   "id": "standard",
   "display": "Standard API access",
   "entries": [
@@ -2518,11 +2511,10 @@ resource `https://api.example/reports` that carry either the scope value
 `reports.read` or `reports.export`, but not both, and requires the
 `department` claim only with `reports.export`. A single entry cannot
 express either rule ({{envelope}}), so the Resource Authorization
-Server publishes two entries:
+Server `https://ras.example/` publishes two entries:
 
 ~~~ json
 {
-  "authorization_server": "https://ras.example/",
   "id": "reports",
   "entries": [
     {
