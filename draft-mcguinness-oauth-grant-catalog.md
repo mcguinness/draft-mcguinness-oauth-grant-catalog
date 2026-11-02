@@ -107,8 +107,8 @@ called the Grant Issuer in this specification, has to know which
 tenants, protected resources, scope values, authorization details types
 {{RFC9396}}, claims, subject identifiers, and grant bindings the
 receiving authorization server, called the Resource Authorization
-Server, accepts from it, because the Resource Authorization Server
-rejects a grant that falls outside what it accepts.
+Server, accepts from it. The Resource Authorization Server rejects any
+other grant.
 
 Public metadata does not convey this information. OAuth 2.0
 Authorization Server Metadata {{RFC8414}} and OAuth 2.0 Protected
@@ -132,10 +132,10 @@ revision on each entry lets the Grant Issuer detect changes that need
 review.
 
 The catalog supports configuration and grant construction. It does not
-establish trust between the servers, register clients, or grant access.
-A catalog is input to policy authoring, not an authorization decision:
-the Resource Authorization Server applies its current policy to every
-grant it processes, whether or not the grant was issued using a catalog.
+establish trust between the servers or register clients, and it is
+input to policy authoring, not an authorization decision: the Resource
+Authorization Server applies its current policy to every grant it
+processes, whether or not the grant was issued using a catalog.
 
 ## Motivating Example {#motivating-example}
 
@@ -194,15 +194,13 @@ Grant Issuer combines these sources.
 
 ## Applicability {#applicability}
 
-This specification applies to authorization grants that a Grant Issuer
-issues for a client to present to a Resource Authorization Server,
-where the Grant Issuer determines the content of each grant and the
-Resource Authorization Server validates it at redemption. JWT
-authorization grants {{RFC7523}} and their profiles have this form. It
-does not apply to grants that an authorization server issues for
-redemption at itself, such as authorization codes, device codes, and
-refresh tokens, because no other party determines what such a grant
-contains.
+This specification applies to authorization grants whose content a
+Grant Issuer determines and that a Resource Authorization Server
+validates at redemption. JWT authorization grants {{RFC7523}} and their
+profiles have this form. This specification does not apply to grants
+that an authorization server issues for redemption at itself, such as
+authorization codes, device codes, and refresh tokens, because no other
+party determines what such a grant contains.
 
 This specification defines a catalog data model independent of grant
 encoding ({{data-model}}), with an Authorization Envelope ({{envelope}})
@@ -270,7 +268,7 @@ tenant identifier:
 
 Grant Issuer:
 : An authorization server that consumes a Relationship View and issues
-  grants that a client presents to a Resource Authorization Server.
+  grants.
 
 Resource Authorization Server:
 : An authorization server that accepts grants issued by a Grant Issuer
@@ -417,11 +415,11 @@ normatively in the sections cited.
 # Catalog Data Model {#data-model}
 
 The objects in this section describe what a Resource Authorization
-Server accepts in grants from one Issuer Relationship. A Relationship
-View is the response for one Issuer Relationship. Its Tenant Objects
-identify the target tenants eligible for that relationship, and its
-Grant Catalogs contain the entries. Several Tenant Objects can reference
-one Grant Catalog, so tenants that accept the same grants share entries,
+Server accepts in grants from one Issuer Relationship. The Tenant
+Objects of a Relationship View identify the Resource Authorization
+Server tenants eligible for that relationship, and its Grant Catalogs
+contain the entries. Several Tenant Objects can reference one Grant
+Catalog, so tenants that are offered the same grants share entries,
 while each approval remains specific to one Tenant Object
 ({{narrowing}}).
 
@@ -553,13 +551,13 @@ issuer identifier of the Grant Issuer. The `tenant` member of
 `grant_issuer` contains
 the issuer tenant identifier, and is present if and only if the Issuer
 Relationship has one ({{relationship-identity}}). The Resource
-Authorization Server derives this object from the Issuer Relationship
-that it used to select the Relationship View. Comparing it with the
-Issuer Relationship for which the Grant Issuer retrieved the view
-({{validation}}) detects errors in routing, caching, or the association
-of responses with requests. The comparison does not show that the
-Resource Authorization Server selected the content of the view
-correctly.
+Authorization Server derives `grant_issuer` from the Issuer Relationship
+that it used to select the Relationship View. Comparing `grant_issuer`
+with the Issuer Relationship for which the Grant Issuer retrieved the
+Relationship View ({{validation}}) detects errors in routing, caching,
+or the association of responses with requests. The comparison does not
+show that the Resource Authorization Server selected the content of the
+Relationship View correctly.
 
 A Relationship View is complete and is not paged. If the Issuer
 Relationship has no eligible tenants, both arrays are empty.
@@ -568,7 +566,7 @@ Relationship has no eligible tenants, both arrays are empty.
 
 A Tenant Object binds one Resource Authorization Server tenant that is
 eligible for an Issuer Relationship to the Grant Catalog that applies to
-it.
+that tenant.
 
 | Member | Status | Description |
 | --- | --- | --- |
@@ -577,8 +575,8 @@ it.
 | `grant_catalog` | REQUIRED | String; the `id` of the Grant Catalog that applies to this tenant |
 {: title="Tenant Object Members"}
 
-A Tenant Object is identified by its `tenant_id`, or, for the one
-Tenant Object that may omit it, by that absence. An ID-JAG conveys
+A Tenant Object is identified by its `tenant_id` or, if it has none, by
+that absence. An ID-JAG conveys
 `tenant_id` in the `aud_tenant` claim ({{jwt-representation}}). The
 Resource Authorization Server MUST include `tenant_id` unless its issuer
 identifier alone identifies the target tenant. A Relationship View MUST
@@ -596,7 +594,7 @@ no default Grant Catalog, and Grant Catalogs have no inheritance,
 partial overrides, or merge rules.
 
 {{installation}} specifies how a change to `grant_catalog` affects
-approvals; a Tenant Object with a different `tenant_id` is a different
+approvals. A Tenant Object with a different `tenant_id` is a different
 Tenant Object.
 
 The following is an example of a Tenant Object:
@@ -829,8 +827,8 @@ A grant is within the Authorization Envelope of an entry, for a Tenant
 Object that references the Grant Catalog containing the entry, when all
 of the following are true:
 
-1. The grant conveys the `authorization_server` of the Relationship View
-   that contains the Grant Catalog as its only audience.
+1. The grant conveys, as its only audience, the `authorization_server`
+   of the Relationship View that contains the Grant Catalog.
 
 2. If the Tenant Object contains `tenant_id`, the grant conveys that
    value as its target tenant. Otherwise, the grant conveys no target
@@ -919,8 +917,7 @@ Grant Catalog identifiers are unique only within a Relationship View
 ({{model-conventions}}), so the Grant Catalogs offered to two Issuer
 Relationships can share an identifier and differ in content.
 
-The `revision` member is opaque to the Grant Issuer and provides no
-integrity guarantee. It
+The `revision` member provides no integrity guarantee. It
 lets the Grant Issuer determine whether an approval made for an earlier
 copy of an entry still applies ({{installation}}). The retrieval
 protocol handles caching of representations.
@@ -1152,8 +1149,7 @@ following hold:
 1. The Relationship View that contains them is installed
    ({{installation}}).
 
-2. The entry is usable for issuance ({{validation}}) and does not
-   conflict with public metadata ({{composition}}).
+2. The entry is usable for issuance ({{validation}}).
 
 3. If the Tenant Object contains `tenant_id`, the entry's Grant
    Profile can convey a target tenant ({{tenant-object}}).
@@ -1168,8 +1164,7 @@ Definition specifies.
 ### Clients {#clients}
 
 The catalog does not enumerate or register application clients, or
-establish client identifier mappings. This document does not define
-views specific to one application client. A Relationship View is
+establish client identifier mappings. A Relationship View is
 relationship-wide and does not establish eligibility for a particular
 application client: a Resource Authorization Server can permit a grant
 configuration for one application client and reject an otherwise
@@ -1194,7 +1189,7 @@ Relationship View omits, or contains with a different `grant_catalog` or
 
 A Grant Issuer retains, with each approval, the Resource Authorization
 Server issuer identifier, the Issuer Relationship, the Tenant Object's
-`tenant_id`, if any, the Grant Catalog `id`, the entry `id` and
+`tenant_id` (if any), the Grant Catalog `id`, the entry `id` and
 `revision`, the approved subset, and any client identifier mapping that
 the Grant Profile requires. The items of the approved subset are
 identified by their protocol values. State that is specific to a
@@ -1202,12 +1197,11 @@ retrieval protocol, such as a URI or an HTTP entity tag, is retained
 separately and is not part of an approval.
 
 An approval applies while the installed Relationship View contains a
-Tenant Object with the approved `tenant_id`, or without one if the
-approved Tenant Object had none, and with the approved
-`grant_catalog`, and the Grant Catalog that the Tenant Object references
-contains an entry with the approved `id` and `revision`. The
-Grant Issuer applies the rules in {{tab-transitions}} when a retrieval
-completes or fails.
+Tenant Object that has the approved `tenant_id` (or no `tenant_id`, if
+the approved Tenant Object had none) and the approved `grant_catalog`,
+and that Grant Catalog contains an entry with the approved `id` and
+`revision`. The Grant Issuer applies the rules in {{tab-transitions}}
+after each retrieval.
 
 | Event | Rule |
 | --- | --- |
@@ -1250,9 +1244,9 @@ the structure of an authorization details type, and authority metadata
 details type authorizes. Such metadata is advisory. It cannot broaden an
 entry or an approval, it does not cause an entry to conflict with public
 metadata, and its absence, or a failure to retrieve it, does not affect
-the validity of an entry. How a Grant Issuer uses schemas or authority
-descriptions to enforce or narrow policy is not specified in this
-document.
+the validity of an entry. This specification does not define how a Grant
+Issuer uses schemas or authority descriptions to enforce or narrow
+policy.
 
 The Grant Issuer MUST NOT send a credential obtained through a retrieval
 protocol when dereferencing a `schema_uri`, `documentation_uri`, or
@@ -1262,12 +1256,11 @@ protocol when dereferencing a `schema_uri`, `documentation_uri`, or
 
 Before disclosing catalog content to a Grant Issuer, the Resource
 Authorization Server establishes, through a retrieval protocol
-({{extensibility}}), which Issuer Relationship the disclosure serves,
-and verifies that the relationship is authorized and current.
+({{extensibility}}), which Issuer Relationship the disclosure serves.
 {{relationship-identity}} and {{relationship-authorization}} apply to
 every retrieval protocol. The remaining subsections define the OAuth
 retrieval protocol, which requires only public metadata and an
-Onboarding Arrangement, and is the same for every Grant Profile.
+Onboarding Arrangement and is the same for every Grant Profile.
 
 ## Relationship Identity {#relationship-identity}
 
@@ -1291,7 +1284,7 @@ tenant identifier, or compare issuer tenant identifiers across issuers.
 
 An Onboarding Arrangement ({{conventions}}) records whether the
 Grant Issuer uses a multi-tenant issuer, which Resource Authorization
-Server tenants are eligible for the Issuer Relationship, the keys and
+Server tenants are eligible for the Issuer Relationship, which keys and
 algorithms the Grant Issuer uses, and, for the OAuth retrieval protocol,
 whether client authentication or DPoP-bound catalog access assertions
 are required.
@@ -1314,10 +1307,10 @@ This specification defines the following Authorization Server Metadata
 
 `authorization_grant_catalog_endpoint`:
 : URL of the catalog endpoint, from which the Grant Issuer retrieves its
-  Relationship View ({{view-document}}). The URL uses the `https` scheme
-  and contains no fragment component. The URL also identifies a
-  protected resource, called the catalog resource, and is its resource
-  indicator ({{Section 2 of RFC8707}}).
+  Relationship View ({{view-document}}). The URL uses the `https`
+  scheme, contains no fragment component, and is the resource indicator
+  ({{Section 2 of RFC8707}}) of a protected resource called the catalog
+  resource.
 
 A Resource Authorization Server that supports the OAuth retrieval
 protocol MUST publish this member. A Grant Issuer MUST NOT use the
@@ -1344,7 +1337,7 @@ retrieval protocol:
   "dpop_signing_alg_values_supported": ["ES256"],
   "authorization_details_types_metadata_endpoint":
     "https://ras.example/oauth2/authorization-details-types",
-    "authorization_grant_catalog_endpoint":
+  "authorization_grant_catalog_endpoint":
     "https://ras.example/oauth2/grant-catalog"
 }
 ~~~
@@ -1534,10 +1527,9 @@ catalog access assertions or grants ({{Section 3.12 of RFC8725}}). When
 client authentication is not required, the request contains no
 `client_id` parameter.
 
-The following is an example of a catalog access token request with
-client authentication, in which the catalog access assertion and the
-client assertion are abbreviated (line breaks for display purposes
-only):
+The following is an example of a catalog access token request that
+uses client authentication, with both assertions abbreviated (line
+breaks for display purposes only):
 
 ~~~ http-message
 POST /oauth2/token HTTP/1.1
@@ -1585,7 +1577,7 @@ The Resource Authorization Server processes the request as follows:
    authenticates the client and verifies that the Onboarding
    Arrangement associates the authenticated client with the `iss` claim
    of the catalog access assertion. It does not accept as a client
-      assertion any JWT whose `typ` is `oauth-grant-catalog-access+jwt`.
+   assertion any JWT whose `typ` is `oauth-grant-catalog-access+jwt`.
 
 7. It records the assertion's `jti` value as accepted and issues the
    catalog access token. It checks that the value is still unused and
@@ -1601,8 +1593,9 @@ the strength of the catalog access assertion alone.
 Because the catalog is disclosed to the Issuer Relationship identified
 by the catalog access assertion, not to the authenticated client, a
 Grant Issuer that uses a multi-tenant issuer needs at most one client
-registration at each Resource Authorization Server, and its client
-identifier can equal its issuer identifier, as in the example above.
+registration at each Resource Authorization Server. The Grant Issuer's
+client identifier can then equal its issuer identifier, as in the
+example above.
 
 ## Catalog Access Token Response {#token-response}
 
@@ -1664,7 +1657,7 @@ a redirection as an incomplete retrieval ({{installation}}).
 
 The Resource Authorization Server determines the Relationship View from
 the Issuer Relationship associated with the catalog access token
-({{relationship-authorization}}) and responds with HTTP status code 200
+({{relationship-authorization}}). It responds with HTTP status code 200
 (OK) and a Relationship View document of media type
 `application/oauth-grant-catalog+json` ({{iana-media-types}}), whose
 content is the Relationship View ({{relationship-view}}). The Resource
@@ -1674,8 +1667,8 @@ document as specified in {{validation}}, and treats a response of any
 other media type as an incomplete retrieval ({{installation}}).
 
 The following is an example of a Relationship View document request and
-response for an Issuer Relationship with two eligible tenants, in which
-the `entries` of each Grant Catalog are abbreviated; {{example-catalog}}
+response for an Issuer Relationship with two eligible tenants. The
+`entries` of each Grant Catalog are abbreviated; {{example-catalog}}
 shows the Grant Catalog `standard` in full:
 
 ~~~ http-message
@@ -1844,9 +1837,8 @@ Clients:
   provide it ({{clients}}).
 
 The following is an example of the claims of an ID-JAG issued for the
-Tenant Object for `customer-acme-eu` in {{view-document}}, using the
-entry in
-{{example-catalog}}:
+Tenant Object `customer-acme-eu` in {{view-document}}, using the entry
+in {{example-catalog}}:
 
 ~~~ json
 {
@@ -1979,8 +1971,9 @@ Grant binding methods:
   it.
 
 Retrieval protocols:
-: A specification can define another retrieval protocol. It defines
-  discovery and error responses, authenticates the Issuer Relationship
+: A specification can define another retrieval protocol. That protocol
+  defines error responses and how the Grant Issuer locates the catalog.
+  It authenticates the Issuer Relationship
   ({{relationship-identity}}) to the Resource Authorization Server and
   that server to the Grant Issuer, and delivers, unchanged, a complete
   Relationship View ({{relationship-view}}) that reflects one
@@ -2071,29 +2064,28 @@ bind the protected resource.
 Trust in a Grant Issuer's signing keys establishes that the Grant Issuer
 can issue grants, not that it is entitled to learn the Resource
 Authorization Server's configuration for every issuer tenant identifier
-it can name. An Onboarding Arrangement therefore authorizes each Issuer
+it can name. An Onboarding Arrangement authorizes each Issuer
 Relationship separately ({{relationship-authorization}}). When a
 Resource Authorization Server accepts one signing key for several Issuer
 Relationships, as it can for a multi-tenant issuer, a compromise of that
-key or of the signing service that uses it discloses the catalogs of
-each of those Issuer Relationships. This specification does not require
-any particular arrangement of keys across tenants. An Onboarding
-Arrangement authorizes an issuer tenant identifier, not the organization
-behind it: if an issuer reassigned a tenant identifier to another
-tenant, contrary to its definition ({{conventions}}), the new tenant
-would receive the catalog content of the old one.
+key or of the signing service that uses it discloses the catalogs of all
+those Issuer Relationships. This specification requires no particular
+arrangement of keys across tenants. An Onboarding Arrangement authorizes
+an issuer tenant identifier, not the organization behind it: if an
+issuer reassigned a tenant identifier to another tenant, contrary to its
+definition ({{conventions}}), the new tenant would receive the catalog
+content of the old one.
 
 ## Protected Discovery and Client Authentication {#sec-protected-discovery}
 
 A Relationship View is disclosed to an Issuer Relationship, not to a
 client, so its retrieval is not the protected discovery mechanism of
-{{Section 9.7 of ID-JAG}}, which requires client authentication and
-is an open issue ({{open-issues}}). The Grant
-Issuer's signature on the catalog
-access assertion binds a response to the relationship, so client
-authentication at the token endpoint is required only when the
-Onboarding Arrangement requires it ({{relationship-authorization}},
-{{token-request}}).
+{{Section 9.7 of ID-JAG}}, which requires client authentication;
+whether to define that mechanism is an open issue ({{open-issues}}).
+The Grant Issuer's signature on the catalog access assertion binds a
+response to the relationship, so client authentication at the token
+endpoint is required only when the Onboarding Arrangement requires it
+({{relationship-authorization}}, {{token-request}}).
 
 When the Onboarding Arrangement does not require client authentication,
 the catalog access assertion is the only credential the Grant Issuer
@@ -2145,9 +2137,8 @@ After a relationship ends and disclosure stops
 configures bounds how long it continues to issue grants under state that
 it can no longer refresh, but the Resource Authorization Server cannot
 enforce that bound. To stop issuance at a known time, the Resource
-Authorization Server first removes every eligible tenant from the
-relationship ({{installation}}) and ends the relationship only after the
-Grant Issuer observes the withdrawal.
+Authorization Server ends the relationship only after the Grant Issuer
+has observed the removal of every eligible tenant ({{installation}}).
 
 ## Revision Integrity and Approval {#sec-revision}
 
@@ -2251,9 +2242,9 @@ A catalog discloses business relationships: which Resource Authorization
 Server tenants are associated with an issuer tenant, and the names those
 tenants use. This specification limits that disclosure to an
 authenticated and authorized Issuer Relationship
-({{relationship-authorization}}). It also requires
-responses that caches do not store ({{refresh}}) and prohibits error
-responses that reveal other issuers, tenants, or catalogs ({{errors}}).
+({{relationship-authorization}}), requires that caches not store
+Relationship View documents ({{refresh}}), and prohibits error responses
+that reveal other issuers, tenants, or catalogs ({{errors}}).
 
 Because an entry states the claims and subject identifier formats that
 the Resource Authorization Server requires or accepts ({{entry-claims}},
@@ -2292,8 +2283,6 @@ Change Controller:
 
 Specification Document(s):
 : {{as-metadata}} of this specification
-
-
 
 ## Media Types Registry {#iana-media-types}
 
@@ -2495,12 +2484,12 @@ objects of type `message_channel`.
 
 # Example of Alternative Entries {#example-alternatives}
 
-A Resource Authorization Server accepts ID-JAGs for the protected
-resource `https://api.example/reports` that carry either the scope value
-`reports.read` or `reports.export`, but not both, and requires the
-`department` claim only with `reports.export`. A single entry cannot
-express either rule ({{envelope}}), so the Resource Authorization
-Server `https://ras.example/` publishes two entries:
+The Resource Authorization Server `https://ras.example/` accepts ID-JAGs
+for the protected resource `https://api.example/reports` that carry
+either the scope value `reports.read` or `reports.export`, but not both,
+and requires the `department` claim only with `reports.export`. A single
+entry cannot express either rule ({{envelope}}), so the Resource
+Authorization Server publishes two entries:
 
 ~~~ json
 {
@@ -2547,8 +2536,8 @@ Server `https://ras.example/` publishes two entries:
 ~~~
 
 An administrator of the Grant Issuer approves each entry separately for
-each Tenant Object; for example, it can approve `reports-read` for two
-tenants and `reports-export` for only one of them.
+each Tenant Object, for example `reports-read` for two Tenant Objects
+and `reports-export` for only one of them.
 
 An ID-JAG issued using `reports-read` does not contain the `department`
 claim, which that entry does not list ({{entry-claims}}), and no ID-JAG
@@ -2626,11 +2615,11 @@ Envelope without alternatives:
   Grant Issuer cannot misread a rule that does not exist.
 
 Opaque revision identifiers:
-: The format leaves the generation of revision values to the Resource
-  Authorization Server, which can use a counter or a digest of the
-  normative semantics, and prescribes no canonicalization. Because a
-  revision is tied to the normative semantics ({{revision}}), the Grant
-  Issuer retains approvals across changes to presentation text.
+: The format prescribes no canonicalization and leaves the generation of
+  revision values to the Resource Authorization Server, which can use a
+  counter or a digest of the normative semantics. Because a revision is
+  tied to the normative semantics ({{revision}}), the Grant Issuer
+  retains approvals across changes to presentation text.
 
 Optional claims listed explicitly:
 : Exempting some optional claims, such as an email address, from listing
@@ -2654,7 +2643,7 @@ Signed relationship assertion:
   Issuer authenticated as a client would instead leave each Resource
   Authorization Server to define its own selector and mapping, and a
   client credential authorized for many issuer tenants would carry the
-  same broad authority ({{sec-relationship}}).
+  same broad authority as a shared signing key ({{sec-relationship}}).
 
 No client inventory:
 : Client identifiers can be shared across trust domains ({{CIMD}}) or
