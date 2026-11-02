@@ -385,20 +385,21 @@ it refreshes the catalog, not for each grant.
 
 The following properties hold throughout this specification. Each is
 stated normatively in the section cited; this section collects them so
-that implementers and authors of extensions ({{extensibility}}) can check
-a design against them. A catalog is input to policy authoring, not an
-authorization decision ({{introduction}}).
+that implementers and authors of extensions ({{extensibility}}) can
+check a design against them. A catalog is input to policy authoring, not
+an authorization decision ({{introduction}}).
 
 1. Relationship scoping: the Resource Authorization Server determines a
    Relationship View solely from the authenticated Issuer Relationship,
    and discloses it only to an Issuer Relationship that an Onboarding
    Arrangement authorizes ({{relationship-authorization}}).
 
-2. Whole views: a Relationship View is delivered complete, and the Grant
-   Issuer installs all of it or none of it. A failed retrieval is never
-   a withdrawal and leaves earlier state installed; {{installation}}
-   recommends that the Grant Issuer stop issuance when that state
-   exceeds its configured maximum age.
+2. Whole views: a Relationship View is delivered complete
+   ({{relationship-view}}), and the Grant Issuer installs all of it or
+   none of it. A failed retrieval is never a withdrawal and leaves
+   earlier state installed; {{installation}} recommends that the Grant
+   Issuer stop issuance when that state exceeds its configured maximum
+   age.
 
 3. Closed world: a grant issued using an entry conveys a
    Catalog-Governed Input only as the entry permits. An absent member
@@ -407,7 +408,8 @@ authorization decision ({{introduction}}).
 
 4. One entry per grant: each grant is issued using one Tenant Object and
    one entry, for one audience and one protected resource. Inputs
-   permitted by different entries are never combined ({{envelope}}).
+   permitted by different entries are never combined ({{envelope}},
+   {{issuing}}).
 
 5. Independent selections: the catalog has no inheritance, no
    alternatives between sets of items, and no exclusions or conditions
@@ -498,14 +500,13 @@ Language negotiation for these values is outside the scope of this
 specification.
 
 Where this specification describes a member as an array of unique
-values, the array MUST NOT contain the same value twice. Within an entry, each
-`scope` value within a `values` array, each `type` value within a
-`types` array, and each `claim` value within a `claims` array is unique
-and identifies an item. Members that
-carry protocol values, such as `issuer`, `target_tenant`, `profile`,
-`resource`, `scope`, `type`, `claim`, and the names in `formats` and
-`methods`, are compared using simple string comparison
-({{Section 6.2.1 of RFC3986}}).
+values, the array MUST NOT contain the same value twice. Within an
+entry, each `scope` value within a `values` array, each `type` value
+within a `types` array, and each `claim` value within a `claims` array
+is unique and identifies an item. Members that carry protocol values,
+such as `issuer`, `target_tenant`, `profile`, `resource`, `scope`,
+`type`, `claim`, and the names in `formats` and `methods`, are compared
+using simple string comparison ({{Section 6.2.1 of RFC3986}}).
 
 ## Relationship View {#relationship-view}
 
@@ -520,7 +521,8 @@ A Relationship View is a JSON object with the following members:
 {: title="Relationship View Members"}
 
 The `issuer` member of `issuer_relationship` is REQUIRED and contains
-the issuer identifier of the Grant Issuer. Its `tenant` member contains
+the issuer identifier of the Grant Issuer. The `tenant` member of
+`issuer_relationship` contains
 the issuer tenant identifier, and is present if and only if the Issuer
 Relationship has one ({{relationship-identity}}). The Resource
 Authorization Server derives this object from the Issuer Relationship
@@ -600,7 +602,8 @@ assembled from parts.
 
 An empty `entries` array indicates that the Resource Authorization
 Server accepts no grants for the tenants whose Tenant Objects reference
-this Grant Catalog. A Grant Catalog can contain entries for several Grant Profiles.
+this Grant Catalog. A Grant Catalog can contain entries for several
+Grant Profiles.
 
 ## Entry {#entry}
 
@@ -616,7 +619,7 @@ Authorization Server accepts for one protected resource.
 | `resource` | REQUIRED | String; the resource indicator ({{Section 2 of RFC8707}}) of the protected resource |
 | `scope` | OPTIONAL | Object; permitted scope values ({{entry-scope}}) |
 | `authorization_details` | OPTIONAL | Object; permitted authorization details types ({{entry-authorization-details}}) |
-| `claims` | OPTIONAL | Non-empty array; permitted claims ({{entry-claims}}) |
+| `claims` | OPTIONAL | Non-empty array of claim objects ({{entry-claims}}) |
 | `sub_id` | OPTIONAL | Object; permitted subject identifier formats ({{entry-sub-id}}) |
 | `grant_binding` | OPTIONAL | Object; permitted grant binding methods ({{entry-grant-binding}}) |
 {: title="Entry Members"}
@@ -838,7 +841,7 @@ of the following are true:
    conveys every listed item whose item requirement is `required`, and
    the grant conveys at least one item if the member's presence
    requirement is `required` (the `claims` member has no presence
-   requirement). A grant that is bound is bound using exactly one
+   requirement). For grant binding, a bound grant uses exactly one
    method.
 
 | Input (Member) | Item | Conveyed When the Grant |
@@ -846,7 +849,7 @@ of the following are true:
 | Scope values (`scope`, {{entry-scope}}) | The `scope` of each scope value object | Conveys that scope value |
 | Authorization details (`authorization_details`, {{entry-authorization-details}}) | The `type` of each authorization details type object | Conveys at least one authorization details object of that type |
 | Catalog-Governed Claims (`claims`, {{entry-claims}}) | The `claim` of each claim object | Conveys that claim |
-| Subject identifier (`sub_id`, {{entry-sub-id}}) | Each name in `formats` | Conveys a subject identifier in that format |
+| Subject identifier in addition to the subject (`sub_id`, {{entry-sub-id}}) | Each name in `formats` | Conveys a subject identifier in that format |
 | Grant binding (`grant_binding`, {{entry-grant-binding}}) | Each name in `methods` | Is bound using that method |
 {: #tab-inputs title="Inputs Governed by Members of an Entry"}
 
@@ -971,9 +974,9 @@ entry:
 
 2. A member of the entry other than its `id`, or a member of an object
    within the entry, does not satisfy its definition in {{entry}} or
-   {{model-conventions}}: a REQUIRED member is absent, a member has a JSON
-   type other than the one specified, or a constraint stated for the
-   member is not met.
+   {{model-conventions}}: a REQUIRED member is absent, a member has a
+   JSON type other than the one specified, or a constraint stated for
+   the member is not met.
 
 3. The entry contains a member for a Catalog-Governed Input that its
    Grant Profile Definition states the Grant Profile cannot convey
@@ -2005,8 +2008,8 @@ and {{RFC9700}}, and of the Grant Profile of each entry, such as
 
 ## Catalog Is Not an Authorization Decision {#sec-not-authorization}
 
-A catalog does not authorize any request ({{introduction}}). Nor is it an
-exhaustive list of the grants that the Resource Authorization Server
+A catalog does not authorize any request ({{introduction}}). Nor is it
+an exhaustive list of the grants that the Resource Authorization Server
 accepts: the Resource Authorization Server can accept grants issued
 under other arrangements, or under an entry that it has since withdrawn,
 as its policy determines.
@@ -2269,7 +2272,7 @@ Interoperability considerations:
 : N/A
 
 Published specification:
-: {{oauth-binding}} of this specification
+: {{relationship-view}} and {{view-document}} of this specification
 
 Applications that use this media type:
 : Authorization servers that publish an OAuth Authorization Grant
