@@ -313,7 +313,7 @@ Entry:
 Catalog-Governed Input:
 : A part of a grant whose permitted values an entry states: the
   protected resource, the scope values, the authorization details types,
-  the Catalog-Governed Claims, the subject identifier, and the key
+  the Catalog-Governed Claims, the subject identifier, and the grant
   binding.
 
 Authorization Envelope:
