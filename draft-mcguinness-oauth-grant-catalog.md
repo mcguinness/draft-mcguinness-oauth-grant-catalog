@@ -1242,6 +1242,11 @@ only narrows an entry, such as the removal of a scope value
 
 # Relationship Authentication {#relationship-authentication}
 
+Before disclosing catalog content, the Resource Authorization Server
+establishes, through a Retrieval Binding ({{extensibility}}), which
+Issuer Relationship the disclosure serves, and verifies that the
+relationship is authorized and current.
+
 ## Relationship Identity {#relationship-identity}
 
 An Issuer Relationship is identified by the Grant Issuer's issuer
