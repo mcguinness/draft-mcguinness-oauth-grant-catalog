@@ -737,8 +737,8 @@ members:
   `saml-nameid` ({{Section 3.2.1 of ID-JAG}}).
 
 This member describes a subject identifier {{RFC9493}} conveyed in
-addition to the subject of the grant; for JWT authorization grants, it
-is the `sub_id` claim ({{jwt-representation}}).
+addition to the subject of the grant; for an ID-JAG, it is the `sub_id`
+claim ({{jwt-representation}}).
 
 ### Grant Binding {#entry-grant-binding}
 
