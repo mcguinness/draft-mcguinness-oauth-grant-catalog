@@ -2386,16 +2386,15 @@ and {{RFC9700}}, and of the Grant Profile of each entry, such as
 
 ## Catalog Is Not an Authorization Decision {#sec-not-authorization}
 
-A catalog does not authorize any request ({{introduction}}). Nor is it
-an exhaustive list of the grants that the Resource Authorization Server
-accepts: the Resource Authorization Server can accept grants issued
-under other arrangements, or under an entry that it has since withdrawn,
-as its policy determines.
+A catalog neither authorizes a request ({{introduction}}) nor lists
+every grant that the Resource Authorization Server accepts: the Resource
+Authorization Server can accept grants issued under other arrangements,
+or under an entry that it has since withdrawn, as its policy determines.
 
 The Authorization Envelope protects the Resource Authorization Server
-only to the extent that the Grant Issuer observes it, so a Resource
-Authorization Server that requires a property of every grant it accepts
-enforces that property at redemption.
+only as far as the Grant Issuer observes it, so a Resource Authorization
+Server that requires a property of every grant it accepts enforces that
+property at redemption.
 
 ## Changes in Scope Meaning {#sec-scope-meaning}
 
@@ -2408,16 +2407,15 @@ and its revision do not change, and approvals that include
 `messages.write` continue to apply. A Resource Authorization Server that
 changes the authority of an existing scope value can instead publish a
 new scope value, so that the change requires new approval. Authority
-metadata can reveal such a change to a Grant Issuer
-({{authority-metadata}}), but it is advisory and does not bind the
-protected resource.
+metadata can reveal such a change ({{authority-metadata}}) but does not
+bind the protected resource.
 
 ## Relationship Authorization and Assertion Trust {#sec-relationship}
 
 Trust in a Grant Issuer's signing keys establishes that the Grant Issuer
 can issue grants, not that it is entitled to learn the Resource
 Authorization Server's configuration for every issuer tenant identifier
-it can name; an Onboarding Arrangement therefore authorizes each Issuer
+it can name. An Onboarding Arrangement therefore authorizes each Issuer
 Relationship separately ({{relationship-authorization}}). A Grant Issuer
 that uses a multi-tenant issuer signs catalog access assertions for all
 of its tenants with the same keys, so a compromise of those keys or of
@@ -2431,25 +2429,26 @@ content of the old one.
 ## Protected Discovery and Client Authentication {#sec-protected-discovery}
 
 A Relationship View is disclosed to an Issuer Relationship, not to a
-client, so its retrieval is not the client-facing discovery mechanism
-of {{Section 9.7 of ID-JAG}}, which requires client authentication;
-client discovery ({{client-discovery}}) is that mechanism. The
-Grant Issuer's signature on the catalog access assertion binds a
-response to the relationship, so client authentication at the token
-endpoint is left to the policy of the Resource Authorization Server
-({{token-request}}).
+client, so its retrieval is not the protected discovery mechanism of
+{{Section 9.7 of ID-JAG}}, which requires client authentication;
+client discovery ({{client-discovery}}) is that mechanism. The Grant
+Issuer's signature on the catalog
+access assertion binds a response to the relationship, so client
+authentication at the token endpoint is required only when the
+Onboarding Arrangement requires it ({{relationship-authorization}},
+{{token-request}}).
 
 When the Onboarding Arrangement does not require client authentication,
 the catalog access assertion is the only credential the Grant Issuer
-presents, and one that is not DPoP-bound is a bearer credential until
-the Resource Authorization Server accepts it: the replay check
-({{assertion-validation}}) prevents its reuse but not its first use by a
-party that obtains it, and binding only the catalog access token does
-not prevent that use. A DPoP-bound catalog access assertion cannot be
-used without the private key that its `cnf` claim identifies
-({{token-request}}). DPoP binding demonstrates possession of a key that
-the Grant Issuer names under its own signature; it is not client
-authentication. The assertion's short lifetime, its audience
+presents. An assertion that is not DPoP-bound is then a bearer
+credential until the Resource Authorization Server accepts it: the
+replay check ({{assertion-validation}}) prevents its reuse but not its
+first use by a party that obtains it, and binding only the catalog
+access token does not prevent that use. A DPoP-bound catalog access
+assertion cannot be used without the private key that its `cnf` claim
+identifies ({{token-request}}). DPoP binding demonstrates possession of
+a key that the Grant Issuer names under its own signature; it is not
+client authentication. The assertion's short lifetime, its audience
 restriction, and TLS further limit the exposure. A Resource
 Authorization Server weighs the confidentiality of its catalog content
 when deciding whether its Onboarding Arrangements require client
@@ -2466,10 +2465,9 @@ Authorization Server.
 
 ## Response Authenticity {#sec-authenticity}
 
-Relationship View documents are not signed. Their
-authenticity and integrity rest on TLS server authentication of the
-Resource Authorization Server's catalog resource and on the validation
-of the Resource Authorization Server's metadata
+Relationship View documents are not signed. Their authenticity and
+integrity rest on TLS server authentication of the catalog resource and
+on validation of the Resource Authorization Server's metadata
 ({{Section 3.3 of RFC8414}}). An attacker able to alter catalog
 responses can cause an administrator of the Grant Issuer to approve
 grants that the Resource Authorization Server did not offer, or to deny
@@ -2483,14 +2481,16 @@ When the Resource Authorization Server narrows what it accepts, a Grant
 Issuer that has not refreshed issues grants that the Resource
 Authorization Server rejects after their claims have been disclosed to
 the client. Such grants affect availability and disclosure, not
-authorization. When a relationship ends, catalog disclosure stops
-({{relationship-authorization}}). The maximum age that the Grant Issuer
-configures ({{installation}}) bounds how long it continues to issue
-grants under state it can no longer refresh, but the Resource
-Authorization Server cannot enforce that bound. To stop issuance at a
-known time, the Resource Authorization Server removes every eligible
-tenant from the relationship, and waits for the Grant Issuer to observe
-the withdrawal, before it ends the relationship.
+authorization.
+
+After a relationship ends and disclosure stops
+({{relationship-authorization}}), the maximum age that the Grant Issuer
+configures bounds how long it continues to issue grants under state that
+it can no longer refresh, but the Resource Authorization Server cannot
+enforce that bound. To stop issuance at a known time, the Resource
+Authorization Server first removes every eligible tenant from the
+relationship ({{installation}}) and ends the relationship only after the
+Grant Issuer observes the withdrawal.
 
 ## Revision Integrity and Approval {#sec-revision}
 
@@ -2509,9 +2509,9 @@ incorrect comparison would expand authorization.
 ## Tenant Confusion {#sec-tenant}
 
 If a Grant Issuer derived a grant's target tenant from a Tenant Object
-identifier, the number of tenants, or the form of an issuer identifier,
-a grant intended for one tenant could be accepted for another
-({{issuing}}). Similarly, an entry obtained for one Issuer
+identifier, the number of Tenant Objects in a Relationship View, or the
+form of an issuer identifier, a grant intended for one tenant could be
+accepted for another ({{issuing}}). An entry obtained for one Issuer
 Relationship is used only for grants whose issuer and issuer tenant
 identify that relationship ({{issuing}}), so that a catalog disclosed to
 one issuer tenant does not determine the grants issued for subjects of
@@ -2524,13 +2524,13 @@ Relationship because an administrator of that tenant configured trust in
 the Grant Issuer, anyone who controls a tenant at the Resource
 Authorization Server can add a Tenant Object, with a `display` of their
 choosing, to the Grant Issuer's Relationship View. If an administrator
-of the Grant Issuer approves it, clients obtain grants for that tenant,
-which disclose claims to it. A Resource Authorization Server SHOULD make
-a tenant eligible for an Issuer Relationship only when the Onboarding
-Arrangement records agreement on the Grant Issuer side, for example by
-an administrator of the issuer tenant. An administrator of the Grant
-Issuer identifies a Tenant Object by its `target_tenant`, not by its
-`display` ({{model-conventions}}).
+of the Grant Issuer approves an entry for that Tenant Object, clients
+obtain grants that disclose claims to that tenant. A Resource
+Authorization Server SHOULD make a tenant eligible for an Issuer
+Relationship only when the Onboarding Arrangement records agreement on
+the Grant Issuer side, for example by an administrator of the issuer
+tenant. An administrator of the Grant Issuer identifies a Tenant Object
+by its `target_tenant`, not by its `display` ({{model-conventions}}).
 
 ## Cross-JWT Confusion {#sec-cross-jwt}
 
@@ -2543,12 +2543,11 @@ access assertion as a grant; their claims overlap, and the `sub` claim
 of a catalog access assertion is an issuer identifier. When the client
 identifier assigned to a Grant Issuer equals its issuer identifier, a
 catalog access assertion also has the `iss`, `sub`, and `aud` values of
-a client assertion ({{Section 3 of RFC7523}}), so one intercepted JWT
-could serve as both the grant and the client authentication of a
-request, and a validator of client assertions that ignores `typ` does
-not prevent this. {{token-request}} therefore forbids the use of a
-catalog access assertion as a client assertion and recommends a separate
-key for client assertions.
+a client assertion ({{Section 3 of RFC7523}}). One intercepted JWT could
+then serve as both the grant and the client authentication of a request,
+and a validator of client assertions that ignores `typ` does not prevent
+this. {{token-request}} forbids using a catalog access assertion as a
+client assertion and recommends a separate key for client assertions.
 {{Section 2.8 of RFC8725}} describes this class of attack. For the same
 reason, an entry is used only for grants of its own Grant Profile
 ({{issuing}}), even when the grants of another profile carry similar
@@ -2563,14 +2562,13 @@ Resource Metadata the Grant Issuer requests during composition
 ({{composition}}). A Resource Authorization Server, or an attacker that
 can alter catalog responses, chooses these URIs
 ({{Section 7.7 of RFC9728}}). A Grant Issuer that dereferences them
-does not send a credential obtained through a retrieval protocol
-({{rar-metadata}}, {{view-document}}), applies the protections against
-server-side request
-forgery that it applies to other URLs obtained from external parties,
-and treats the content, which the retrieval protocol does not
-authenticate, as untrusted input and not as catalog content. A Grant
-Issuer can cache Protected Resource Metadata and limit how many such
-requests one refresh makes.
+sends no credential obtained through a retrieval protocol
+({{rar-metadata}}, {{view-document}}) and applies the protections
+against server-side request forgery that it applies to other URLs
+obtained from external parties. The retrieval protocol does not
+authenticate the content, so the Grant Issuer treats it as untrusted
+input, not as catalog content. A Grant Issuer can cache Protected
+Resource Metadata and limit how many such requests one refresh makes.
 
 A Grant Issuer presents `display`, `description`, `documentation_uri`,
 and `definition_uri` to administrators as untrusted text. These members
@@ -2579,31 +2577,23 @@ not cover later changes to them.
 
 ## Client Discovery {#sec-client-discovery}
 
-Client discovery discloses acceptance information to an application
-client. A client could use it to learn which Grant Issuers and tenants
-the Resource Authorization Server trusts, which
-{{Section 9.7 of ID-JAG}} treats as deployment-sensitive. Client
-authentication, disclosure authorization, and the uniform empty response
-limit disclosure to clients that the Resource Authorization Server
-authorizes, and make an unknown context indistinguishable from an
-unauthorized one ({{client-disclosure}}). An authorized client still
-learns the Tenant Objects and entries that apply to it, including their
-`display` and `description` members. A client that the Resource
-Authorization Server authorizes for many Issuer Relationships, such as
-an application that many organizations use, learns the Tenant Objects of
-each; the disclosure policy of the Resource Authorization Server
-determines how far that extends. Differences in processing time can also
-reveal whether a Grant Issuer is known, so a Resource Authorization
-Server processes the cases listed in {{client-disclosure}} alike.
+A client could use client discovery to learn which Grant Issuers and
+tenants the Resource Authorization Server trusts, which
+{{Section 9.7 of ID-JAG}} treats as deployment-sensitive. The rules in
+{{client-disclosure}} limit that disclosure to clients that the Resource
+Authorization Server authorizes. An authorized client still learns the
+Tenant Objects and entries that apply to it, including their `display`
+and `description` members. A client authorized for many Issuer
+Relationships, such as an application that many organizations use,
+learns the Tenant Objects of each, as far as the disclosure policy of
+the Resource Authorization Server permits. Differences in processing
+time can also reveal whether a Grant Issuer is known, so a Resource
+Authorization Server processes the cases listed in {{client-disclosure}}
+alike.
 
-A client view is not an authorization decision ({{client-discovery}}).
-A client that treats it as one gains nothing: the Grant Issuer issues
-only grants within its approved subsets ({{issuing}}), and the Resource
-Authorization Server validates every grant it receives.
-
-A client view has a different media type from a Relationship View
-document ({{client-view}}), so a Grant Issuer does not install one in
-place of a Relationship View ({{view-document}}).
+A client view is not an authorization decision ({{client-discovery}}),
+and a Grant Issuer does not install one in place of a Relationship View
+({{client-view}}, {{view-document}}).
 
 ## Resource Consumption {#sec-resources}
 
@@ -2626,23 +2616,20 @@ tenants use. This specification limits that disclosure to an
 authenticated and authorized Issuer Relationship
 ({{relationship-authorization}}) and, through client discovery, to an
 authenticated client that the Resource Authorization Server authorizes
-for that Issuer Relationship ({{client-disclosure}}), requires responses
-that caches do not store ({{refresh}}), and prohibits error responses
-that reveal other issuers, tenants, or catalogs ({{errors}}).
+for that Issuer Relationship ({{client-disclosure}}). It also requires
+responses that caches do not store ({{refresh}}) and prohibits error
+responses that reveal other issuers, tenants, or catalogs ({{errors}}).
 
 Because an entry states the claims and subject identifier formats that
 the Resource Authorization Server requires or accepts ({{entry-claims}},
 {{entry-sub-id}}), an administrator of the Grant Issuer decides before
 issuance which claims the Grant Issuer releases and to which Resource
-Authorization Server tenants. A Grant
-Issuer that cannot release a required claim for a subject does not
-issue a grant using that entry ({{issuing}}) rather than release
-the claim without approval.
+Authorization Server tenants. An entry that requires a claim does not
+cause the Grant Issuer to release it without approval ({{issuing}}).
 
-The Grant Issuer stores catalog content as configuration, protects that
-content as it protects other relationship-specific configuration, and
-makes the content accessible only to administrators who manage the
-corresponding Issuer Relationship.
+The Grant Issuer stores catalog content as configuration, protects it
+like other relationship-specific configuration, and makes it accessible
+only to administrators who manage the corresponding Issuer Relationship.
 
 Dereferencing a URI contained in a catalog, such as a
 `documentation_uri` or `definition_uri`, can reveal to the server
@@ -2759,8 +2746,8 @@ Optional parameters:
 : N/A
 
 Encoding considerations:
-: binary; a catalog access assertion is a JWT, and a JWT is a sequence
-  of base64url-encoded values separated by period (".") characters.
+: binary; a catalog access assertion is a JWT, which is a sequence of
+  base64url-encoded values separated by period (".") characters.
 
 Security considerations:
 : See {{security}} of this specification.
@@ -2936,8 +2923,8 @@ Server publishes two entries:
 ~~~
 
 An administrator of the Grant Issuer approves each entry separately for
-each Tenant Object; for example, it can approve the `reports.read` entry
-for two tenants and the `reports.export` entry for only one of them.
+each Tenant Object; for example, it can approve `reports-read` for two
+tenants and `reports-export` for only one of them.
 
 An ID-JAG issued using `reports-read` does not contain the `department`
 claim, which that entry does not list ({{entry-claims}}), and no ID-JAG
@@ -3030,21 +3017,20 @@ Optional claims listed explicitly:
 One resource per grant:
 : Limiting a grant to one protected resource ({{envelope}}) avoids
   rules for how scope values and authorization details apply across
-  resources, and keeps each approval about one resource. A client that
-  needs several resources obtains several grants.
+  resources, and keeps each approval about one resource.
 
 Signed relationship assertion:
 : Stating the Issuer Relationship under the signature of the keys that
   sign the Grant Issuer's grants ({{assertion}}) gives every Resource
-  Authorization Server the same standardized provenance for the
-  relationship, reuses the trust it already places in the issuer, and
-  binds catalog access to the identity that will issue the grants the
-  catalog describes. Authorizing a tenant selector against the
-  relationships permitted to an authenticated client would instead leave
-  each Resource Authorization Server to define its own selector and
-  mapping, and a client credential authorized for many issuer tenants
-  would carry the same broad authority ({{sec-relationship}}). Client
-  discovery ({{client-discovery}}) does authorize a selector against an
+  Authorization Server the same provenance for the relationship, reuses
+  the trust it already places in the issuer, and binds catalog access to
+  the identity that issues the grants the catalog describes. Authorizing
+  a tenant selector against the relationships permitted to an
+  authenticated client would instead leave each Resource Authorization
+  Server to define its own selector and mapping, and a client credential
+  authorized for many issuer tenants would carry the same broad
+  authority ({{sec-relationship}}). Client discovery
+  ({{client-discovery}}) does authorize a selector against an
   authenticated client, because its response describes only what
   applies to that client ({{sec-client-discovery}}).
 
@@ -3078,12 +3064,12 @@ No client inventory:
   relationship-wide ({{clients}}). Whether Resource Authorization
   Servers restrict grant configurations by client often enough to need
   an optional view, retrieved by the Grant Issuer, for one identified
-  client is open. Such a view would keep two parties
-  distinct: the application client it describes, identified by its
-  client identifier at the Resource Authorization Server, and the Issuer
-  Relationship that retrieves it, which needs authorization to inspect
-  that client's configuration, as client discovery requires for a
-  client's own view ({{client-disclosure}}). The client context would
+  client is open. Such a view would keep two parties distinct: the
+  application client it describes, identified by its client identifier
+  at the Resource Authorization Server, and the Issuer Relationship that
+  retrieves it. The Issuer Relationship would need authorization to
+  inspect that client's configuration, as client discovery requires for
+  a client's own view ({{client-disclosure}}). The client context would
   include the target tenant where needed to identify the client
   registration ({{Section 6.2 of ID-JAG}}), and the response would
   identify that context for comparison with the request. Installed
