@@ -222,7 +222,7 @@ The following are outside the scope of this specification:
   catalogs.
 
 * Automatic reconciliation of Grant Issuer policy with a changed entry
-  ({{reconciliation}}).
+  ({{installation}}).
 
 * A mechanism by which a client discovers whether a grant from a
   particular Grant Issuer would be accepted ({{Section 9.7 of ID-JAG}}),
@@ -409,7 +409,7 @@ an authorization decision ({{introduction}}).
 
 6. Narrowing only: approval and runtime policy only narrow an entry. A
    new or changed entry, public metadata, and authority metadata never
-   broaden an approval ({{narrowing}}, {{reconciliation}},
+   broaden an approval ({{narrowing}}, {{installation}},
    {{authority-metadata}}).
 
 7. Public metadata prevails: an entry cannot enable a value that public
@@ -420,7 +420,7 @@ an authorization decision ({{introduction}}).
    `target_tenant` or `grant_catalog` of a Tenant Object, changes,
    issuance under approvals made for the previous value stops until an
    administrator approves the changed object ({{revision}},
-   {{reconciliation}}).
+   {{installation}}).
 
 9. Safe extension: a Grant Issuer ignores members it does not
    understand. A specification that defines a restrictive member also
@@ -523,7 +523,7 @@ used by several objects:
   opaque and case-sensitive, and are compared using simple string
   comparison ({{Section 6.2.1 of RFC3986}}). The length limit bounds the
   identifiers that a Grant Issuer retains with each approval
-  ({{reconciliation}}). Tenant Object identifiers and Grant Catalog
+  ({{installation}}). Tenant Object identifiers and Grant Catalog
   identifiers are each unique within a Relationship View, and entry
   identifiers are unique within a Grant Catalog.
 
@@ -602,15 +602,15 @@ the target tenant. A Relationship View MUST NOT contain more than one
 Tenant Object without `target_tenant`, or two Tenant Objects with the
 same value of `target_tenant`.
 
-A Tenant Object that contains `target_tenant` is usable only with entries whose
-Grant Profile can convey a target tenant ({{envelope}}).
+A Tenant Object that contains `target_tenant` is usable only with
+entries whose Grant Profile can convey a target tenant ({{envelope}}).
 
 Several Tenant Objects can reference the same Grant Catalog. Tenant
 Objects for tenants that differ in any input that an entry governs
 ({{envelope}}) reference different Grant Catalogs. The data model has no
 defaults, inheritance, partial overrides, or merge rules.
 
-{{reconciliation}} specifies how a change to `target_tenant` or
+{{installation}} specifies how a change to `target_tenant` or
 `grant_catalog` affects approvals.
 
 The following is an example of a Tenant Object:
@@ -932,7 +932,7 @@ Relationships can share an identifier and differ in content.
 
 The `revision` member is neither a digest nor an integrity mechanism. It
 lets the Grant Issuer determine whether an approval made for an earlier
-copy of an entry still applies ({{reconciliation}}). The retrieval
+copy of an entry still applies ({{installation}}). The retrieval
 protocol handles caching of representations.
 
 # Using a Catalog {#processing}
@@ -1171,41 +1171,17 @@ Authorization Server specifies how the Grant Issuer obtains that
 identifier, as {{id-jag}} does for ID-JAG; such an
 identifier can be shared across trust domains {{CIMD}}.
 
-## Installation {#installation}
+## Installation and Reconciliation {#installation}
 
-The Grant Issuer distinguishes the following outcomes of a retrieval:
-
-Complete retrieval:
-: The Grant Issuer obtains and validates a complete Relationship View,
-  replaces the installed state for the Issuer Relationship with it, and
-  reconciles its policy ({{reconciliation}}). A Tenant Object, Grant
-  Catalog, or entry that the new Relationship View omits, or contains
-  with a different `target_tenant`, `grant_catalog`, or `revision`, is
-  withdrawn, and the Grant Issuer MUST stop issuing grants that depend
-  on it in its previous form.
-
-Incomplete retrieval:
-: A transport failure occurs, a response is interrupted or fails
-  validation, or the Resource Authorization Server rejects the Grant
-  Issuer's credentials. The Grant Issuer MUST NOT install any state from
-  that retrieval, and does not treat it as a withdrawal. State installed
-  from an earlier retrieval remains in force, subject to the maximum age
-  described below.
-
-The Grant Issuer
-SHOULD retrieve the Relationship View periodically and after
-administrative changes to the Issuer Relationship, and SHOULD stop
-issuing grants that depend on installed state it has not been able to
-refresh within a maximum age that it configures for the Issuer
-Relationship, such as one day. The maximum age is measured from the most
-recent complete retrieval; an incomplete retrieval, including one that
-results from the end of the Issuer Relationship, does not extend it
-({{sec-stale}}). A Resource Authorization Server that
-needs issuance to stop sooner first removes every eligible tenant from
-the relationship; the Grant Issuer observes that removal at its next
-refresh as a withdrawal.
-
-## Policy Reconciliation {#reconciliation}
+A retrieval is complete when the Grant Issuer obtains and validates a
+complete Relationship View ({{validation}}). It is incomplete when a
+transport failure occurs, a response is interrupted or fails validation,
+or the Resource Authorization Server rejects the Grant Issuer's
+credentials. After a complete retrieval, the Grant Issuer replaces the
+installed state for the Issuer Relationship with the new Relationship
+View. A Tenant Object, Grant Catalog, or entry that the new Relationship
+View omits, or contains with a different `target_tenant`,
+`grant_catalog`, or `revision`, is withdrawn.
 
 A Grant Issuer retains, with each approval, the Resource Authorization
 Server issuer identifier, the Issuer Relationship, the Tenant Object
@@ -1219,30 +1195,38 @@ separately and is not part of an approval.
 An approval applies while the installed Relationship View contains a
 Tenant Object with the approved `id`, `target_tenant`, and
 `grant_catalog`, and the Grant Catalog that the Tenant Object references
-contains an entry with the approved `id` and `revision`. When the
-Relationship View changes, the following rules apply:
+contains an entry with the approved `id` and `revision`.  The
+Grant Issuer applies the rules in {{tab-transitions}} when a retrieval
+completes or fails.
 
-* The appearance of a new Tenant Object or entry MUST NOT, by itself,
-  cause the Grant Issuer to issue grants using it, and a change to an
-  entry MUST NOT, by itself, expand an existing approval.
-
-* When a Tenant Object, Grant Catalog, or entry is withdrawn
-  ({{installation}}), the Grant Issuer suspends issuance under the
-  approvals that depend on it. If a later complete retrieval contains
-  the object again with the approved identifiers, `target_tenant`,
-  `grant_catalog`, and `revision`, the approval applies again without
-  new approval.
-
-* When the `target_tenant` or `grant_catalog` of a Tenant Object
-  changes, or the `revision` of an entry changes, the Grant Issuer MUST
-  NOT issue grants under an approval made for the previous value.
-  Issuance resumes only after an administrator approves the changed
-  object.
+| Event | Rule |
+| --- | --- |
+| A retrieval is incomplete | The Grant Issuer MUST NOT install any state from that retrieval, and does not treat it as a withdrawal. State installed from an earlier retrieval remains in force, subject to the maximum age below. |
+| A Tenant Object or entry appears | The appearance of a new Tenant Object or entry MUST NOT, by itself, cause the Grant Issuer to issue grants using it. |
+| An entry changes | A change to an entry MUST NOT, by itself, expand an existing approval. |
+| Only members outside the normative semantics of an entry change ({{revision}}) | Approvals made for the entry continue to apply. |
+| A Tenant Object, Grant Catalog, or entry is withdrawn | The Grant Issuer MUST stop issuing grants that depend on it in its previous form, and suspends issuance under the approvals that depend on it. |
+| The `target_tenant` or `grant_catalog` of a Tenant Object, or the `revision` of an entry, changes | The Grant Issuer MUST NOT issue grants under an approval made for the previous value. Issuance resumes only after an administrator approves the changed object. |
+| A later complete retrieval contains a withdrawn object again with the approved identifiers, `target_tenant`, `grant_catalog`, and `revision` | The approval applies again without new approval. |
+{: #tab-transitions title="Effects of a Retrieval on Installed State and Approvals"}
 
 These rules apply to every change of revision, including a change that
 only narrows an entry, such as the removal of a scope value
 ({{sec-revision}}). Whether to relax these rules is an open issue
 ({{open-issues}}).
+
+The Grant Issuer
+SHOULD retrieve the Relationship View periodically and after
+administrative changes to the Issuer Relationship, and SHOULD stop
+issuing grants that depend on installed state it has not been able to
+refresh within a maximum age that it configures for the Issuer
+Relationship, such as one day. The maximum age is measured from the most
+recent complete retrieval; an incomplete retrieval, including one that
+results from the end of the Issuer Relationship, does not extend it
+({{sec-stale}}). A Resource Authorization Server that
+needs issuance to stop sooner first removes every eligible tenant from
+the relationship; the Grant Issuer observes that removal at its next
+refresh as a withdrawal.
 
 ## Optional Supporting Metadata {#optional-metadata}
 
@@ -2165,7 +2149,7 @@ earlier copy of the entry with the same revision ({{validation}}). A
 revision does not bind the Resource Authorization Server to the meaning
 that the Grant Issuer approved, and a grant issued before a change can
 be redeemed after it. Requiring new approval for every revision change
-({{reconciliation}}) avoids relying on a Grant Issuer's comparison of
+({{installation}}) avoids relying on a Grant Issuer's comparison of
 two revisions to decide that a change only narrows an entry; an
 incorrect comparison would expand authorization.
 
@@ -2568,13 +2552,13 @@ An approval of the entry in {{example-catalog}} for the Tenant Object
 4. The Resource Authorization Server restores `tenant-123` with the same
    `target_tenant` and `grant_catalog`, and the Grant Catalog still
    contains revision `5` of the entry. The approval applies again
-   without new approval ({{reconciliation}}).
+   without new approval ({{installation}}).
 
 5. The Resource Authorization Server adds the optional scope value
    `messages.archive` to the entry and changes its revision to `6`. The
    Grant Issuer stops issuing ID-JAGs under the approval for revision
    `5`, even though the change does not affect `messages.read`
-   ({{reconciliation}}).
+   ({{installation}}).
 
 6. An administrator reviews revision `6` and approves `messages.read`
    again. The Grant Issuer resumes issuing ID-JAGs with that scope
@@ -2658,7 +2642,7 @@ No client inventory:
 {:numbered="false"}
 
 * Reapproval: every revision change suspends issuance until an
-  administrator approves the changed entry ({{reconciliation}}), even
+  administrator approves the changed entry ({{installation}}), even
   when the change only adds an item that no approval includes
   ({{example-lifecycle}}). The essential invariant is that no change
   expands an approval. Whether issuance can continue while the approved
