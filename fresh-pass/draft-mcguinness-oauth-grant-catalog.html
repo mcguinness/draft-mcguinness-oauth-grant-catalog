@@ -3771,9 +3771,7 @@ is accepted when the Resource Authorization Server issues a catalog
 access token in response to it. The Resource Authorization Server
 retains each accepted <code>jti</code> value, across every instance of its token
 endpoint, until the assertion's <code>exp</code> time plus the allowance for
-clock skew has passed. It checks and records the <code>jti</code> value in one
-atomic operation, so that two concurrent requests that carry the same
-assertion cannot both obtain a catalog access token.<a href="#section-6.4.1-2.6.1" class="pilcrow">¶</a></p>
+clock skew has passed.<a href="#section-6.4.1-2.6.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-6.4.1-2.7">
               <p id="section-6.4.1-2.7.1">The pair of <code>iss</code> and, when present, <code>tenant</code> identifies an Issuer
@@ -3904,7 +3902,7 @@ does not require DPoP-bound catalog access assertions.<a href="#section-6.5-8.3.
 <code>authorization_grant_catalog_endpoint</code> metadata value.<a href="#section-6.5-8.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-6.5-8.5">
-            <p id="section-6.5-8.5.1">It verifies that the <code>scope</code> parameter includes
+            <p id="section-6.5-8.5.1">It verifies that the <code>scope</code> parameter is
 <code>authorization_grant_catalog.read</code>.<a href="#section-6.5-8.5.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-6.5-8.6">
@@ -3912,7 +3910,15 @@ does not require DPoP-bound catalog access assertions.<a href="#section-6.5-8.3.
 authenticates the client and verifies that the Onboarding
 Arrangement associates the authenticated client with the <code>iss</code> claim
 of the catalog access assertion. It does not accept as a client
-assertion any JWT whose <code>typ</code> is <code>oauth-grant-catalog-access+jwt</code>.<a href="#section-6.5-8.6.1" class="pilcrow">¶</a></p>
+   assertion any JWT whose <code>typ</code> is <code>oauth-grant-catalog-access+jwt</code>.<a href="#section-6.5-8.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-6.5-8.7">
+            <p id="section-6.5-8.7.1">It records the assertion's <code>jti</code> value as accepted and issues the
+catalog access token. It checks that the value is still unused and
+records it in one atomic operation, so that two concurrent requests
+that carry the same assertion cannot both obtain a catalog access
+token, and a request rejected by an earlier step does not consume
+the value.<a href="#section-6.5-8.7.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <p id="section-6.5-9">When the Onboarding Arrangement requires client authentication, the
@@ -4108,8 +4114,8 @@ authenticated as is not associated with the assertion's issuer.<a href="#section
 parameter is missing or is not the catalog resource.<a href="#section-6.9-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-6.9-2.3">
-            <p id="section-6.9-2.3.1"><code>invalid_scope</code>, if the <code>scope</code> parameter is missing or does not
-include <code>authorization_grant_catalog.read</code>.<a href="#section-6.9-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-6.9-2.3.1"><code>invalid_scope</code>, if the <code>scope</code> parameter is missing or is not
+<code>authorization_grant_catalog.read</code>.<a href="#section-6.9-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-6.9-3">The catalog endpoint returns errors as specified in
