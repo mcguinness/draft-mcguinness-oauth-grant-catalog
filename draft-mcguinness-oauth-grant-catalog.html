@@ -21,9 +21,7 @@ is not an authorization decision. The data model is independent of grant
 encoding and retrieval protocol. This specification applies it only to
 the Identity Assertion JWT Authorization Grant (ID-JAG), and defines an
 OAuth retrieval protocol that delivers the complete catalog in one
-response. It also defines client discovery, through which an
-application client retrieves the part of a catalog that applies to it
-to construct its request to the Grant Issuer. 
+response. 
     " name="description">
 <meta content="xml2rfc 3.34.1" name="generator">
 <meta content="OAuth" name="keyword">
@@ -1110,9 +1108,7 @@ is not an authorization decision. The data model is independent of grant
 encoding and retrieval protocol. This specification applies it only to
 the Identity Assertion JWT Authorization Grant (ID-JAG), and defines an
 OAuth retrieval protocol that delivers the complete catalog in one
-response. It also defines client discovery, through which an
-application client retrieves the part of a catalog that applies to it
-to construct its request to the Grant Issuer.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+response.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1269,14 +1265,6 @@ to construct its request to the Grant Issuer.<a href="#section-abstract-1" class
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.6">
                 <p id="section-toc.1-1.5.2.6.1"><a href="#section-5.6" class="auto internal xref">5.6</a>.  <a href="#name-optional-supporting-metadat" class="internal xref">Optional Supporting Metadata</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.6.2.1">
-                    <p id="section-toc.1-1.5.2.6.2.1.1"><a href="#section-5.6.1" class="auto internal xref">5.6.1</a>.  <a href="#name-use-of-authorization-detail" class="internal xref">Use of Authorization Details Types Metadata</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.6.2.2">
-                    <p id="section-toc.1-1.5.2.6.2.2.1"><a href="#section-5.6.2" class="auto internal xref">5.6.2</a>.  <a href="#name-use-of-authority-metadata" class="internal xref">Use of Authority Metadata</a></p>
-</li>
-                </ul>
 </li>
             </ul>
 </li>
@@ -1318,159 +1306,130 @@ to construct its request to the Grant Issuer.<a href="#section-abstract-1" class
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-client-discovery" class="internal xref">Client Discovery</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-identity-assertion-jwt-auth" class="internal xref">Identity Assertion JWT Authorization Grant Profile</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
-                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-client-discovery-endpoint" class="internal xref">Client Discovery Endpoint</a></p>
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-representation-of-inputs" class="internal xref">Representation of Inputs</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
-                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-client-discovery-request" class="internal xref">Client Discovery Request</a></p>
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-reserved-claims" class="internal xref">Reserved Claims</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
-                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-disclosure-authorization" class="internal xref">Disclosure Authorization</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
-                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-client-view" class="internal xref">Client View</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.5">
-                <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="auto internal xref">7.5</a>.  <a href="#name-client-processing" class="internal xref">Client Processing</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.6">
-                <p id="section-toc.1-1.7.2.6.1"><a href="#section-7.6" class="auto internal xref">7.6</a>.  <a href="#name-error-responses-2" class="internal xref">Error Responses</a></p>
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-composition-checks" class="internal xref">Composition Checks</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-identity-assertion-jwt-auth" class="internal xref">Identity Assertion JWT Authorization Grant Profile</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-extensibility" class="internal xref">Extensibility</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-representation-of-inputs" class="internal xref">Representation of Inputs</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-reserved-claims" class="internal xref">Reserved Claims</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3">
-                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="auto internal xref">8.3</a>.  <a href="#name-composition-checks" class="internal xref">Composition Checks</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4">
-                <p id="section-toc.1-1.8.2.4.1"><a href="#section-8.4" class="auto internal xref">8.4</a>.  <a href="#name-client-requests" class="internal xref">Client Requests</a></p>
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-grant-profile-definitions" class="internal xref">Grant Profile Definitions</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-extensibility" class="internal xref">Extensibility</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
-                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-grant-profile-definitions" class="internal xref">Grant Profile Definitions</a></p>
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-catalog-is-not-an-authoriza" class="internal xref">Catalog Is Not an Authorization Decision</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-changes-in-scope-meaning" class="internal xref">Changes in Scope Meaning</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.3">
+                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="auto internal xref">9.3</a>.  <a href="#name-relationship-authorization-" class="internal xref">Relationship Authorization and Assertion Trust</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.4">
+                <p id="section-toc.1-1.9.2.4.1"><a href="#section-9.4" class="auto internal xref">9.4</a>.  <a href="#name-protected-discovery-and-cli" class="internal xref">Protected Discovery and Client Authentication</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.5">
+                <p id="section-toc.1-1.9.2.5.1"><a href="#section-9.5" class="auto internal xref">9.5</a>.  <a href="#name-catalog-access-token-disclo" class="internal xref">Catalog Access Token Disclosure</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.6">
+                <p id="section-toc.1-1.9.2.6.1"><a href="#section-9.6" class="auto internal xref">9.6</a>.  <a href="#name-response-authenticity" class="internal xref">Response Authenticity</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.7">
+                <p id="section-toc.1-1.9.2.7.1"><a href="#section-9.7" class="auto internal xref">9.7</a>.  <a href="#name-stale-catalogs-and-relation" class="internal xref">Stale Catalogs and Relationship Termination</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.8">
+                <p id="section-toc.1-1.9.2.8.1"><a href="#section-9.8" class="auto internal xref">9.8</a>.  <a href="#name-revision-integrity-and-appr" class="internal xref">Revision Integrity and Approval</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.9">
+                <p id="section-toc.1-1.9.2.9.1"><a href="#section-9.9" class="auto internal xref">9.9</a>.  <a href="#name-tenant-confusion" class="internal xref">Tenant Confusion</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.10">
+                <p id="section-toc.1-1.9.2.10.1"><a href="#section-9.10" class="auto internal xref">9.10</a>. <a href="#name-tenant-eligibility" class="internal xref">Tenant Eligibility</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.11">
+                <p id="section-toc.1-1.9.2.11.1"><a href="#section-9.11" class="auto internal xref">9.11</a>. <a href="#name-cross-jwt-confusion" class="internal xref">Cross-JWT Confusion</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.12">
+                <p id="section-toc.1-1.9.2.12.1"><a href="#section-9.12" class="auto internal xref">9.12</a>. <a href="#name-external-references" class="internal xref">External References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.13">
+                <p id="section-toc.1-1.9.2.13.1"><a href="#section-9.13" class="auto internal xref">9.13</a>. <a href="#name-resource-consumption" class="internal xref">Resource Consumption</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
-                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-catalog-is-not-an-authoriza" class="internal xref">Catalog Is Not an Authorization Decision</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
-                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-changes-in-scope-meaning" class="internal xref">Changes in Scope Meaning</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.3">
-                <p id="section-toc.1-1.10.2.3.1"><a href="#section-10.3" class="auto internal xref">10.3</a>.  <a href="#name-relationship-authorization-" class="internal xref">Relationship Authorization and Assertion Trust</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.4">
-                <p id="section-toc.1-1.10.2.4.1"><a href="#section-10.4" class="auto internal xref">10.4</a>.  <a href="#name-protected-discovery-and-cli" class="internal xref">Protected Discovery and Client Authentication</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5">
-                <p id="section-toc.1-1.10.2.5.1"><a href="#section-10.5" class="auto internal xref">10.5</a>.  <a href="#name-catalog-access-token-disclo" class="internal xref">Catalog Access Token Disclosure</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.6">
-                <p id="section-toc.1-1.10.2.6.1"><a href="#section-10.6" class="auto internal xref">10.6</a>.  <a href="#name-response-authenticity" class="internal xref">Response Authenticity</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.7">
-                <p id="section-toc.1-1.10.2.7.1"><a href="#section-10.7" class="auto internal xref">10.7</a>.  <a href="#name-stale-catalogs-and-relation" class="internal xref">Stale Catalogs and Relationship Termination</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.8">
-                <p id="section-toc.1-1.10.2.8.1"><a href="#section-10.8" class="auto internal xref">10.8</a>.  <a href="#name-revision-integrity-and-appr" class="internal xref">Revision Integrity and Approval</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.9">
-                <p id="section-toc.1-1.10.2.9.1"><a href="#section-10.9" class="auto internal xref">10.9</a>.  <a href="#name-tenant-confusion" class="internal xref">Tenant Confusion</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.10">
-                <p id="section-toc.1-1.10.2.10.1"><a href="#section-10.10" class="auto internal xref">10.10</a>. <a href="#name-tenant-eligibility" class="internal xref">Tenant Eligibility</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.11">
-                <p id="section-toc.1-1.10.2.11.1"><a href="#section-10.11" class="auto internal xref">10.11</a>. <a href="#name-cross-jwt-confusion" class="internal xref">Cross-JWT Confusion</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.12">
-                <p id="section-toc.1-1.10.2.12.1"><a href="#section-10.12" class="auto internal xref">10.12</a>. <a href="#name-external-references" class="internal xref">External References</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.13">
-                <p id="section-toc.1-1.10.2.13.1"><a href="#section-10.13" class="auto internal xref">10.13</a>. <a href="#name-client-discovery-2" class="internal xref">Client Discovery</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.14">
-                <p id="section-toc.1-1.10.2.14.1"><a href="#section-10.14" class="auto internal xref">10.14</a>. <a href="#name-resource-consumption" class="internal xref">Resource Consumption</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-privacy-considerations" class="internal xref">Privacy Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-privacy-considerations" class="internal xref">Privacy Considerations</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
-                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-oauth-authorization-server-" class="internal xref">OAuth Authorization Server Metadata Registry</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-oauth-authorization-server-" class="internal xref">OAuth Authorization Server Metadata Registry</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
-                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-media-types-registry" class="internal xref">Media Types Registry</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-media-types-registry" class="internal xref">Media Types Registry</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2.2.1">
-                    <p id="section-toc.1-1.12.2.2.2.1.1"><a href="#section-12.2.1" class="auto internal xref">12.2.1</a>.  <a href="#name-application-oauth-grant-cat" class="internal xref">application/oauth-grant-catalog+json</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.1">
+                    <p id="section-toc.1-1.11.2.2.2.1.1"><a href="#section-11.2.1" class="auto internal xref">11.2.1</a>.  <a href="#name-application-oauth-grant-cat" class="internal xref">application/oauth-grant-catalog+json</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2.2.2">
-                    <p id="section-toc.1-1.12.2.2.2.2.1"><a href="#section-12.2.2" class="auto internal xref">12.2.2</a>.  <a href="#name-application-oauth-grant-cata" class="internal xref">application/oauth-grant-catalog-access+jwt</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.2">
+                    <p id="section-toc.1-1.11.2.2.2.2.1"><a href="#section-11.2.2" class="auto internal xref">11.2.2</a>.  <a href="#name-application-oauth-grant-cata" class="internal xref">application/oauth-grant-catalog-access+jwt</a></p>
 </li>
                 </ul>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.3">
-                <p id="section-toc.1-1.12.2.3.1"><a href="#section-12.3" class="auto internal xref">12.3</a>.  <a href="#name-oauth-scope-value" class="internal xref">OAuth Scope Value</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.3">
+                <p id="section-toc.1-1.11.2.3.1"><a href="#section-11.3" class="auto internal xref">11.3</a>.  <a href="#name-oauth-scope-value" class="internal xref">OAuth Scope Value</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
+                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-references" class="internal xref">References</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
-                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
-                <p id="section-toc.1-1.13.2.2.1"><a href="#section-13.2" class="auto internal xref">13.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-example-grant-catalog" class="internal xref">Example Grant Catalog</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-example-grant-catalog" class="internal xref">Example Grant Catalog</a></p>
+            <p id="section-toc.1-1.14.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-example-of-alternative-entr" class="internal xref">Example of Alternative Entries</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-example-of-alternative-entr" class="internal xref">Example of Alternative Entries</a></p>
+            <p id="section-toc.1-1.15.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-example-approval-lifecycle" class="internal xref">Example Approval Lifecycle</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
-            <p id="section-toc.1-1.16.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-example-approval-lifecycle" class="internal xref">Example Approval Lifecycle</a></p>
+            <p id="section-toc.1-1.16.1"><a href="#appendix-D" class="auto internal xref">Appendix D</a>.  <a href="#name-design-rationale" class="internal xref">Design Rationale</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17">
-            <p id="section-toc.1-1.17.1"><a href="#appendix-D" class="auto internal xref">Appendix D</a>.  <a href="#name-design-rationale" class="internal xref">Design Rationale</a></p>
+            <p id="section-toc.1-1.17.1"><a href="#appendix-E" class="auto internal xref"></a><a href="#name-open-issues" class="internal xref">Open Issues</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18">
-            <p id="section-toc.1-1.18.1"><a href="#appendix-E" class="auto internal xref"></a><a href="#name-open-issues" class="internal xref">Open Issues</a></p>
+            <p id="section-toc.1-1.18.1"><a href="#appendix-F" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19">
-            <p id="section-toc.1-1.19.1"><a href="#appendix-F" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.19.1"><a href="#appendix-G" class="auto internal xref"></a><a href="#name-document-history" class="internal xref">Document History</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.20">
-            <p id="section-toc.1-1.20.1"><a href="#appendix-G" class="auto internal xref"></a><a href="#name-document-history" class="internal xref">Document History</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.21">
-            <p id="section-toc.1-1.21.1"><a href="#appendix-H" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.20.1"><a href="#appendix-H" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1541,12 +1500,16 @@ application later changes the entry, the identity provider detects the
 new revision and asks for review instead of continuing under the old
 approval. <a href="#example-alternatives" class="auto internal xref">Appendix B</a> shows a richer case, with scope
 values that cannot be combined in one grant.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
-<p id="section-1.1-4">The rest of the integration is unchanged: establishing the relationship
-(the Onboarding Arrangement), registering the client at the application
-and mapping its client identifier, learning any restrictions the
+<p id="section-1.1-4">The catalog replaces copied grant configuration; the rest of the
+integration is unchanged: establishing the relationship (the Onboarding
+Arrangement), registering the client at the application and mapping its
+client identifier, mapping subjects, learning any restrictions the
 application applies to that particular client, deciding which employees
 and clients may use the integration, and the application's runtime
-authorization decisions.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+authorization decisions. Approving an entry constrains what grants
+contain; what a scope value permits, and whether a request is allowed,
+remain decisions of the application (<a href="#sec-not-authorization" class="auto internal xref">Section 9.1</a>,
+<a href="#sec-scope-meaning" class="auto internal xref">Section 9.2</a>).<a href="#section-1.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="other-metadata">
@@ -1624,13 +1587,11 @@ contains.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
 encoding (<a href="#data-model" class="auto internal xref">Section 4</a>), with an Authorization Envelope (<a href="#envelope" class="auto internal xref">Section 4.6</a>)
 and processing rules (<a href="#processing" class="auto internal xref">Section 5</a>) stated in terms of the inputs a
 grant conveys. Each Grant Profile Definition specifies how grants
-of its Grant Profile convey those inputs (<a href="#profile-definitions" class="auto internal xref">Section 9.1</a>); this
-specification provides one only for ID-JAG (<a href="#id-jag" class="auto internal xref">Section 8</a>). A retrieval
+of its Grant Profile convey those inputs (<a href="#profile-definitions" class="auto internal xref">Section 8.1</a>); this
+specification provides one only for ID-JAG (<a href="#id-jag" class="auto internal xref">Section 7</a>). A retrieval
 protocol authenticates the relationship and delivers the catalog
 (<a href="#oauth-binding" class="auto internal xref">Section 6</a>); this specification defines an OAuth retrieval
-protocol. A Resource Authorization Server can also provide client
-discovery, through which an application client retrieves the part of a
-catalog that applies to it (<a href="#client-discovery" class="auto internal xref">Section 7</a>).<a href="#section-1.3-2" class="pilcrow">¶</a></p>
+protocol.<a href="#section-1.3-2" class="pilcrow">¶</a></p>
 <p id="section-1.3-3">The following are outside the scope of this specification:<a href="#section-1.3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1.3-4.1">
@@ -1650,8 +1611,13 @@ catalogs.<a href="#section-1.3-4.3.1" class="pilcrow">¶</a></p>
 (<a href="#installation" class="auto internal xref">Section 5.5</a>).<a href="#section-1.3-4.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.3-4.5">
-            <p id="section-1.3-4.5.1">Establishment of an Onboarding Arrangement
-(<a href="#relationship-authorization" class="auto internal xref">Section 6.2</a>).<a href="#section-1.3-4.5.1" class="pilcrow">¶</a></p>
+            <p id="section-1.3-4.5.1">A mechanism by which a client discovers whether a grant from a
+particular Grant Issuer would be accepted (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.7" class="relref">Section 9.7</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>),
+which is an open issue (<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>).<a href="#section-1.3-4.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.3-4.6">
+            <p id="section-1.3-4.6.1">Establishment of an Onboarding Arrangement
+(<a href="#relationship-authorization" class="auto internal xref">Section 6.2</a>).<a href="#section-1.3-4.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1723,7 +1689,7 @@ the <code>authorization_grant_profiles_supported</code> metadata member
 <dt id="section-2-4.11">Grant Profile Definition:</dt>
         <dd style="margin-left: 1.5em" id="section-2-4.12">
           <p id="section-2-4.12.1">A specification that defines how catalog entries apply to a Grant
-Profile (<a href="#profile-definitions" class="auto internal xref">Section 9.1</a>).<a href="#section-2-4.12.1" class="pilcrow">¶</a></p>
+Profile (<a href="#profile-definitions" class="auto internal xref">Section 8.1</a>).<a href="#section-2-4.12.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-4.13">Issuer Relationship:</dt>
@@ -1858,9 +1824,12 @@ Grant Profile.<a href="#section-3-3.14.1" class="pilcrow">¶</a></p>
       <dd class="break"></dd>
 </dl>
 <p id="section-3-4">Steps (A) through (E) occur when the Grant Issuer is configured and when
-it refreshes the catalog, not for each grant. Before step (F), a client
-can retrieve a client view through client discovery and use the view
-to construct its request (<a href="#client-discovery" class="auto internal xref">Section 7</a>).<a href="#section-3-4" class="pilcrow">¶</a></p>
+it refreshes the catalog, not for each grant. With the OAuth retrieval
+protocol, the Grant Issuer signs a catalog access assertion, exchanges
+it at the Resource Authorization Server's token endpoint for a catalog
+access token, and uses that token to retrieve one complete Relationship
+View (<a href="#oauth-binding" class="auto internal xref">Section 6</a>). This exchange is separate from the grants that
+clients later request in step (F).<a href="#section-3-4" class="pilcrow">¶</a></p>
 <p id="section-3-5">The design rests on the following principles, each stated
 normatively in the sections cited.<a href="#section-3-5" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -1868,10 +1837,7 @@ normatively in the sections cited.<a href="#section-3-5" class="pilcrow">¶</a><
           <p id="section-3-6.1.1">The Resource Authorization Server determines a Relationship View
 solely from the authenticated Issuer Relationship
 (<a href="#relationship-authorization" class="auto internal xref">Section 6.2</a>), and the Grant Issuer installs all of
-a Relationship View or none of it (<a href="#installation" class="auto internal xref">Section 5.5</a>). A client view
-contains only objects of that Relationship View, disclosed to a client
-that the Resource Authorization Server authorizes (<a href="#client-view" class="auto internal xref">Section 7.4</a>,
-<a href="#client-disclosure" class="auto internal xref">Section 7.3</a>).<a href="#section-3-6.1.1" class="pilcrow">¶</a></p>
+a Relationship View or none of it (<a href="#installation" class="auto internal xref">Section 5.5</a>).<a href="#section-3-6.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-6.2">
           <p id="section-3-6.2.1">A grant is issued using one Tenant Object and one entry, and conveys
@@ -1884,7 +1850,7 @@ is either reserved by the Grant Profile or listed in the entry
 entry, public metadata, and authority metadata never broaden an
 approval, and an entry cannot enable a value that public metadata
 excludes (<a href="#narrowing" class="auto internal xref">Section 5.3</a>, <a href="#composition" class="auto internal xref">Section 5.2</a>, <a href="#installation" class="auto internal xref">Section 5.5</a>,
-<a href="#authority-metadata" class="auto internal xref">Section 5.6.2</a>).<a href="#section-3-6.3.1" class="pilcrow">¶</a></p>
+<a href="#optional-metadata" class="auto internal xref">Section 5.6</a>).<a href="#section-3-6.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-6.4">
           <p id="section-3-6.4.1">When the <code>revision</code> of an entry, or the <code>target_tenant</code> or
@@ -1896,7 +1862,7 @@ made for the new value (<a href="#installation" class="auto internal xref">Secti
           <p id="section-3-6.5.1">A Grant Issuer ignores members it does not understand, and a
 specification that defines a restrictive member also defines a
 mechanism that prevents Grant Issuers that do not implement that
-member from using the entry (<a href="#extensibility" class="auto internal xref">Section 9</a>).<a href="#section-3-6.5.1" class="pilcrow">¶</a></p>
+member from using the entry (<a href="#extensibility" class="auto internal xref">Section 8</a>).<a href="#section-3-6.5.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
@@ -1907,7 +1873,13 @@ member from using the entry (<a href="#extensibility" class="auto internal xref"
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-catalog-data-model" class="section-name selfRef">Catalog Data Model</a>
       </h2>
 <p id="section-4-1">The objects in this section describe what a Resource Authorization
-Server accepts in grants from one Issuer Relationship.<a href="#section-4-1" class="pilcrow">¶</a></p>
+Server accepts in grants from one Issuer Relationship. A Relationship
+View is the response for one Issuer Relationship. Its Tenant Objects
+identify the target tenants eligible for that relationship, and its
+Grant Catalogs contain the entries. Several Tenant Objects can reference
+one Grant Catalog, so tenants that accept the same grants share entries,
+while each approval remains specific to one Tenant Object
+(<a href="#narrowing" class="auto internal xref">Section 5.3</a>).<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2"><a href="#fig-model-example" class="auto internal xref">Figure 2</a> shows a complete Relationship View with one Tenant
 Object and one Grant Catalog. The Tenant Object references the Grant
 Catalog <code>read-only</code>, whose single entry permits ID-JAGs for the Messages
@@ -1997,7 +1969,7 @@ Relationship View
 <p id="section-4.1-1">Every object defined in this section is a JSON object <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>. A
 document that carries these objects <span class="bcp14">MUST</span> conform to I-JSON <span>[<a href="#RFC7493" class="cite xref">RFC7493</a>]</span>.
 A Grant Issuer <span class="bcp14">MUST</span> ignore members it does not understand
-(<a href="#extensibility" class="auto internal xref">Section 9</a>).<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+(<a href="#extensibility" class="auto internal xref">Section 8</a>).<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">Each object is defined by a table of its members, in which "string",
 "object", and "array" denote JSON types; the JSON value <code>null</code> has none
 of these types. The following members are
@@ -2182,7 +2154,7 @@ it.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
 Authorization Server tenant. The Resource Authorization Server <span class="bcp14">MUST NOT</span> use the identifier of a Tenant Object for a different tenant in
 any later Relationship View for the same Issuer Relationship.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
 <p id="section-4.3-4">An ID-JAG conveys <code>target_tenant</code> in the <code>aud_tenant</code> claim
-(<a href="#jwt-representation" class="auto internal xref">Section 8.1</a>). The Resource Authorization Server <span class="bcp14">MUST</span>
+(<a href="#jwt-representation" class="auto internal xref">Section 7.1</a>). The Resource Authorization Server <span class="bcp14">MUST</span>
 include <code>target_tenant</code> unless its issuer identifier alone identifies
 the target tenant. A Relationship View <span class="bcp14">MUST NOT</span> contain more than one
 Tenant Object without <code>target_tenant</code>, or two Tenant Objects with the
@@ -2647,7 +2619,7 @@ grant can convey more than one authorization details object of a
 permitted type. The Grant Issuer applies its policy to complete
 authorization details objects, and the Resource Authorization Server
 validates their contents at redemption. The catalog does not carry
-schemas for authorization details types (<a href="#rar-metadata" class="auto internal xref">Section 5.6.1</a>).<a href="#section-4.5.3-5" class="pilcrow">¶</a></p>
+schemas for authorization details types (<a href="#optional-metadata" class="auto internal xref">Section 5.6</a>).<a href="#section-4.5.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="entry-claims">
@@ -2782,7 +2754,7 @@ members:<a href="#section-4.5.5-1" class="pilcrow">¶</a></p>
           </table>
 <p id="section-4.5.5-3">This member describes a subject identifier <span>[<a href="#RFC9493" class="cite xref">RFC9493</a>]</span> conveyed in
 addition to the subject of the grant; for an ID-JAG, it is the <code>sub_id</code>
-claim (<a href="#jwt-representation" class="auto internal xref">Section 8.1</a>).<a href="#section-4.5.5-3" class="pilcrow">¶</a></p>
+claim (<a href="#jwt-representation" class="auto internal xref">Section 7.1</a>).<a href="#section-4.5.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="entry-grant-binding">
@@ -2821,7 +2793,7 @@ following members:<a href="#section-4.5.6-1" class="pilcrow">¶</a></p>
                 <td class="text-left" rowspan="1" colspan="1">
                   <span class="bcp14">REQUIRED</span>
 </td>
-                <td class="text-left" rowspan="1" colspan="1">Non-empty array of unique grant binding method names, defined below or by other specifications (<a href="#extensibility" class="auto internal xref">Section 9</a>)</td>
+                <td class="text-left" rowspan="1" colspan="1">Non-empty array of unique grant binding method names, defined below or by other specifications (<a href="#extensibility" class="auto internal xref">Section 8</a>)</td>
               </tr>
             </tbody>
           </table>
@@ -2986,7 +2958,7 @@ claim object;<a href="#section-4.7-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.7-2.6">
             <p id="section-4.7-2.6.1">any member that the specification defining it declares part of the
-normative semantics of an entry (<a href="#extensibility" class="auto internal xref">Section 9</a>).<a href="#section-4.7-2.6.1" class="pilcrow">¶</a></p>
+normative semantics of an entry (<a href="#extensibility" class="auto internal xref">Section 8</a>).<a href="#section-4.7-2.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-4.7-3">The Resource Authorization Server <span class="bcp14">MUST</span> change the <code>revision</code> of an entry
@@ -3007,7 +2979,8 @@ the Issuer Relationship, the Grant Catalog <code>id</code>, the entry <code>id</
 Grant Catalog identifiers are unique only within a Relationship View
 (<a href="#model-conventions" class="auto internal xref">Section 4.1</a>), so the Grant Catalogs offered to two Issuer
 Relationships can share an identifier and differ in content.<a href="#section-4.7-4" class="pilcrow">¶</a></p>
-<p id="section-4.7-5">The <code>revision</code> member is neither a digest nor an integrity mechanism. It
+<p id="section-4.7-5">The <code>revision</code> member is opaque to the Grant Issuer and provides no
+integrity guarantee. It
 lets the Grant Issuer determine whether an approval made for an earlier
 copy of an entry still applies (<a href="#installation" class="auto internal xref">Section 5.5</a>). The retrieval
 protocol handles caching of representations.<a href="#section-4.7-5" class="pilcrow">¶</a></p>
@@ -3090,7 +3063,7 @@ the member is not met.<a href="#section-5.1-5.2.1" class="pilcrow">¶</a></p>
           <li id="section-5.1-5.3">
             <p id="section-5.1-5.3.1">The entry contains a member for an input (<a href="#envelope" class="auto internal xref">Section 4.6</a>) that its
 Grant Profile Definition states the Grant Profile cannot convey
-(<a href="#profile-definitions" class="auto internal xref">Section 9.1</a>).<a href="#section-5.1-5.3.1" class="pilcrow">¶</a></p>
+(<a href="#profile-definitions" class="auto internal xref">Section 8.1</a>).<a href="#section-5.1-5.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-5.4">
             <p id="section-5.1-5.4.1">The entry conflicts with public metadata (<a href="#composition" class="auto internal xref">Section 5.2</a>).<a href="#section-5.1-5.4.1" class="pilcrow">¶</a></p>
@@ -3136,7 +3109,7 @@ the entry.<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.4">
             <p id="section-5.2-2.4.1">Perform the checks that the Grant Profile Definition specifies, such
-as checks of <code>grant_types_supported</code> (<a href="#jwt-composition" class="auto internal xref">Section 8.3</a>).<a href="#section-5.2-2.4.1" class="pilcrow">¶</a></p>
+as checks of <code>grant_types_supported</code> (<a href="#jwt-composition" class="auto internal xref">Section 7.3</a>).<a href="#section-5.2-2.4.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <span id="name-public-metadata-members-che"></span><table class="center" id="table-15">
@@ -3262,7 +3235,7 @@ configuration for the Issuer Relationship, and selects an entry whose
 Grant Profile matches the kind of grant the client requested and whose
 <code>resource</code> is the requested protected resource. The catalog defines no
 parameter of the client's grant request for selecting a target tenant
-(<a href="#profile-definitions" class="auto internal xref">Section 9.1</a>). When more than one approved Tenant Object or
+(<a href="#profile-definitions" class="auto internal xref">Section 8.1</a>). When more than one approved Tenant Object or
 entry could satisfy a request, Grant Issuer policy selects one. The
 Grant Issuer issues a grant for a request that names several resources
 only if its policy reduces the request to one of them, and for a request
@@ -3271,7 +3244,7 @@ that names none only if its policy determines one (<a href="#envelope" class="au
 Issuer Relationship unless the grant identifies its issuer by the issuer
 identifier of that relationship and, when the relationship has an issuer
 tenant, identifies that issuer tenant, as the Grant Profile Definition
-specifies (<a href="#profile-definitions" class="auto internal xref">Section 9.1</a>).<a href="#section-5.4-3" class="pilcrow">¶</a></p>
+specifies (<a href="#profile-definitions" class="auto internal xref">Section 8.1</a>).<a href="#section-5.4-3" class="pilcrow">¶</a></p>
 <p id="section-5.4-4">The Grant Issuer <span class="bcp14">MUST NOT</span> derive a target tenant identifier from
 the Tenant Object <code>id</code>, from the number of Tenant Objects in a
 Relationship View, or from the form of an issuer identifier.<a href="#section-5.4-4" class="pilcrow">¶</a></p>
@@ -3324,10 +3297,8 @@ Definition specifies.<a href="#section-5.4-10" class="pilcrow">¶</a></p>
 <a href="#section-5.4.1" class="section-number selfRef">5.4.1. </a><a href="#name-clients" class="section-name selfRef">Clients</a>
           </h4>
 <p id="section-5.4.1-1">The catalog does not enumerate or register application clients, or
-establish client identifier mappings. An application client can retrieve
-the part of a catalog that applies to it (<a href="#client-discovery" class="auto internal xref">Section 7</a>); views
-specific to one client that the Grant Issuer retrieves are an open issue
-(<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>).
+establish client identifier mappings. Views specific to one application
+client are an open issue (<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>).
 A Relationship View is relationship-wide and does not establish
 eligibility for a particular application client: a Resource
 Authorization Server can permit a grant configuration for one
@@ -3335,7 +3306,7 @@ application client and reject an otherwise equivalent configuration for
 another. The Grant Profile Definition of a Grant Profile whose grants
 identify the client by its client identifier at the Resource
 Authorization Server specifies how the Grant Issuer obtains that
-identifier, as <a href="#id-jag" class="auto internal xref">Section 8</a> does for ID-JAG. Such an identifier can be
+identifier, as <a href="#id-jag" class="auto internal xref">Section 7</a> does for ID-JAG. Such an identifier can be
 shared across trust domains <span>[<a href="#CIMD" class="cite xref">CIMD</a>]</span>.<a href="#section-5.4.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -3420,7 +3391,7 @@ withdraws the previous form of the object, so the withdrawal row applies
 to it as well.<a href="#section-5.5-5" class="pilcrow">¶</a></p>
 <p id="section-5.5-6">These rules apply to every change of revision, including a change that
 only narrows an entry, such as the removal of a scope value
-(<a href="#sec-revision" class="auto internal xref">Section 10.8</a>). Whether to relax these rules is an open issue
+(<a href="#sec-revision" class="auto internal xref">Section 9.8</a>). Whether to relax these rules is an open issue
 (<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>).<a href="#section-5.5-6" class="pilcrow">¶</a></p>
 <p id="section-5.5-7">The Grant Issuer <span class="bcp14">SHOULD</span> retrieve the Relationship View periodically and
 after administrative changes to the Issuer Relationship. The Grant
@@ -3429,7 +3400,7 @@ not been able to refresh within a maximum age that it configures for the
 Issuer Relationship, such as one day. The maximum age is measured from
 the most recent complete retrieval; an incomplete retrieval, including
 one that results from the end of the Issuer Relationship, does not
-extend it (<a href="#sec-stale" class="auto internal xref">Section 10.7</a>). A Resource Authorization Server that needs
+extend it (<a href="#sec-stale" class="auto internal xref">Section 9.7</a>). A Resource Authorization Server that needs
 issuance to stop sooner first removes every eligible tenant from the
 relationship; the Grant Issuer observes that removal at its next refresh
 as a withdrawal.<a href="#section-5.5-7" class="pilcrow">¶</a></p>
@@ -3440,56 +3411,19 @@ as a withdrawal.<a href="#section-5.5-7" class="pilcrow">¶</a></p>
         <h3 id="name-optional-supporting-metadat">
 <a href="#section-5.6" class="section-number selfRef">5.6. </a><a href="#name-optional-supporting-metadat" class="section-name selfRef">Optional Supporting Metadata</a>
         </h3>
-<p id="section-5.6-1">A Grant Issuer can use the following metadata to assist administrators
-and to narrow requests at runtime. It can use a catalog without either.<a href="#section-5.6-1" class="pilcrow">¶</a></p>
-<div id="rar-metadata">
-<section id="section-5.6.1">
-          <h4 id="name-use-of-authorization-detail">
-<a href="#section-5.6.1" class="section-number selfRef">5.6.1. </a><a href="#name-use-of-authorization-detail" class="section-name selfRef">Use of Authorization Details Types Metadata</a>
-          </h4>
-<p id="section-5.6.1-1">If the Resource Authorization Server publishes the
-<code>authorization_details_types_metadata_endpoint</code> metadata member
-<span>[<a href="#RAR-METADATA" class="cite xref">RAR-METADATA</a>]</span>, the Grant Issuer <span class="bcp14">MAY</span> retrieve the metadata for a
-<code>type</code> that an entry permits and use its <code>schema</code> or <code>schema_uri</code> to
-assist administrators or to validate authorization details objects
-locally. That metadata is not an authorization policy for the values in
-an object; it cannot broaden an entry, and its absence, or a failure to
-retrieve it, does not affect the validity of an entry.<a href="#section-5.6.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.6.1-2">The Grant Issuer <span class="bcp14">MUST NOT</span> send a credential obtained through a retrieval
+<p id="section-5.6-1">A Grant Issuer can use other metadata to help administrators understand
+entries: authorization details types metadata <span>[<a href="#RAR-METADATA" class="cite xref">RAR-METADATA</a>]</span> describes
+the structure of an authorization details type, and authority metadata
+<span>[<a href="#AUTHORITY-METADATA" class="cite xref">AUTHORITY-METADATA</a>]</span> describes what a scope value or authorization
+details type authorizes. Such metadata is advisory. It cannot broaden an
+entry or an approval, it does not cause an entry to conflict with public
+metadata, and its absence, or a failure to retrieve it, does not affect
+the validity of an entry. How a Grant Issuer uses schemas or authority
+descriptions to enforce or narrow policy is an open issue
+(<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>).<a href="#section-5.6-1" class="pilcrow">¶</a></p>
+<p id="section-5.6-2">The Grant Issuer <span class="bcp14">MUST NOT</span> send a credential obtained through a retrieval
 protocol when dereferencing a <code>schema_uri</code>, <code>documentation_uri</code>, or
-<code>definition_uri</code>. A Grant Issuer that uses a schema to enforce policy
-retains the schema, or a cryptographic digest of it, and requires new
-approval when the schema changes; otherwise its use of the schema is
-advisory. Schemas specific to an Issuer Relationship or to a tenant are
-outside the scope of this specification.<a href="#section-5.6.1-2" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="authority-metadata">
-<section id="section-5.6.2">
-          <h4 id="name-use-of-authority-metadata">
-<a href="#section-5.6.2" class="section-number selfRef">5.6.2. </a><a href="#name-use-of-authority-metadata" class="section-name selfRef">Use of Authority Metadata</a>
-          </h4>
-<p id="section-5.6.2-1">If the Protected Resource Metadata for an entry's <code>resource</code> contains
-the <code>authority_metadata</code> member (<span><a href="https://datatracker.ietf.org/doc/html/draft-zehavi-oauth-authority-metadata-00#section-2.1" class="relref">Section 2.1</a> of [<a href="#AUTHORITY-METADATA" class="cite xref">AUTHORITY-METADATA</a>]</span>),
-the Grant Issuer <span class="bcp14">MAY</span> use its authority entries to show administrators
-what the scope values and authorization details types of the entry
-authorize. An authority entry describes an item of the entry when its
-<code>kind</code> is <code>scope</code> and its <code>value</code> is the item's <code>scope</code>, or its <code>kind</code>
-is <code>authorization_details_type</code> and its <code>value</code> is the item's <code>type</code>.
-Authorization Server Metadata can carry the same member
-for the Resource Authorization Server's own vocabulary
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-zehavi-oauth-authority-metadata-00#section-2.2" class="relref">Section 2.2</a> of [<a href="#AUTHORITY-METADATA" class="cite xref">AUTHORITY-METADATA</a>]</span>).<a href="#section-5.6.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.6.2-2">Authority metadata is advisory input to approval: it cannot broaden an
-entry, it does not cause an entry to conflict with public metadata, and
-the absence of an authority entry does not affect the validity of an
-entry. A Grant Issuer that retains, with an
-approval, the authority description that the administrator saw can
-detect a later change to it and request review (<a href="#sec-scope-meaning" class="auto internal xref">Section 10.2</a>).
-When narrowing a request at runtime (<a href="#narrowing" class="auto internal xref">Section 5.3</a>), the Grant Issuer
-can use an attenuation relationship that the authority metadata
-declares only to select a value within the approved subset.<a href="#section-5.6.2-2" class="pilcrow">¶</a></p>
-</section>
-</div>
+<code>definition_uri</code>.<a href="#section-5.6-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3501,7 +3435,7 @@ declares only to select a value within the approved subset.<a href="#section-5.6
       </h2>
 <p id="section-6-1">Before disclosing catalog content to a Grant Issuer, the Resource
 Authorization Server establishes, through a retrieval protocol
-(<a href="#extensibility" class="auto internal xref">Section 9</a>), which Issuer Relationship the disclosure serves,
+(<a href="#extensibility" class="auto internal xref">Section 8</a>), which Issuer Relationship the disclosure serves,
 and verifies that the relationship is authorized and current.
 <a href="#relationship-identity" class="auto internal xref">Section 6.1</a> and <a href="#relationship-authorization" class="auto internal xref">Section 6.2</a> apply to
 every retrieval protocol. The remaining subsections define the OAuth
@@ -3547,8 +3481,7 @@ Relationship.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 <p id="section-6.2-3">The Resource Authorization Server <span class="bcp14">MUST</span> verify that the Issuer
 Relationship is authorized each time it discloses catalog content.
 Ending an Issuer Relationship stops disclosure, even under a
-credential issued before the relationship ended. <a href="#client-disclosure" class="auto internal xref">Section 7.3</a>
-specifies disclosure to an application client.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
+credential issued before the relationship ended.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="as-metadata">
@@ -3575,8 +3508,8 @@ protocol <span class="bcp14">MUST</span> publish this member. A Grant Issuer <sp
 OAuth retrieval protocol with a Resource Authorization Server whose
 metadata omits this member.<a href="#section-6.3-3" class="pilcrow">¶</a></p>
 <p id="section-6.3-4">The following is an example of Authorization Server Metadata for a
-Resource Authorization Server that supports ID-JAG, the OAuth retrieval
-protocol, and client discovery:<a href="#section-6.3-4" class="pilcrow">¶</a></p>
+Resource Authorization Server that supports ID-JAG and the OAuth
+retrieval protocol:<a href="#section-6.3-4" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-6.3-5">
 <pre>
 {
@@ -3594,10 +3527,8 @@ protocol, and client discovery:<a href="#section-6.3-4" class="pilcrow">¶</a></
   "dpop_signing_alg_values_supported": ["ES256"],
   "authorization_details_types_metadata_endpoint":
     "https://ras.example/oauth2/authorization-details-types",
-  "authorization_grant_catalog_endpoint":
-    "https://ras.example/oauth2/grant-catalog",
-  "authorization_grant_client_discovery_endpoint":
-    "https://ras.example/oauth2/grant-catalog/client"
+    "authorization_grant_catalog_endpoint":
+    "https://ras.example/oauth2/grant-catalog"
 }
 </pre><a href="#section-6.3-5" class="pilcrow">¶</a>
 </div>
@@ -3788,7 +3719,7 @@ other than <code>oauth-grant-catalog-access+jwt</code> as a catalog access
 assertion, and <span class="bcp14">MUST NOT</span> accept a catalog access assertion as a grant of
 any Grant Profile or as a client assertion. These rules apply whether or
 not a Grant Profile specifies a <code>typ</code> value for its grants
-(<a href="#sec-cross-jwt" class="auto internal xref">Section 10.11</a>).<a href="#section-6.4.1-3" class="pilcrow">¶</a></p>
+(<a href="#sec-cross-jwt" class="auto internal xref">Section 9.11</a>).<a href="#section-6.4.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3998,7 +3929,7 @@ a redirection as an incomplete retrieval (<a href="#installation" class="auto in
 the Issuer Relationship associated with the catalog access token
 (<a href="#relationship-authorization" class="auto internal xref">Section 6.2</a>) and responds with HTTP status code 200
 (OK) and a Relationship View document of media type
-<code>application/oauth-grant-catalog+json</code> (<a href="#iana-media-types" class="auto internal xref">Section 12.2</a>), whose
+<code>application/oauth-grant-catalog+json</code> (<a href="#iana-media-types" class="auto internal xref">Section 11.2</a>), whose
 content is the Relationship View (<a href="#relationship-view" class="auto internal xref">Section 4.2</a>). The Resource
 Authorization Server <span class="bcp14">MUST</span> construct the document from one consistent
 state of the Issuer Relationship. The Grant Issuer validates the
@@ -4133,329 +4064,26 @@ exists.<a href="#section-6.9-4" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
-<div id="client-discovery">
-<section id="section-7">
-      <h2 id="name-client-discovery">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-client-discovery" class="section-name selfRef">Client Discovery</a>
-      </h2>
-<p id="section-7-1">A Resource Authorization Server can let an application client retrieve
-the part of a catalog that applies to it, called a client view, for a
-Grant Issuer whose grants the client intends to present. The client
-uses the client view to construct its request to the Grant Issuer. This
-is the protected discovery mechanism that <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.7" class="relref">Section 9.7</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>
-permits: the Resource Authorization Server authenticates the client
-before disclosing acceptance information (<a href="#client-discovery-request" class="auto internal xref">Section 7.2</a>),
-the response is specific to the authenticated client, and it can be
-scoped by tenant and resource (<a href="#client-view" class="auto internal xref">Section 7.4</a>).<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">A client view describes what a client can request. It does not
-establish user authorization or consent. It does not show that the Grant
-Issuer will issue a grant: the Grant Issuer issues only grants within an
-approved subset (<a href="#issuing" class="auto internal xref">Section 5.4</a>), and the Resource Authorization Server
-applies its current policy to every grant it processes.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<div id="client-discovery-endpoint">
-<section id="section-7.1">
-        <h3 id="name-client-discovery-endpoint">
-<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-client-discovery-endpoint" class="section-name selfRef">Client Discovery Endpoint</a>
-        </h3>
-<p id="section-7.1-1">This specification defines the following Authorization Server Metadata
-<span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span> member:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-7.1-2">
-          <dt id="section-7.1-2.1">
-<code>authorization_grant_client_discovery_endpoint</code>:</dt>
-          <dd style="margin-left: 1.5em" id="section-7.1-2.2">
-            <p id="section-7.1-2.2.1">URL of the client discovery endpoint of the Resource Authorization
-Server. The URL uses the <code>https</code> scheme.<a href="#section-7.1-2.2.1" class="pilcrow">¶</a></p>
-</dd>
-        <dd class="break"></dd>
-</dl>
-<p id="section-7.1-3">A Resource Authorization Server that supports client discovery <span class="bcp14">MUST</span>
-publish this member. The member discloses that client discovery is
-supported, not any Issuer Relationship.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="client-discovery-request">
-<section id="section-7.2">
-        <h3 id="name-client-discovery-request">
-<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-client-discovery-request" class="section-name selfRef">Client Discovery Request</a>
-        </h3>
-<p id="section-7.2-1">The client sends an HTTP POST request to the client discovery endpoint
-with the following parameters in the <code>application/x-www-form-urlencoded</code>
-format:<a href="#section-7.2-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-7.2-2">
-          <dt id="section-7.2-2.1">
-<code>issuer</code>:</dt>
-          <dd style="margin-left: 1.5em" id="section-7.2-2.2">
-            <p id="section-7.2-2.2.1"><span class="bcp14">REQUIRED</span>. The issuer identifier of the Grant Issuer whose grants the
-client intends to present.<a href="#section-7.2-2.2.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-7.2-2.3">
-<code>issuer_tenant</code>:</dt>
-          <dd style="margin-left: 1.5em" id="section-7.2-2.4">
-            <p id="section-7.2-2.4.1"><span class="bcp14">OPTIONAL</span>. The issuer tenant identifier (<a href="#relationship-identity" class="auto internal xref">Section 6.1</a>) of
-the subject's tenant, when the Grant Issuer is multi-tenant
-(<a href="#id-jag-client" class="auto internal xref">Section 8.4</a> describes how an ID-JAG client obtains it).<a href="#section-7.2-2.4.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-7.2-2.5">
-<code>target_tenant</code>:</dt>
-          <dd style="margin-left: 1.5em" id="section-7.2-2.6">
-            <p id="section-7.2-2.6.1">The tenant identifier of the Resource Authorization Server tenant in
-which the client is registered. <span class="bcp14">REQUIRED</span> when the Resource
-Authorization Server uses client identifiers that are unique only
-within a tenant (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-6.2" class="relref">Section 6.2</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>), and <span class="bcp14">OPTIONAL</span> otherwise.<a href="#section-7.2-2.6.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-7.2-2.7">
-<code>resource</code>:</dt>
-          <dd style="margin-left: 1.5em" id="section-7.2-2.8">
-            <p id="section-7.2-2.8.1"><span class="bcp14">OPTIONAL</span>. A resource indicator (<span><a href="https://rfc-editor.org/rfc/rfc8707#section-2" class="relref">Section 2</a> of [<a href="#RFC8707" class="cite xref">RFC8707</a>]</span>) that
-restricts the client view to entries for that protected resource.<a href="#section-7.2-2.8.1" class="pilcrow">¶</a></p>
-</dd>
-        <dd class="break"></dd>
-</dl>
-<p id="section-7.2-3">The requested Issuer Relationship is the one that <code>issuer</code> and
-<code>issuer_tenant</code> identify.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
-<p id="section-7.2-4">The client authenticates using the method it uses at the token endpoint
-of the Resource Authorization Server (<span><a href="https://rfc-editor.org/rfc/rfc6749#section-2.3" class="relref">Section 2.3</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>), such
-as a JWT client assertion (<span><a href="https://rfc-editor.org/rfc/rfc7523#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>) or mutual TLS
-<span>[<a href="#RFC8705" class="cite xref">RFC8705</a>]</span>. A client that authenticates with a JWT client assertion
-<span class="bcp14">MUST</span> use the issuer identifier of the Resource Authorization Server as
-the sole value of the assertion's <code>aud</code> claim, and the Resource
-Authorization Server <span class="bcp14">MUST</span> reject a client assertion that does not
-contain its issuer identifier as the sole audience value, as
-<span>[<a href="#RFC7523BIS" class="cite xref">RFC7523BIS</a>]</span> specifies for client authentication. When the Resource
-Authorization Server uses client identifiers that are unique only within
-a tenant, it authenticates the client against its registration in the
-tenant that <code>target_tenant</code> identifies, as it does at its token
-endpoint, and responds to a <code>target_tenant</code> that identifies no tenant as
-it does to failed client authentication. Otherwise, <code>target_tenant</code> only
-restricts the client view, and a value that identifies no Tenant Object
-of the requested Issuer Relationship yields a client view with no Tenant
-Objects (<a href="#client-view" class="auto internal xref">Section 7.4</a>). The Resource Authorization Server <span class="bcp14">MUST</span>
-authenticate the client, and <span class="bcp14">MUST NOT</span> disclose any part of a client view
-to a client that it has not authenticated. When the Resource
-Authorization Server rejects replayed client assertions at its token
-endpoint (<span><a href="https://rfc-editor.org/rfc/rfc7523#section-3" class="relref">Section 3</a> of [<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>), it applies the same check, with the
-same record of <code>jti</code> values, at the client discovery endpoint. Because a
-client view depends on the identity of the client, a public client
-cannot use client discovery.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
-<p id="section-7.2-5">The following is an example of a client discovery request, from a client
-whose identifier at the Resource Authorization Server is
-<code>assistant-456</code>. The Resource Authorization Server in this example uses
-globally unique client identifiers, so the request omits
-<code>target_tenant</code> (line breaks for display purposes only):<a href="#section-7.2-5" class="pilcrow">¶</a></p>
-<div class="lang-http-message sourcecode" id="section-7.2-6">
-<pre>
-POST /oauth2/grant-catalog/client HTTP/1.1
-Host: ras.example
-Content-Type: application/x-www-form-urlencoded
-
-issuer=https%3A%2F%2Fidp.example%2F
-&amp;issuer_tenant=org-acme
-&amp;resource=https%3A%2F%2Fapi.example%2Fmessages
-&amp;client_id=assistant-456
-&amp;client_assertion_type=
- urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
-&amp;client_assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6ImFwcC1rZXktMSJ9...
-</pre><a href="#section-7.2-6" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="client-disclosure">
-<section id="section-7.3">
-        <h3 id="name-disclosure-authorization">
-<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-disclosure-authorization" class="section-name selfRef">Disclosure Authorization</a>
-        </h3>
-<p id="section-7.3-1">Client authentication identifies the client; it does not authorize
-disclosure. The Resource Authorization Server <span class="bcp14">MUST NOT</span> include a Tenant
-Object or entry in a client view unless its policy authorizes the client
-to receive acceptance information for the requested Issuer Relationship
-and that Tenant Object, for example because an administrator authorized
-the client for that Issuer Relationship. Registering a client, including
-through dynamic registration or a Client ID Metadata Document <span>[<a href="#CIMD" class="cite xref">CIMD</a>]</span>,
-does not by itself authorize disclosure. A client view
-carries only content from the Relationship View of an Issuer
-Relationship that an Onboarding Arrangement authorizes
-(<a href="#relationship-authorization" class="auto internal xref">Section 6.2</a>).<a href="#section-7.3-1" class="pilcrow">¶</a></p>
-<p id="section-7.3-2">The Resource Authorization Server <span class="bcp14">MUST</span> respond with a client view that
-contains no Tenant Objects and no Grant Catalogs when the requested
-Grant Issuer is unknown to it, when no Onboarding Arrangement authorizes
-the requested Issuer Relationship, when the client is not authorized for
-it, and when <code>issuer_tenant</code> is absent for a multi-tenant Grant Issuer
-or present for one that is not multi-tenant. The response is then the
-same as when the Resource Authorization Server accepts no grants for the
-client, so it does not reveal which Grant Issuers and tenants the
-Resource Authorization Server trusts.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="client-view">
-<section id="section-7.4">
-        <h3 id="name-client-view">
-<a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-client-view" class="section-name selfRef">Client View</a>
-        </h3>
-<p id="section-7.4-1">The Resource Authorization Server responds with HTTP status code 200
-(OK), the <code>Cache-Control: no-store</code> header field
-(<span><a href="https://rfc-editor.org/rfc/rfc9111#section-5.2.2.5" class="relref">Section 5.2.2.5</a> of [<a href="#RFC9111" class="cite xref">RFC9111</a>]</span>), and a client view: a JSON object of
-media type <code>application/json</code> that has the members of a Relationship
-View (<a href="#relationship-view" class="auto internal xref">Section 4.2</a>) and the following member:<a href="#section-7.4-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-7.4-2">
-          <dt id="section-7.4-2.1">
-<code>client_id</code>:</dt>
-          <dd style="margin-left: 1.5em" id="section-7.4-2.2">
-            <p id="section-7.4-2.2.1"><span class="bcp14">REQUIRED</span>. The client identifier of the authenticated client at the
-Resource Authorization Server.<a href="#section-7.4-2.2.1" class="pilcrow">¶</a></p>
-</dd>
-        <dd class="break"></dd>
-</dl>
-<p id="section-7.4-3">In a client view:<a href="#section-7.4-3" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.4-4.1">
-            <p id="section-7.4-4.1.1"><code>issuer_relationship</code> has the <code>issuer</code> parameter as its <code>issuer</code>
-member and, if and only if the request contained <code>issuer_tenant</code>, that
-value as its <code>tenant</code> member.<a href="#section-7.4-4.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.4-4.2">
-            <p id="section-7.4-4.2.1"><code>tenants</code> contains only the Tenant Objects for which the client is
-authorized (<a href="#client-disclosure" class="auto internal xref">Section 7.3</a>) and, when the request contained
-<code>target_tenant</code>, only the Tenant Object with that <code>target_tenant</code>.<a href="#section-7.4-4.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.4-4.3">
-            <p id="section-7.4-4.3.1"><code>grant_catalogs</code> contains each Grant Catalog that a Tenant Object in
-the client view references, each exactly once.<a href="#section-7.4-4.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.4-4.4">
-            <p id="section-7.4-4.4.1">Each Grant Catalog contains only the entries that apply to the client
-and, when the request contained <code>resource</code>, only the entries with
-that <code>resource</code>. An empty <code>entries</code> array means that no entry applies
-to the client.<a href="#section-7.4-4.4.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-7.4-5">A client view only selects from the Relationship View for the requested
-Issuer Relationship. Each Tenant Object and each entry in a client view
-<span class="bcp14">MUST</span> have the same members and values as one in that Relationship View,
-taken from one consistent state of the Issuer Relationship, and each
-Grant Catalog <span class="bcp14">MUST</span> have the <code>issuer</code> and <code>id</code> of the Grant Catalog with
-that <code>id</code> in that Relationship View. A client view therefore cannot
-express a restriction narrower than an entry. A Resource Authorization
-Server that accepts less from one client than an entry permits enforces
-that restriction when it processes the client's grants.<a href="#section-7.4-5" class="pilcrow">¶</a></p>
-<p id="section-7.4-6">A client view is not a Relationship View document: a Grant Issuer does
-not install one, and a client does not approve or reconcile its entries.<a href="#section-7.4-6" class="pilcrow">¶</a></p>
-<p id="section-7.4-7">The following is an example of a client view, in which the entry is
-abbreviated; <a href="#fig-model-example" class="auto internal xref">Figure 2</a> shows it in full:<a href="#section-7.4-7" class="pilcrow">¶</a></p>
-<div class="lang-http-message sourcecode" id="section-7.4-8">
-<pre>
-HTTP/1.1 200 OK
-Content-Type: application/json
-Cache-Control: no-store
-
-{
-  "issuer": "https://ras.example/",
-  "issuer_relationship": {
-    "issuer": "https://idp.example/",
-    "tenant": "org-acme"
-  },
-  "client_id": "assistant-456",
-  "tenants": [
-    {
-      "id": "tenant-123",
-      "target_tenant": "customer-acme",
-      "grant_catalog": "read-only"
-    }
-  ],
-  "grant_catalogs": [
-    {
-      "issuer": "https://ras.example/",
-      "id": "read-only",
-      "entries": [ { "id": "messages-read", ... } ]
-    }
-  ]
-}
-</pre><a href="#section-7.4-8" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="client-processing">
-<section id="section-7.5">
-        <h3 id="name-client-processing">
-<a href="#section-7.5" class="section-number selfRef">7.5. </a><a href="#name-client-processing" class="section-name selfRef">Client Processing</a>
-        </h3>
-<p id="section-7.5-1">Before using a client view, the client <span class="bcp14">MUST</span> verify the following, and
-<span class="bcp14">MUST NOT</span> use a client view that fails any of these checks:<a href="#section-7.5-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-7.5-2">
-<li id="section-7.5-2.1">
-            <p id="section-7.5-2.1.1">The <code>issuer</code> of the client view and the <code>issuer</code> of every Grant
-Catalog in it are identical to the issuer identifier in the validated
-Authorization Server Metadata from which the client obtained the
-client discovery endpoint (<span><a href="https://rfc-editor.org/rfc/rfc8414#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>).<a href="#section-7.5-2.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-7.5-2.2">
-            <p id="section-7.5-2.2.1">The <code>issuer_relationship</code> identifies the requested Issuer
-Relationship, and the <code>client_id</code> is the client's identifier at the
-Resource Authorization Server.<a href="#section-7.5-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-7.5-2.3">
-            <p id="section-7.5-2.3.1">When the request contained <code>target_tenant</code>, <code>tenants</code> contains no
-other Tenant Object; when it contained <code>resource</code>, every entry has
-that <code>resource</code>.<a href="#section-7.5-2.3.1" class="pilcrow">¶</a></p>
-</li>
-        </ol>
-<p id="section-7.5-3">The client ignores an entry whose Grant Profile it does not support, and
-an entry that does not satisfy its definition (<a href="#entry" class="auto internal xref">Section 4.5</a>).<a href="#section-7.5-3" class="pilcrow">¶</a></p>
-<p id="section-7.5-4">The client constructs its request to the Grant Issuer from one entry, as
-the Grant Profile Definition of the entry specifies (<a href="#id-jag-client" class="auto internal xref">Section 8.4</a>
-for ID-JAG). The <code>claims</code> and <code>sub_id</code> members of the entry and the
-<code>target_tenant</code> of the Tenant Object describe the grant that the Grant
-Issuer produces, not the client's request. The Grant Issuer selects the
-entry that it uses for a grant (<a href="#issuing" class="auto internal xref">Section 5.4</a>), which need not be the
-entry from which the client constructed its request. A client view
-without a usable entry does not show that the Resource Authorization
-Server would reject a grant; it can also mean that the client is not
-authorized to learn about that Issuer Relationship
-(<a href="#client-disclosure" class="auto internal xref">Section 7.3</a>). When the Grant Issuer refuses the request or
-the Resource Authorization Server rejects the grant, the client can
-retrieve a client view again.<a href="#section-7.5-4" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="client-discovery-errors">
-<section id="section-7.6">
-        <h3 id="name-error-responses-2">
-<a href="#section-7.6" class="section-number selfRef">7.6. </a><a href="#name-error-responses-2" class="section-name selfRef">Error Responses</a>
-        </h3>
-<p id="section-7.6-1">When client authentication fails, the Resource Authorization Server
-responds as <span><a href="https://rfc-editor.org/rfc/rfc6749#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> specifies for the token endpoint,
-with the error code <code>invalid_client</code>. When a required parameter is
-absent, a parameter is repeated, or a parameter value is malformed, it
-responds with HTTP status code 400 (Bad Request) and the error code
-<code>invalid_request</code>, in the format that <span><a href="https://rfc-editor.org/rfc/rfc6749#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>
-specifies. No error response indicates that a Grant Issuer, Issuer
-Relationship, or tenant is unknown or that the client is not authorized
-for it (<a href="#client-disclosure" class="auto internal xref">Section 7.3</a>).<a href="#section-7.6-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-</section>
-</div>
 <div id="id-jag">
-<section id="section-8">
+<section id="section-7">
       <h2 id="name-identity-assertion-jwt-auth">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-identity-assertion-jwt-auth" class="section-name selfRef">Identity Assertion JWT Authorization Grant Profile</a>
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-identity-assertion-jwt-auth" class="section-name selfRef">Identity Assertion JWT Authorization Grant Profile</a>
       </h2>
-<p id="section-8-1">In this Grant Profile Definition for <span>[<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>, the Grant Issuer is
+<p id="section-7-1">In this Grant Profile Definition for <span>[<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>, the Grant Issuer is
 the IdP Authorization Server and grants are ID-JAGs. A Grant Profile
 Definition for another profile of the JWT authorization grant
 <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span> can reuse the representation of inputs in
-<a href="#jwt-representation" class="auto internal xref">Section 8.1</a>.<a href="#section-8-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-8-2">
-        <dt id="section-8-2.1">Grant Profile identifier:</dt>
-        <dd style="margin-left: 1.5em" id="section-8-2.2">
-          <p id="section-8-2.2.1"><code>urn:ietf:params:oauth:grant-profile:id-jag</code>
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-7.2" class="relref">Section 7.2</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>).<a href="#section-8-2.2.1" class="pilcrow">¶</a></p>
+<a href="#jwt-representation" class="auto internal xref">Section 7.1</a>.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-7-2">
+        <dt id="section-7-2.1">Grant Profile identifier:</dt>
+        <dd style="margin-left: 1.5em" id="section-7-2.2">
+          <p id="section-7-2.2.1"><code>urn:ietf:params:oauth:grant-profile:id-jag</code>
+(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-7.2" class="relref">Section 7.2</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>).<a href="#section-7-2.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-8-2.3">Grant binding:</dt>
-        <dd style="margin-left: 1.5em" id="section-8-2.4">
-          <p id="section-8-2.4.1">The IdP Authorization Server selects the binding as described in
+<dt id="section-7-2.3">Grant binding:</dt>
+        <dd style="margin-left: 1.5em" id="section-7-2.4">
+          <p id="section-7-2.4.1">The IdP Authorization Server selects the binding as described in
 <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.11" class="relref">Section 9.11</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>. When the client presents a valid DPoP
 proof, ID-JAG requires the IdP Authorization Server to bind the ID-JAG
 to the DPoP key or a client certificate
@@ -4464,33 +4092,33 @@ satisfies that requirement if the approved subset permits it
 (<a href="#issuing" class="auto internal xref">Section 5.4</a>). When the approved subset permits neither, the IdP
 Authorization Server does not issue an ID-JAG using that entry for
 such a request (<a href="#issuing" class="auto internal xref">Section 5.4</a>), so a Resource Authorization Server that
-verifies DPoP-bound ID-JAGs lists <code>dpop</code> in its entries.<a href="#section-8-2.4.1" class="pilcrow">¶</a></p>
+verifies DPoP-bound ID-JAGs lists <code>dpop</code> in its entries.<a href="#section-7-2.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-8-2.5">Resource selection:</dt>
-        <dd style="margin-left: 1.5em" id="section-8-2.6">
-          <p id="section-8-2.6.1">ID-JAG does not require the <code>resource</code> parameter of the Token Exchange
+<dt id="section-7-2.5">Resource selection:</dt>
+        <dd style="margin-left: 1.5em" id="section-7-2.6">
+          <p id="section-7-2.6.1">ID-JAG does not require the <code>resource</code> parameter of the Token Exchange
 request (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-4.3" class="relref">Section 4.3</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>); <a href="#issuing" class="auto internal xref">Section 5.4</a> specifies how the IdP
-Authorization Server selects an entry when that parameter is absent.<a href="#section-8-2.6.1" class="pilcrow">¶</a></p>
+Authorization Server selects an entry when that parameter is absent.<a href="#section-7-2.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-8-2.7">Tenant selection:</dt>
-        <dd style="margin-left: 1.5em" id="section-8-2.8">
-          <p id="section-8-2.8.1">The IdP Authorization Server selects the Tenant Object as it
-determines the <code>aud_tenant</code> claim (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-6.4" class="relref">Section 6.4</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>).<a href="#section-8-2.8.1" class="pilcrow">¶</a></p>
+<dt id="section-7-2.7">Tenant selection:</dt>
+        <dd style="margin-left: 1.5em" id="section-7-2.8">
+          <p id="section-7-2.8.1">The IdP Authorization Server selects the Tenant Object as it
+determines the <code>aud_tenant</code> claim (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-6.4" class="relref">Section 6.4</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>).<a href="#section-7-2.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-8-2.9">Error responses:</dt>
-        <dd style="margin-left: 1.5em" id="section-8-2.10">
-          <p id="section-8-2.10.1">When the IdP Authorization Server does not issue an ID-JAG because no
+<dt id="section-7-2.9">Error responses:</dt>
+        <dd style="margin-left: 1.5em" id="section-7-2.10">
+          <p id="section-7-2.10.1">When the IdP Authorization Server does not issue an ID-JAG because no
 approved entry permits the request, it responds to the Token Exchange
 request with the <code>access_denied</code> error code
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-4.3.4.3" class="relref">Section 4.3.4.3</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>).<a href="#section-8-2.10.1" class="pilcrow">¶</a></p>
+(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-4.3.4.3" class="relref">Section 4.3.4.3</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>).<a href="#section-7-2.10.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-8-2.11">Narrowed rules:</dt>
-        <dd style="margin-left: 1.5em" id="section-8-2.12">
-          <p id="section-8-2.12.1">An ID-JAG issued using an entry always contains the <code>resource</code> claim
+<dt id="section-7-2.11">Narrowed rules:</dt>
+        <dd style="margin-left: 1.5em" id="section-7-2.12">
+          <p id="section-7-2.12.1">An ID-JAG issued using an entry always contains the <code>resource</code> claim
 with exactly one resource identifier; <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-3.1" class="relref">Section 3.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span> makes
 the claim <span class="bcp14">OPTIONAL</span> and permits several resource identifiers. An
 ID-JAG issued using an entry contains a Catalog-Governed Claim only if
@@ -4501,22 +4129,22 @@ Server that uses those claims lists them in its entries. Requiring
 <code>target_tenant</code> in a Tenant Object (<a href="#tenant-object" class="auto internal xref">Section 4.3</a>) is stricter
 than <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-4.4.1" class="relref">Section 4.4.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>, which also lets a Resource
 Authorization Server identify the target tenant from its trust
-relationship with the issuer.<a href="#section-8-2.12.1" class="pilcrow">¶</a></p>
+relationship with the issuer.<a href="#section-7-2.12.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-8-2.13">Clients:</dt>
-        <dd style="margin-left: 1.5em" id="section-8-2.14">
-          <p id="section-8-2.14.1">The IdP Authorization Server obtains the value of the <code>client_id</code>
+<dt id="section-7-2.13">Clients:</dt>
+        <dd style="margin-left: 1.5em" id="section-7-2.14">
+          <p id="section-7-2.14.1">The IdP Authorization Server obtains the value of the <code>client_id</code>
 claim, the client's identifier at the Resource Authorization Server,
 as described in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-5.1" class="relref">Section 5.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>; the catalog does not
-provide it (<a href="#clients" class="auto internal xref">Section 5.4.1</a>).<a href="#section-8-2.14.1" class="pilcrow">¶</a></p>
+provide it (<a href="#clients" class="auto internal xref">Section 5.4.1</a>).<a href="#section-7-2.14.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-8-3">The following is an example of the claims of an ID-JAG issued for the
+<p id="section-7-3">The following is an example of the claims of an ID-JAG issued for the
 Tenant Object <code>tenant-456</code> in <a href="#view-document" class="auto internal xref">Section 6.7</a>, using the entry in
-<a href="#example-catalog" class="auto internal xref">Appendix A</a>:<a href="#section-8-3" class="pilcrow">¶</a></p>
-<div class="lang-json sourcecode" id="section-8-4">
+<a href="#example-catalog" class="auto internal xref">Appendix A</a>:<a href="#section-7-3" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="section-7-4">
 <pre>
 {
   "iss": "https://idp.example/",
@@ -4540,15 +4168,15 @@ Tenant Object <code>tenant-456</code> in <a href="#view-document" class="auto in
   "exp": 1788898000,
   "jti": "grant-456"
 }
-</pre><a href="#section-8-4" class="pilcrow">¶</a>
+</pre><a href="#section-7-4" class="pilcrow">¶</a>
 </div>
 <div id="jwt-representation">
-<section id="section-8.1">
+<section id="section-7.1">
         <h3 id="name-representation-of-inputs">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-representation-of-inputs" class="section-name selfRef">Representation of Inputs</a>
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-representation-of-inputs" class="section-name selfRef">Representation of Inputs</a>
         </h3>
-<p id="section-8.1-1">An ID-JAG conveys its issuer, its issuer tenant (<a href="#issuing" class="auto internal xref">Section 5.4</a>), and the
-values that <a href="#envelope" class="auto internal xref">Section 4.6</a> constrains as follows.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-1">An ID-JAG conveys its issuer, its issuer tenant (<a href="#issuing" class="auto internal xref">Section 5.4</a>), and the
+values that <a href="#envelope" class="auto internal xref">Section 4.6</a> constrains as follows.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <span id="name-representation-of-inputs-in"></span><table class="center" id="table-17">
           <caption>
 <a href="#table-17" class="selfRef">Table 17</a>:
@@ -4612,33 +4240,33 @@ values that <a href="#envelope" class="auto internal xref">Section 4.6</a> const
             </tr>
           </tbody>
         </table>
-<p id="section-8.1-3">A <code>cnf</code> claim that represents a binding contains only the confirmation
-member of one method:<a href="#section-8.1-3" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-8.1-4">
-          <dt id="section-8.1-4.1">
+<p id="section-7.1-3">A <code>cnf</code> claim that represents a binding contains only the confirmation
+member of one method:<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-7.1-4">
+          <dt id="section-7.1-4.1">
 <code>dpop</code>:</dt>
-          <dd style="margin-left: 1.5em" id="section-8.1-4.2">
-            <p id="section-8.1-4.2.1">The <code>jkt</code> confirmation member, containing the JWK SHA-256 Thumbprint
+          <dd style="margin-left: 1.5em" id="section-7.1-4.2">
+            <p id="section-7.1-4.2.1">The <code>jkt</code> confirmation member, containing the JWK SHA-256 Thumbprint
 of the client's DPoP key (<span><a href="https://rfc-editor.org/rfc/rfc9449#section-6.1" class="relref">Section 6.1</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>), as specified in
-<span><a href="https://datatracker.ietf.org/doc/html/draft-parecki-oauth-jwt-dpop-grant-02#section-3" class="relref">Section 3</a> of [<a href="#JWT-DPOP" class="cite xref">JWT-DPOP</a>]</span>.<a href="#section-8.1-4.2.1" class="pilcrow">¶</a></p>
+<span><a href="https://datatracker.ietf.org/doc/html/draft-parecki-oauth-jwt-dpop-grant-02#section-3" class="relref">Section 3</a> of [<a href="#JWT-DPOP" class="cite xref">JWT-DPOP</a>]</span>.<a href="#section-7.1-4.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-8.1-4.3">
+<dt id="section-7.1-4.3">
 <code>mtls</code>:</dt>
-          <dd style="margin-left: 1.5em" id="section-8.1-4.4">
-            <p id="section-8.1-4.4.1">The <code>x5t#S256</code> confirmation member, containing the SHA-256 thumbprint
-of the client's X.509 certificate (<span><a href="https://rfc-editor.org/rfc/rfc8705#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC8705" class="cite xref">RFC8705</a>]</span>).<a href="#section-8.1-4.4.1" class="pilcrow">¶</a></p>
+          <dd style="margin-left: 1.5em" id="section-7.1-4.4">
+            <p id="section-7.1-4.4.1">The <code>x5t#S256</code> confirmation member, containing the SHA-256 thumbprint
+of the client's X.509 certificate (<span><a href="https://rfc-editor.org/rfc/rfc8705#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC8705" class="cite xref">RFC8705</a>]</span>).<a href="#section-7.1-4.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
 </section>
 </div>
 <div id="jwt-reserved">
-<section id="section-8.2">
+<section id="section-7.2">
         <h3 id="name-reserved-claims">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-reserved-claims" class="section-name selfRef">Reserved Claims</a>
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-reserved-claims" class="section-name selfRef">Reserved Claims</a>
         </h3>
-<p id="section-8.2-1">The reserved claim names of this Grant Profile are <code>iss</code>, <code>sub</code>, <code>aud</code>,
+<p id="section-7.2-1">The reserved claim names of this Grant Profile are <code>iss</code>, <code>sub</code>, <code>aud</code>,
 <code>jti</code>, <code>exp</code>, <code>iat</code>, <code>nbf</code>, <code>tenant</code>, <code>aud_tenant</code>, <code>resource</code>, <code>scope</code>,
 <code>authorization_details</code>, <code>sub_id</code>, <code>cnf</code>, <code>client_id</code>
 (<span><a href="https://rfc-editor.org/rfc/rfc8693#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC8693" class="cite xref">RFC8693</a>]</span>), and <code>act</code> (<span><a href="https://rfc-editor.org/rfc/rfc8693#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC8693" class="cite xref">RFC8693</a>]</span>).
@@ -4647,15 +4275,15 @@ client identifier or an actor. The other claims that
 <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-3.1" class="relref">Section 3.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span> defines (<code>auth_time</code>, <code>acr</code>, <code>amr</code>,
 <code>aud_sub</code>, and <code>email</code>) are Catalog-Governed Claims. An ID-JAG has the
 <code>typ</code> value <code>oauth-id-jag+jwt</code> (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-3.1" class="relref">Section 3.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>,
-<a href="#sec-cross-jwt" class="auto internal xref">Section 10.11</a>).<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<a href="#sec-cross-jwt" class="auto internal xref">Section 9.11</a>).<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="jwt-composition">
-<section id="section-8.3">
+<section id="section-7.3">
         <h3 id="name-composition-checks">
-<a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-composition-checks" class="section-name selfRef">Composition Checks</a>
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-composition-checks" class="section-name selfRef">Composition Checks</a>
         </h3>
-<p id="section-8.3-1">A Resource Authorization Server that publishes entries for this Grant
+<p id="section-7.3-1">A Resource Authorization Server that publishes entries for this Grant
 Profile <span class="bcp14">MUST</span> include <code>grant_types_supported</code> in its Authorization Server
 Metadata; if it lists this Grant Profile in
 <code>authorization_grant_profiles_supported</code>, it also includes
@@ -4663,109 +4291,53 @@ Metadata; if it lists this Grant Profile in
 (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-7.2" class="relref">Section 7.2</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>). For each such entry, the Grant Issuer
 performs the following checks in step 4 of <a href="#composition" class="auto internal xref">Section 5.2</a>, interpreting
 <code>grant_types_supported</code> with the default value defined in
-<span><a href="https://rfc-editor.org/rfc/rfc8414#section-2" class="relref">Section 2</a> of [<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>:<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<span><a href="https://rfc-editor.org/rfc/rfc8414#section-2" class="relref">Section 2</a> of [<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>:<a href="#section-7.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-8.3-2.1">
-            <p id="section-8.3-2.1.1">Unless the entry requires binding and lists <code>dpop</code> as its only method,
+<li class="normal" id="section-7.3-2.1">
+            <p id="section-7.3-2.1.1">Unless the entry requires binding and lists <code>dpop</code> as its only method,
 <code>grant_types_supported</code> includes
-<code>urn:ietf:params:oauth:grant-type:jwt-bearer</code>.<a href="#section-8.3-2.1.1" class="pilcrow">¶</a></p>
+<code>urn:ietf:params:oauth:grant-type:jwt-bearer</code>.<a href="#section-7.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-8.3-2.2">
-            <p id="section-8.3-2.2.1">If the entry lists <code>dpop</code>, <code>grant_types_supported</code> includes
+          <li class="normal" id="section-7.3-2.2">
+            <p id="section-7.3-2.2.1">If the entry lists <code>dpop</code>, <code>grant_types_supported</code> includes
 <code>urn:ietf:params:oauth:grant-type:jwt-dpop</code>
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-parecki-oauth-jwt-dpop-grant-02#section-4.1" class="relref">Section 4.1</a> of [<a href="#JWT-DPOP" class="cite xref">JWT-DPOP</a>]</span>).<a href="#section-8.3-2.2.1" class="pilcrow">¶</a></p>
+(<span><a href="https://datatracker.ietf.org/doc/html/draft-parecki-oauth-jwt-dpop-grant-02#section-4.1" class="relref">Section 4.1</a> of [<a href="#JWT-DPOP" class="cite xref">JWT-DPOP</a>]</span>).<a href="#section-7.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-</section>
-</div>
-<div id="id-jag-client">
-<section id="section-8.4">
-        <h3 id="name-client-requests">
-<a href="#section-8.4" class="section-number selfRef">8.4. </a><a href="#name-client-requests" class="section-name selfRef">Client Requests</a>
-        </h3>
-<p id="section-8.4-1">A client that uses a client view (<a href="#client-discovery" class="auto internal xref">Section 7</a>) constructs its
-Token Exchange request to the IdP Authorization Server
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-4.3" class="relref">Section 4.3</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>) from one entry, in addition to the
-parameters that section requires, as follows:<a href="#section-8.4-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-8.4-2.1">
-            <p id="section-8.4-2.1.1"><code>audience</code> is the <code>issuer</code> of the Grant Catalog that contains the
-entry.<a href="#section-8.4-2.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-8.4-2.2">
-            <p id="section-8.4-2.2.1"><code>resource</code> is the entry's <code>resource</code>.<a href="#section-8.4-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-8.4-2.3">
-            <p id="section-8.4-2.3.1"><code>scope</code> contains only scope values that the entry's <code>scope</code> member
-lists, including every value whose item requirement is <code>required</code> and
-at least one value when the presence requirement is <code>required</code>. The
-client omits <code>scope</code> when the entry has no <code>scope</code> member.<a href="#section-8.4-2.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-8.4-2.4">
-            <p id="section-8.4-2.4.1"><code>authorization_details</code> contains only objects whose <code>type</code> the entry's
-<code>authorization_details</code> member lists, including at least one object
-of each type whose item requirement is <code>required</code> and at least one
-object when the presence requirement is <code>required</code>. The client omits
-<code>authorization_details</code> when the entry has no <code>authorization_details</code>
-member.<a href="#section-8.4-2.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-8.4-2.5">
-            <p id="section-8.4-2.5.1">The client includes a DPoP proof in the request only when the entry's
-<code>grant_binding</code> member lists <code>dpop</code>, because the IdP Authorization
-Server binds the ID-JAG to the key of a valid proof
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.11.1.1" class="relref">Section 9.11.1.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>). When the entry requires grant
-binding, the client uses one of the listed methods: for <code>dpop</code>, a DPoP
-proof; for <code>mtls</code>, its certificate on a mutually authenticated TLS
-connection, to which the IdP Authorization Server binds the ID-JAG
-when its policy permits (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.11.2.1" class="relref">Section 9.11.2.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>).<a href="#section-8.4-2.5.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-8.4-3">When the subject token is an ID Token <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span> that contains a
-<code>tenant</code> claim <span>[<a href="#OpenID.Enterprise" class="cite xref">OpenID.Enterprise</a>]</span> whose value is not <code>personal</code> or
-<code>organization</code> (<a href="#relationship-identity" class="auto internal xref">Section 6.1</a>), the client uses that value
-as <code>issuer_tenant</code> in its client discovery request; it is the issuer
-tenant of an ID-JAG issued for that subject (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-6.4" class="relref">Section 6.4</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>).
-Otherwise, the client obtains the issuer tenant identifier from its own
-configuration. The client does not request claims or a subject
-identifier; the IdP Authorization Server determines them. The client
-does not select the Resource Authorization Server tenant: the IdP
-Authorization Server determines the <code>aud_tenant</code> claim
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-6.4" class="relref">Section 6.4</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>). A Tenant Object in a client view tells the
-client which tenants accept grants, not how to select one.<a href="#section-8.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="extensibility">
-<section id="section-9">
+<section id="section-8">
       <h2 id="name-extensibility">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-extensibility" class="section-name selfRef">Extensibility</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-extensibility" class="section-name selfRef">Extensibility</a>
       </h2>
-<p id="section-9-1">The extension points below are designed to preserve the principles in
-<a href="#overview" class="auto internal xref">Section 3</a>.<a href="#section-9-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-9-2">
-        <dt id="section-9-2.1">Grant Profiles:</dt>
-        <dd style="margin-left: 1.5em" id="section-9-2.2">
-          <p id="section-9-2.2.1">A specification can apply the catalog to another Grant Profile by
-providing a Grant Profile Definition (<a href="#profile-definitions" class="auto internal xref">Section 9.1</a>). A
+<p id="section-8-1">The extension points below are designed to preserve the principles in
+<a href="#overview" class="auto internal xref">Section 3</a>.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-8-2">
+        <dt id="section-8-2.1">Grant Profiles:</dt>
+        <dd style="margin-left: 1.5em" id="section-8-2.2">
+          <p id="section-8-2.2.1">A specification can apply the catalog to another Grant Profile by
+providing a Grant Profile Definition (<a href="#profile-definitions" class="auto internal xref">Section 8.1</a>). A
 Grant Issuer that does not implement that Grant Profile Definition
-does not use that profile's entries (<a href="#validation" class="auto internal xref">Section 5.1</a>).<a href="#section-9-2.2.1" class="pilcrow">¶</a></p>
+does not use that profile's entries (<a href="#validation" class="auto internal xref">Section 5.1</a>).<a href="#section-8-2.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-9-2.3">Members:</dt>
-        <dd style="margin-left: 1.5em" id="section-9-2.4">
-          <p id="section-9-2.4.1">A specification can define additional members of the objects defined
+<dt id="section-8-2.3">Members:</dt>
+        <dd style="margin-left: 1.5em" id="section-8-2.4">
+          <p id="section-8-2.4.1">A specification can define additional members of the objects defined
 in this specification. A Grant Issuer ignores members it does not
 understand (<a href="#model-conventions" class="auto internal xref">Section 4.1</a>). A specification that defines a
 member of an entry, or of an object within an entry, whose value
 affects what an administrator approves or which grants the entry
 permits declares that member part of the entry's normative semantics
-(<a href="#revision" class="auto internal xref">Section 4.7</a>).<a href="#section-9-2.4.1" class="pilcrow">¶</a></p>
+(<a href="#revision" class="auto internal xref">Section 4.7</a>).<a href="#section-8-2.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-9-2.5"></dt>
-        <dd style="margin-left: 1.5em" id="section-9-2.6">
-          <p id="section-9-2.6.1">An extension member is either advisory or restrictive. An advisory
+<dt id="section-8-2.5"></dt>
+        <dd style="margin-left: 1.5em" id="section-8-2.6">
+          <p id="section-8-2.6.1">An extension member is either advisory or restrictive. An advisory
 member informs approval, for example by grouping entries for
 presentation to administrators. A Grant Issuer that ignores an
 advisory member still issues only grants within the entry's
@@ -4779,20 +4351,20 @@ to the client. A specification <span class="bcp14">MUST NOT</span> define a rest
 unless it also defines a mechanism that prevents Grant Issuers that do
 not implement the member from using the entry, such as a distinct
 Grant Profile identifier. This specification defines no such mechanism
-(<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>).<a href="#section-9-2.6.1" class="pilcrow">¶</a></p>
+(<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>).<a href="#section-8-2.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-9-2.7">Grant binding methods:</dt>
-        <dd style="margin-left: 1.5em" id="section-9-2.8">
-          <p id="section-9-2.8.1">A specification can define additional grant binding methods. It
+<dt id="section-8-2.7">Grant binding methods:</dt>
+        <dd style="margin-left: 1.5em" id="section-8-2.8">
+          <p id="section-8-2.8.1">A specification can define additional grant binding methods. It
 states how the Grant Issuer binds a grant, how the Resource
 Authorization Server verifies the binding, and how a grant represents
-it.<a href="#section-9-2.8.1" class="pilcrow">¶</a></p>
+it.<a href="#section-8-2.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-9-2.9">Retrieval protocols:</dt>
-        <dd style="margin-left: 1.5em" id="section-9-2.10">
-          <p id="section-9-2.10.1">A specification can define another retrieval protocol. A retrieval
+<dt id="section-8-2.9">Retrieval protocols:</dt>
+        <dd style="margin-left: 1.5em" id="section-8-2.10">
+          <p id="section-8-2.10.1">A specification can define another retrieval protocol. A retrieval
 protocol authenticates the Issuer Relationship
 (<a href="#relationship-identity" class="auto internal xref">Section 6.1</a>) to the Resource Authorization Server, and
 the Resource Authorization Server to the Grant Issuer; delivers,
@@ -4800,109 +4372,104 @@ unchanged, a complete Relationship View (<a href="#relationship-view" class="aut
 reflects one consistent state of the Issuer Relationship; and defines
 its discovery and error responses. A Grant Issuer obtains a
 Relationship View through one retrieval protocol and does not combine
-objects retrieved through different ones.<a href="#section-9-2.10.1" class="pilcrow">¶</a></p>
+objects retrieved through different ones.<a href="#section-8-2.10.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-9-3">Additional capabilities, such as change notification, can be defined as
-extensions that use the same objects.<a href="#section-9-3" class="pilcrow">¶</a></p>
+<p id="section-8-3">Additional capabilities, such as change notification, can be defined as
+extensions that use the same objects.<a href="#section-8-3" class="pilcrow">¶</a></p>
 <div id="profile-definitions">
-<section id="section-9.1">
+<section id="section-8.1">
         <h3 id="name-grant-profile-definitions">
-<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-grant-profile-definitions" class="section-name selfRef">Grant Profile Definitions</a>
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-grant-profile-definitions" class="section-name selfRef">Grant Profile Definitions</a>
         </h3>
-<p id="section-9.1-1">A Grant Profile Definition specifies the following:<a href="#section-9.1-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-9.1-2">
-<li id="section-9.1-2.1">
-            <p id="section-9.1-2.1.1">The Grant Profile identifier used in the <code>profile</code> member of an
-entry.<a href="#section-9.1-2.1.1" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">A Grant Profile Definition specifies the following:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-8.1-2">
+<li id="section-8.1-2.1">
+            <p id="section-8.1-2.1.1">The Grant Profile identifier used in the <code>profile</code> member of an
+entry.<a href="#section-8.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-9.1-2.2">
-            <p id="section-9.1-2.2.1">How a grant of the profile conveys each input in <a href="#envelope" class="auto internal xref">Section 4.6</a>. A
+          <li id="section-8.1-2.2">
+            <p id="section-8.1-2.2.1">How a grant of the profile conveys each input in <a href="#envelope" class="auto internal xref">Section 4.6</a>. A
 Grant Profile to which the catalog applies conveys the audience and
 the protected resource.
 Where the profile cannot convey another input, the Grant Profile
 Definition says so; an entry for that profile then does not contain
-the corresponding member.<a href="#section-9.1-2.2.1" class="pilcrow">¶</a></p>
+the corresponding member.<a href="#section-8.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-9.1-2.3">
-            <p id="section-9.1-2.3.1">How a grant of the profile identifies its issuer and, for a
-multi-tenant issuer, its issuer tenant (<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-9.1-2.3.1" class="pilcrow">¶</a></p>
+          <li id="section-8.1-2.3">
+            <p id="section-8.1-2.3.1">How a grant of the profile identifies its issuer and, for a
+multi-tenant issuer, its issuer tenant (<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-8.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-9.1-2.4">
-            <p id="section-9.1-2.4.1">The reserved claim names of the profile, including the claims the
+          <li id="section-8.1-2.4">
+            <p id="section-8.1-2.4.1">The reserved claim names of the profile, including the claims the
 profile requires in every grant (<a href="#entry-claims" class="auto internal xref">Section 4.5.4</a>), and the namespace
-of the <code>claim</code> member.<a href="#section-9.1-2.4.1" class="pilcrow">¶</a></p>
+of the <code>claim</code> member.<a href="#section-8.1-2.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-9.1-2.5">
-            <p id="section-9.1-2.5.1">For each grant binding method the profile supports, how the binding
+          <li id="section-8.1-2.5">
+            <p id="section-8.1-2.5.1">For each grant binding method the profile supports, how the binding
 is represented in a grant, when the profile requires the Grant Issuer
 to bind a grant, and how the Grant Issuer selects among methods
-(<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-9.1-2.5.1" class="pilcrow">¶</a></p>
+(<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-8.1-2.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-9.1-2.6">
-            <p id="section-9.1-2.6.1">The composition checks against public metadata that apply to the
+          <li id="section-8.1-2.6">
+            <p id="section-8.1-2.6.1">The composition checks against public metadata that apply to the
 profile, such as checks of the grant types used to redeem its grants
-(<a href="#composition" class="auto internal xref">Section 5.2</a>).<a href="#section-9.1-2.6.1" class="pilcrow">¶</a></p>
+(<a href="#composition" class="auto internal xref">Section 5.2</a>).<a href="#section-8.1-2.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-9.1-2.7">
-            <p id="section-9.1-2.7.1">How the Grant Issuer selects a Tenant Object for a request, and how
+          <li id="section-8.1-2.7">
+            <p id="section-8.1-2.7.1">How the Grant Issuer selects a Tenant Object for a request, and how
 it responds when it does not issue a grant because no approved entry
-permits the request (<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-9.1-2.7.1" class="pilcrow">¶</a></p>
+permits the request (<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-8.1-2.7.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-9.1-2.8">
-            <p id="section-9.1-2.8.1">Any rule of the Grant Profile that catalog use narrows, such as
-making an <span class="bcp14">OPTIONAL</span> element required.<a href="#section-9.1-2.8.1" class="pilcrow">¶</a></p>
+          <li id="section-8.1-2.8">
+            <p id="section-8.1-2.8.1">Any rule of the Grant Profile that catalog use narrows, such as
+making an <span class="bcp14">OPTIONAL</span> element required.<a href="#section-8.1-2.8.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-9.1-2.9">
-            <p id="section-9.1-2.9.1">For a profile that supports client discovery, how a client
-constructs its request to the Grant Issuer from an entry
-(<a href="#client-processing" class="auto internal xref">Section 7.5</a>).<a href="#section-9.1-2.9.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-9.1-2.10">
-            <p id="section-9.1-2.10.1">For a profile whose grants identify the client by its client
+          <li id="section-8.1-2.9">
+            <p id="section-8.1-2.9.1">For a profile whose grants identify the client by its client
 identifier at the Resource Authorization Server, how the Grant
-Issuer obtains that identifier (<a href="#clients" class="auto internal xref">Section 5.4.1</a>).<a href="#section-9.1-2.10.1" class="pilcrow">¶</a></p>
+Issuer obtains that identifier (<a href="#clients" class="auto internal xref">Section 5.4.1</a>).<a href="#section-8.1-2.9.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-9.1-3">A Grant Profile Definition for a JWT authorization grant <span class="bcp14">SHOULD</span> specify
+<p id="section-8.1-3">A Grant Profile Definition for a JWT authorization grant <span class="bcp14">SHOULD</span> specify
 a <code>typ</code> value for the grants of the profile
 (<span><a href="https://rfc-editor.org/rfc/rfc8725#section-3.11" class="relref">Section 3.11</a> of [<a href="#RFC8725" class="cite xref">RFC8725</a>]</span>), so that a Resource Authorization Server
 that accepts them at the same token endpoint as catalog access
-assertions can distinguish the two (<a href="#sec-cross-jwt" class="auto internal xref">Section 10.11</a>).<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+assertions can distinguish the two (<a href="#sec-cross-jwt" class="auto internal xref">Section 9.11</a>).<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="security">
-<section id="section-10">
+<section id="section-9">
       <h2 id="name-security-considerations">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-10-1">The security considerations of <span>[<a href="#RFC7521" class="cite xref">RFC7521</a>]</span>, <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>, <span>[<a href="#RFC8725" class="cite xref">RFC8725</a>]</span>,
+<p id="section-9-1">The security considerations of <span>[<a href="#RFC7521" class="cite xref">RFC7521</a>]</span>, <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>, <span>[<a href="#RFC8725" class="cite xref">RFC8725</a>]</span>,
 and <span>[<a href="#RFC9700" class="cite xref">RFC9700</a>]</span>, and of the Grant Profile of each entry, such as
-<span>[<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>, apply to this specification.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<span>[<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>, apply to this specification.<a href="#section-9-1" class="pilcrow">¶</a></p>
 <div id="sec-not-authorization">
-<section id="section-10.1">
+<section id="section-9.1">
         <h3 id="name-catalog-is-not-an-authoriza">
-<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-catalog-is-not-an-authoriza" class="section-name selfRef">Catalog Is Not an Authorization Decision</a>
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-catalog-is-not-an-authoriza" class="section-name selfRef">Catalog Is Not an Authorization Decision</a>
         </h3>
-<p id="section-10.1-1">A catalog neither authorizes a request (<a href="#introduction" class="auto internal xref">Section 1</a>) nor lists
+<p id="section-9.1-1">A catalog neither authorizes a request (<a href="#introduction" class="auto internal xref">Section 1</a>) nor lists
 every grant that the Resource Authorization Server accepts: the Resource
 Authorization Server can accept grants issued under other arrangements,
-or under an entry that it has since withdrawn, as its policy determines.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
-<p id="section-10.1-2">The Authorization Envelope protects the Resource Authorization Server
+or under an entry that it has since withdrawn, as its policy determines.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-2">The Authorization Envelope protects the Resource Authorization Server
 only as far as the Grant Issuer observes it, so a Resource Authorization
 Server that requires a property of every grant it accepts enforces that
-property at redemption.<a href="#section-10.1-2" class="pilcrow">¶</a></p>
+property at redemption.<a href="#section-9.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-scope-meaning">
-<section id="section-10.2">
+<section id="section-9.2">
         <h3 id="name-changes-in-scope-meaning">
-<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-changes-in-scope-meaning" class="section-name selfRef">Changes in Scope Meaning</a>
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-changes-in-scope-meaning" class="section-name selfRef">Changes in Scope Meaning</a>
         </h3>
-<p id="section-10.2-1">An entry does not state the authority that its scope values and
+<p id="section-9.2-1">An entry does not state the authority that its scope values and
 authorization details types represent at the protected resource, so an
 approval bounds the grants that the Grant Issuer constructs, not what
 those grants authorize. For example, if the protected resource changes
@@ -4911,16 +4478,16 @@ and its revision do not change, and approvals that include
 <code>messages.write</code> continue to apply. A Resource Authorization Server that
 changes the authority of an existing scope value can instead publish a
 new scope value, so that the change requires new approval. Authority
-metadata can reveal such a change (<a href="#authority-metadata" class="auto internal xref">Section 5.6.2</a>) but does not
-bind the protected resource.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+metadata can reveal such a change (<a href="#optional-metadata" class="auto internal xref">Section 5.6</a>) but does not
+bind the protected resource.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-relationship">
-<section id="section-10.3">
+<section id="section-9.3">
         <h3 id="name-relationship-authorization-">
-<a href="#section-10.3" class="section-number selfRef">10.3. </a><a href="#name-relationship-authorization-" class="section-name selfRef">Relationship Authorization and Assertion Trust</a>
+<a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-relationship-authorization-" class="section-name selfRef">Relationship Authorization and Assertion Trust</a>
         </h3>
-<p id="section-10.3-1">Trust in a Grant Issuer's signing keys establishes that the Grant Issuer
+<p id="section-9.3-1">Trust in a Grant Issuer's signing keys establishes that the Grant Issuer
 can issue grants, not that it is entitled to learn the Resource
 Authorization Server's configuration for every issuer tenant identifier
 it can name. An Onboarding Arrangement therefore authorizes each Issuer
@@ -4932,24 +4499,24 @@ that names the issuer. An Onboarding Arrangement authorizes an issuer
 tenant identifier, not the organization behind it: if an issuer
 reassigned a tenant identifier to another tenant, contrary to its
 definition (<a href="#conventions" class="auto internal xref">Section 2</a>), the new tenant would receive the catalog
-content of the old one.<a href="#section-10.3-1" class="pilcrow">¶</a></p>
+content of the old one.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-protected-discovery">
-<section id="section-10.4">
+<section id="section-9.4">
         <h3 id="name-protected-discovery-and-cli">
-<a href="#section-10.4" class="section-number selfRef">10.4. </a><a href="#name-protected-discovery-and-cli" class="section-name selfRef">Protected Discovery and Client Authentication</a>
+<a href="#section-9.4" class="section-number selfRef">9.4. </a><a href="#name-protected-discovery-and-cli" class="section-name selfRef">Protected Discovery and Client Authentication</a>
         </h3>
-<p id="section-10.4-1">A Relationship View is disclosed to an Issuer Relationship, not to a
+<p id="section-9.4-1">A Relationship View is disclosed to an Issuer Relationship, not to a
 client, so its retrieval is not the protected discovery mechanism of
-<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.7" class="relref">Section 9.7</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>, which requires client authentication;
-client discovery (<a href="#client-discovery" class="auto internal xref">Section 7</a>) is that mechanism. The Grant
+<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.7" class="relref">Section 9.7</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>, which requires client authentication and
+is an open issue (<a href="#open-issues" class="auto internal xref">Appendix "Open Issues"</a>). The Grant
 Issuer's signature on the catalog
 access assertion binds a response to the relationship, so client
 authentication at the token endpoint is required only when the
 Onboarding Arrangement requires it (<a href="#relationship-authorization" class="auto internal xref">Section 6.2</a>,
-<a href="#token-request" class="auto internal xref">Section 6.5</a>).<a href="#section-10.4-1" class="pilcrow">¶</a></p>
-<p id="section-10.4-2">When the Onboarding Arrangement does not require client authentication,
+<a href="#token-request" class="auto internal xref">Section 6.5</a>).<a href="#section-9.4-1" class="pilcrow">¶</a></p>
+<p id="section-9.4-2">When the Onboarding Arrangement does not require client authentication,
 the catalog access assertion is the only credential the Grant Issuer
 presents. An assertion that is not DPoP-bound is then a bearer
 credential until the Resource Authorization Server accepts it: the
@@ -4963,28 +4530,28 @@ client authentication. The assertion's short lifetime, its audience
 restriction, and TLS further limit the exposure. A Resource
 Authorization Server weighs the confidentiality of its catalog content
 when deciding whether its Onboarding Arrangements require client
-authentication or DPoP-bound catalog access assertions.<a href="#section-10.4-2" class="pilcrow">¶</a></p>
+authentication or DPoP-bound catalog access assertions.<a href="#section-9.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-token-disclosure">
-<section id="section-10.5">
+<section id="section-9.5">
         <h3 id="name-catalog-access-token-disclo">
-<a href="#section-10.5" class="section-number selfRef">10.5. </a><a href="#name-catalog-access-token-disclo" class="section-name selfRef">Catalog Access Token Disclosure</a>
+<a href="#section-9.5" class="section-number selfRef">9.5. </a><a href="#name-catalog-access-token-disclo" class="section-name selfRef">Catalog Access Token Disclosure</a>
         </h3>
-<p id="section-10.5-1">A disclosed catalog access token permits retrieval of the Relationship
+<p id="section-9.5-1">A disclosed catalog access token permits retrieval of the Relationship
 View until it expires or the relationship ends. The rules for where the
 Grant Issuer sends it (<a href="#view-document" class="auto internal xref">Section 6.7</a>) limit its disclosure, and its
 restriction to the catalog resource and scope (<a href="#token-response" class="auto internal xref">Section 6.6</a>)
 prevents its use at other protected resources of the Resource
-Authorization Server.<a href="#section-10.5-1" class="pilcrow">¶</a></p>
+Authorization Server.<a href="#section-9.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-authenticity">
-<section id="section-10.6">
+<section id="section-9.6">
         <h3 id="name-response-authenticity">
-<a href="#section-10.6" class="section-number selfRef">10.6. </a><a href="#name-response-authenticity" class="section-name selfRef">Response Authenticity</a>
+<a href="#section-9.6" class="section-number selfRef">9.6. </a><a href="#name-response-authenticity" class="section-name selfRef">Response Authenticity</a>
         </h3>
-<p id="section-10.6-1">Relationship View documents are not signed. Their authenticity and
+<p id="section-9.6-1">Relationship View documents are not signed. Their authenticity and
 integrity rest on TLS server authentication of the catalog resource and
 on validation of the Resource Authorization Server's metadata
 (<span><a href="https://rfc-editor.org/rfc/rfc8414#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>). An attacker able to alter catalog
@@ -4992,35 +4559,35 @@ responses can cause an administrator of the Grant Issuer to approve
 grants that the Resource Authorization Server did not offer, or to deny
 approval of grants that it did offer. The attacker cannot cause the
 Resource Authorization Server to accept a grant that its current policy
-rejects.<a href="#section-10.6-1" class="pilcrow">¶</a></p>
+rejects.<a href="#section-9.6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-stale">
-<section id="section-10.7">
+<section id="section-9.7">
         <h3 id="name-stale-catalogs-and-relation">
-<a href="#section-10.7" class="section-number selfRef">10.7. </a><a href="#name-stale-catalogs-and-relation" class="section-name selfRef">Stale Catalogs and Relationship Termination</a>
+<a href="#section-9.7" class="section-number selfRef">9.7. </a><a href="#name-stale-catalogs-and-relation" class="section-name selfRef">Stale Catalogs and Relationship Termination</a>
         </h3>
-<p id="section-10.7-1">When the Resource Authorization Server narrows what it accepts, a Grant
+<p id="section-9.7-1">When the Resource Authorization Server narrows what it accepts, a Grant
 Issuer that has not refreshed issues grants that the Resource
 Authorization Server rejects after their claims have been disclosed to
 the client. Such grants affect availability and disclosure, not
-authorization.<a href="#section-10.7-1" class="pilcrow">¶</a></p>
-<p id="section-10.7-2">After a relationship ends and disclosure stops
+authorization.<a href="#section-9.7-1" class="pilcrow">¶</a></p>
+<p id="section-9.7-2">After a relationship ends and disclosure stops
 (<a href="#relationship-authorization" class="auto internal xref">Section 6.2</a>), the maximum age that the Grant Issuer
 configures bounds how long it continues to issue grants under state that
 it can no longer refresh, but the Resource Authorization Server cannot
 enforce that bound. To stop issuance at a known time, the Resource
 Authorization Server first removes every eligible tenant from the
 relationship (<a href="#installation" class="auto internal xref">Section 5.5</a>) and ends the relationship only after the
-Grant Issuer observes the withdrawal.<a href="#section-10.7-2" class="pilcrow">¶</a></p>
+Grant Issuer observes the withdrawal.<a href="#section-9.7-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-revision">
-<section id="section-10.8">
+<section id="section-9.8">
         <h3 id="name-revision-integrity-and-appr">
-<a href="#section-10.8" class="section-number selfRef">10.8. </a><a href="#name-revision-integrity-and-appr" class="section-name selfRef">Revision Integrity and Approval</a>
+<a href="#section-9.8" class="section-number selfRef">9.8. </a><a href="#name-revision-integrity-and-appr" class="section-name selfRef">Revision Integrity and Approval</a>
         </h3>
-<p id="section-10.8-1">A Resource Authorization Server that changes the normative semantics of
+<p id="section-9.8-1">A Resource Authorization Server that changes the normative semantics of
 an entry without changing its revision causes the Grant Issuer to
 continue issuing grants under an approval that no longer matches the
 entry. The Grant Issuer detects such a change only when it holds an
@@ -5030,30 +4597,30 @@ that the Grant Issuer approved, and a grant issued before a change can
 be redeemed after it. Requiring new approval for every revision change
 (<a href="#installation" class="auto internal xref">Section 5.5</a>) avoids relying on a Grant Issuer's comparison of
 two revisions to decide that a change only narrows an entry; an
-incorrect comparison would expand authorization.<a href="#section-10.8-1" class="pilcrow">¶</a></p>
+incorrect comparison would expand authorization.<a href="#section-9.8-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-tenant">
-<section id="section-10.9">
+<section id="section-9.9">
         <h3 id="name-tenant-confusion">
-<a href="#section-10.9" class="section-number selfRef">10.9. </a><a href="#name-tenant-confusion" class="section-name selfRef">Tenant Confusion</a>
+<a href="#section-9.9" class="section-number selfRef">9.9. </a><a href="#name-tenant-confusion" class="section-name selfRef">Tenant Confusion</a>
         </h3>
-<p id="section-10.9-1">If a Grant Issuer derived a grant's target tenant from a Tenant Object
+<p id="section-9.9-1">If a Grant Issuer derived a grant's target tenant from a Tenant Object
 identifier, the number of Tenant Objects in a Relationship View, or the
 form of an issuer identifier, a grant intended for one tenant could be
 accepted for another (<a href="#issuing" class="auto internal xref">Section 5.4</a>). An entry obtained for one Issuer
 Relationship is used only for grants whose issuer and issuer tenant
 identify that relationship (<a href="#issuing" class="auto internal xref">Section 5.4</a>), so that a catalog disclosed to
 one issuer tenant does not determine the grants issued for subjects of
-another.<a href="#section-10.9-1" class="pilcrow">¶</a></p>
+another.<a href="#section-9.9-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-eligibility">
-<section id="section-10.10">
+<section id="section-9.10">
         <h3 id="name-tenant-eligibility">
-<a href="#section-10.10" class="section-number selfRef">10.10. </a><a href="#name-tenant-eligibility" class="section-name selfRef">Tenant Eligibility</a>
+<a href="#section-9.10" class="section-number selfRef">9.10. </a><a href="#name-tenant-eligibility" class="section-name selfRef">Tenant Eligibility</a>
         </h3>
-<p id="section-10.10-1">If a Resource Authorization Server makes a tenant eligible for an Issuer
+<p id="section-9.10-1">If a Resource Authorization Server makes a tenant eligible for an Issuer
 Relationship because an administrator of that tenant configured trust in
 the Grant Issuer, anyone who controls a tenant at the Resource
 Authorization Server can add a Tenant Object, with a <code>display</code> of their
@@ -5064,18 +4631,18 @@ Authorization Server <span class="bcp14">SHOULD</span> make a tenant eligible fo
 Relationship only when the Onboarding Arrangement records agreement on
 the Grant Issuer side, for example by an administrator of the issuer
 tenant. An administrator of the Grant Issuer identifies a Tenant Object
-by its <code>target_tenant</code>, not by its <code>display</code> (<a href="#model-conventions" class="auto internal xref">Section 4.1</a>).<a href="#section-10.10-1" class="pilcrow">¶</a></p>
+by its <code>target_tenant</code>, not by its <code>display</code> (<a href="#model-conventions" class="auto internal xref">Section 4.1</a>).<a href="#section-9.10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-cross-jwt">
-<section id="section-10.11">
+<section id="section-9.11">
         <h3 id="name-cross-jwt-confusion">
-<a href="#section-10.11" class="section-number selfRef">10.11. </a><a href="#name-cross-jwt-confusion" class="section-name selfRef">Cross-JWT Confusion</a>
+<a href="#section-9.11" class="section-number selfRef">9.11. </a><a href="#name-cross-jwt-confusion" class="section-name selfRef">Cross-JWT Confusion</a>
         </h3>
-<p id="section-10.11-1">A Resource Authorization Server that accepts JWT authorization grants
+<p id="section-9.11-1">A Resource Authorization Server that accepts JWT authorization grants
 and catalog access assertions at the same token endpoint relies on the
 <code>typ</code> JOSE header parameter to distinguish them
-(<a href="#assertion-validation" class="auto internal xref">Section 6.4.1</a>, <a href="#profile-definitions" class="auto internal xref">Section 9.1</a>). Without that check,
+(<a href="#assertion-validation" class="auto internal xref">Section 6.4.1</a>, <a href="#profile-definitions" class="auto internal xref">Section 8.1</a>). Without that check,
 a grant could be presented as a catalog access assertion, or a catalog
 access assertion as a grant; their claims overlap, and the <code>sub</code> claim
 of a catalog access assertion is an issuer identifier. When the client
@@ -5089,15 +4656,15 @@ client assertion and recommends a separate key for client assertions.
 <span><a href="https://rfc-editor.org/rfc/rfc8725#section-2.8" class="relref">Section 2.8</a> of [<a href="#RFC8725" class="cite xref">RFC8725</a>]</span> describes this class of attack. For the same
 reason, an entry is used only for grants of its own Grant Profile
 (<a href="#issuing" class="auto internal xref">Section 5.4</a>), even when the grants of another profile carry similar
-claims.<a href="#section-10.11-1" class="pilcrow">¶</a></p>
+claims.<a href="#section-9.11-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-external">
-<section id="section-10.12">
+<section id="section-9.12">
         <h3 id="name-external-references">
-<a href="#section-10.12" class="section-number selfRef">10.12. </a><a href="#name-external-references" class="section-name selfRef">External References</a>
+<a href="#section-9.12" class="section-number selfRef">9.12. </a><a href="#name-external-references" class="section-name selfRef">External References</a>
         </h3>
-<p id="section-10.12-1">Entries and authorization details types metadata contain URIs that refer
+<p id="section-9.12-1">Entries and authorization details types metadata contain URIs that refer
 to other servers: the <code>documentation_uri</code>, <code>definition_uri</code>, and
 <code>schema_uri</code> members, and the <code>resource</code> of each entry, whose Protected
 Resource Metadata the Grant Issuer requests during composition
@@ -5105,396 +4672,350 @@ Resource Metadata the Grant Issuer requests during composition
 can alter catalog responses, chooses these URIs
 (<span><a href="https://rfc-editor.org/rfc/rfc9728#section-7.7" class="relref">Section 7.7</a> of [<a href="#RFC9728" class="cite xref">RFC9728</a>]</span>). A Grant Issuer that dereferences them
 sends no credential obtained through a retrieval protocol
-(<a href="#rar-metadata" class="auto internal xref">Section 5.6.1</a>, <a href="#view-document" class="auto internal xref">Section 6.7</a>) and applies the protections
+(<a href="#optional-metadata" class="auto internal xref">Section 5.6</a>, <a href="#view-document" class="auto internal xref">Section 6.7</a>) and applies the protections
 against server-side request forgery that it applies to other URLs
 obtained from external parties. The retrieval protocol does not
 authenticate content retrieved from these URIs, so the Grant Issuer
 treats it as untrusted input, not as catalog content. A Grant Issuer can
 cache Protected Resource Metadata and limit how many such requests one
-refresh makes.<a href="#section-10.12-1" class="pilcrow">¶</a></p>
-<p id="section-10.12-2">A Grant Issuer presents <code>display</code>, <code>description</code>, <code>documentation_uri</code>,
+refresh makes.<a href="#section-9.12-1" class="pilcrow">¶</a></p>
+<p id="section-9.12-2">A Grant Issuer presents <code>display</code>, <code>description</code>, <code>documentation_uri</code>,
 and <code>definition_uri</code> to administrators as untrusted text. These members
 can change without a new revision (<a href="#revision" class="auto internal xref">Section 4.7</a>), so an approval does
-not cover later changes to them.<a href="#section-10.12-2" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="sec-client-discovery">
-<section id="section-10.13">
-        <h3 id="name-client-discovery-2">
-<a href="#section-10.13" class="section-number selfRef">10.13. </a><a href="#name-client-discovery-2" class="section-name selfRef">Client Discovery</a>
-        </h3>
-<p id="section-10.13-1">A client could use client discovery to learn which Grant Issuers and
-tenants the Resource Authorization Server trusts, which
-<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.7" class="relref">Section 9.7</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span> treats as deployment-sensitive. The rules in
-<a href="#client-disclosure" class="auto internal xref">Section 7.3</a> limit that disclosure to clients that the Resource
-Authorization Server authorizes. An authorized client still learns the
-Tenant Objects and entries that apply to it, including their <code>display</code>
-and <code>description</code> members. A client authorized for many Issuer
-Relationships, such as an application that many organizations use,
-learns the Tenant Objects of each, as far as the disclosure policy of
-the Resource Authorization Server permits. Differences in processing
-time can also reveal whether a Grant Issuer is known, so a Resource
-Authorization Server processes the cases listed in <a href="#client-disclosure" class="auto internal xref">Section 7.3</a>
-alike.<a href="#section-10.13-1" class="pilcrow">¶</a></p>
-<p id="section-10.13-2">A client view is not an authorization decision (<a href="#client-discovery" class="auto internal xref">Section 7</a>),
-and a Grant Issuer does not install one in place of a Relationship View
-(<a href="#client-view" class="auto internal xref">Section 7.4</a>, <a href="#view-document" class="auto internal xref">Section 6.7</a>).<a href="#section-10.13-2" class="pilcrow">¶</a></p>
+not cover later changes to them.<a href="#section-9.12-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-resources">
-<section id="section-10.14">
+<section id="section-9.13">
         <h3 id="name-resource-consumption">
-<a href="#section-10.14" class="section-number selfRef">10.14. </a><a href="#name-resource-consumption" class="section-name selfRef">Resource Consumption</a>
+<a href="#section-9.13" class="section-number selfRef">9.13. </a><a href="#name-resource-consumption" class="section-name selfRef">Resource Consumption</a>
         </h3>
-<p id="section-10.14-1">A Relationship View can be large. A Grant Issuer <span class="bcp14">SHOULD</span> limit the size
+<p id="section-9.13-1">A Relationship View can be large. A Grant Issuer <span class="bcp14">SHOULD</span> limit the size
 of the responses it accepts, and treats a response that exceeds its
 limits as an incomplete retrieval (<a href="#installation" class="auto internal xref">Section 5.5</a>). A Resource
 Authorization Server can limit the rate at which it accepts catalog
 access assertions and requests to the catalog endpoint from an Issuer
-Relationship, and requests to the client discovery endpoint from a
-client.<a href="#section-10.14-1" class="pilcrow">¶</a></p>
+Relationship.<a href="#section-9.13-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="privacy">
-<section id="section-11">
+<section id="section-10">
       <h2 id="name-privacy-considerations">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
       </h2>
-<p id="section-11-1">The privacy considerations of the Grant Profile of each entry, such as
-<span>[<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>, apply to this specification.<a href="#section-11-1" class="pilcrow">¶</a></p>
-<p id="section-11-2">A catalog discloses business relationships: which Resource Authorization
+<p id="section-10-1">The privacy considerations of the Grant Profile of each entry, such as
+<span>[<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>, apply to this specification.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<p id="section-10-2">A catalog discloses business relationships: which Resource Authorization
 Server tenants are associated with an issuer tenant, and the names those
 tenants use. This specification limits that disclosure to an
 authenticated and authorized Issuer Relationship
-(<a href="#relationship-authorization" class="auto internal xref">Section 6.2</a>) and, through client discovery, to an
-authenticated client that the Resource Authorization Server authorizes
-for that Issuer Relationship (<a href="#client-disclosure" class="auto internal xref">Section 7.3</a>). It also requires
+(<a href="#relationship-authorization" class="auto internal xref">Section 6.2</a>). It also requires
 responses that caches do not store (<a href="#refresh" class="auto internal xref">Section 6.8</a>) and prohibits error
-responses that reveal other issuers, tenants, or catalogs (<a href="#errors" class="auto internal xref">Section 6.9</a>).<a href="#section-11-2" class="pilcrow">¶</a></p>
-<p id="section-11-3">Because an entry states the claims and subject identifier formats that
+responses that reveal other issuers, tenants, or catalogs (<a href="#errors" class="auto internal xref">Section 6.9</a>).<a href="#section-10-2" class="pilcrow">¶</a></p>
+<p id="section-10-3">Because an entry states the claims and subject identifier formats that
 the Resource Authorization Server requires or accepts (<a href="#entry-claims" class="auto internal xref">Section 4.5.4</a>,
 <a href="#entry-sub-id" class="auto internal xref">Section 4.5.5</a>), an administrator of the Grant Issuer decides before
 issuance which claims the Grant Issuer releases and to which Resource
 Authorization Server tenants. An entry that requires a claim does not
-cause the Grant Issuer to release it without approval (<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-11-3" class="pilcrow">¶</a></p>
-<p id="section-11-4">The Grant Issuer stores catalog content as configuration, protects it
+cause the Grant Issuer to release it without approval (<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-10-3" class="pilcrow">¶</a></p>
+<p id="section-10-4">The Grant Issuer stores catalog content as configuration, protects it
 like other relationship-specific configuration, and makes it accessible
-only to administrators who manage the corresponding Issuer Relationship.<a href="#section-11-4" class="pilcrow">¶</a></p>
-<p id="section-11-5">Dereferencing a URI contained in a catalog, such as a
+only to administrators who manage the corresponding Issuer Relationship.<a href="#section-10-4" class="pilcrow">¶</a></p>
+<p id="section-10-5">Dereferencing a URI contained in a catalog, such as a
 <code>documentation_uri</code> or <code>definition_uri</code>, can reveal to the server
 hosting it that the Grant Issuer has a relationship with the Resource
 Authorization Server. A Grant Issuer can avoid such retrieval or perform
-it through an intermediary.<a href="#section-11-5" class="pilcrow">¶</a></p>
+it through an intermediary.<a href="#section-10-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana">
-<section id="section-12">
+<section id="section-11">
       <h2 id="name-iana-considerations">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <div id="iana-as-metadata">
-<section id="section-12.1">
+<section id="section-11.1">
         <h3 id="name-oauth-authorization-server-">
-<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-oauth-authorization-server-" class="section-name selfRef">OAuth Authorization Server Metadata Registry</a>
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-oauth-authorization-server-" class="section-name selfRef">OAuth Authorization Server Metadata Registry</a>
         </h3>
-<p id="section-12.1-1">This specification requests registration of the following values in
-the "OAuth Authorization Server Metadata" registry established by
-<span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>.<a href="#section-12.1-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-12.1-2">
-          <dt id="section-12.1-2.1">Metadata Name:</dt>
-          <dd style="margin-left: 1.5em" id="section-12.1-2.2">
-            <p id="section-12.1-2.2.1"><code>authorization_grant_catalog_endpoint</code><a href="#section-12.1-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-11.1-1">This specification requests registration of the following value in the
+"OAuth Authorization Server Metadata" registry established by
+<span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>.<a href="#section-11.1-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-11.1-2">
+          <dt id="section-11.1-2.1">Metadata Name:</dt>
+          <dd style="margin-left: 1.5em" id="section-11.1-2.2">
+            <p id="section-11.1-2.2.1"><code>authorization_grant_catalog_endpoint</code><a href="#section-11.1-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-12.1-2.3">Metadata Description:</dt>
-          <dd style="margin-left: 1.5em" id="section-12.1-2.4">
-            <p id="section-12.1-2.4.1">URL of the OAuth Authorization Grant Catalog endpoint, which is also
-the resource indicator for requesting a catalog access token<a href="#section-12.1-2.4.1" class="pilcrow">¶</a></p>
+<dt id="section-11.1-2.3">Metadata Description:</dt>
+          <dd style="margin-left: 1.5em" id="section-11.1-2.4">
+            <p id="section-11.1-2.4.1">URL of the OAuth Authorization Grant Catalog endpoint, which is also
+the resource indicator for requesting a catalog access token<a href="#section-11.1-2.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-12.1-2.5">Change Controller:</dt>
-          <dd style="margin-left: 1.5em" id="section-12.1-2.6">
-            <p id="section-12.1-2.6.1">IETF<a href="#section-12.1-2.6.1" class="pilcrow">¶</a></p>
+<dt id="section-11.1-2.5">Change Controller:</dt>
+          <dd style="margin-left: 1.5em" id="section-11.1-2.6">
+            <p id="section-11.1-2.6.1">IETF<a href="#section-11.1-2.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-12.1-2.7">Specification Document(s):</dt>
-          <dd style="margin-left: 1.5em" id="section-12.1-2.8">
-            <p id="section-12.1-2.8.1"><a href="#as-metadata" class="auto internal xref">Section 6.3</a> of this specification<a href="#section-12.1-2.8.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-12.1-2.9">Metadata Name:</dt>
-          <dd style="margin-left: 1.5em" id="section-12.1-2.10">
-            <p id="section-12.1-2.10.1"><code>authorization_grant_client_discovery_endpoint</code><a href="#section-12.1-2.10.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-12.1-2.11">Metadata Description:</dt>
-          <dd style="margin-left: 1.5em" id="section-12.1-2.12">
-            <p id="section-12.1-2.12.1">URL of the OAuth Authorization Grant Catalog client discovery endpoint<a href="#section-12.1-2.12.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-12.1-2.13">Change Controller:</dt>
-          <dd style="margin-left: 1.5em" id="section-12.1-2.14">
-            <p id="section-12.1-2.14.1">IETF<a href="#section-12.1-2.14.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-12.1-2.15">Specification Document(s):</dt>
-          <dd style="margin-left: 1.5em" id="section-12.1-2.16">
-            <p id="section-12.1-2.16.1"><a href="#client-discovery-endpoint" class="auto internal xref">Section 7.1</a> of this specification<a href="#section-12.1-2.16.1" class="pilcrow">¶</a></p>
+<dt id="section-11.1-2.7">Specification Document(s):</dt>
+          <dd style="margin-left: 1.5em" id="section-11.1-2.8">
+            <p id="section-11.1-2.8.1"><a href="#as-metadata" class="auto internal xref">Section 6.3</a> of this specification<a href="#section-11.1-2.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
 </section>
 </div>
 <div id="iana-media-types">
-<section id="section-12.2">
+<section id="section-11.2">
         <h3 id="name-media-types-registry">
-<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-media-types-registry" class="section-name selfRef">Media Types Registry</a>
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-media-types-registry" class="section-name selfRef">Media Types Registry</a>
         </h3>
-<p id="section-12.2-1">This specification requests registration of the following media types
-in the "Media Types" registry, in the manner described in <span>[<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>.<a href="#section-12.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.2-1">This specification requests registration of the following media types
+in the "Media Types" registry, in the manner described in <span>[<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
 <div id="applicationoauth-grant-catalogjson">
-<section id="section-12.2.1">
+<section id="section-11.2.1">
           <h4 id="name-application-oauth-grant-cat">
-<a href="#section-12.2.1" class="section-number selfRef">12.2.1. </a><a href="#name-application-oauth-grant-cat" class="section-name selfRef">application/oauth-grant-catalog+json</a>
+<a href="#section-11.2.1" class="section-number selfRef">11.2.1. </a><a href="#name-application-oauth-grant-cat" class="section-name selfRef">application/oauth-grant-catalog+json</a>
           </h4>
-<span class="break"></span><dl class="dlParallel" id="section-12.2.1-1">
-            <dt id="section-12.2.1-1.1">Type name:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.2">
-              <p id="section-12.2.1-1.2.1">application<a href="#section-12.2.1-1.2.1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-11.2.1-1">
+            <dt id="section-11.2.1-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.2">
+              <p id="section-11.2.1-1.2.1">application<a href="#section-11.2.1-1.2.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.3">Subtype name:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.4">
-              <p id="section-12.2.1-1.4.1">oauth-grant-catalog+json<a href="#section-12.2.1-1.4.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.3">Subtype name:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.4">
+              <p id="section-11.2.1-1.4.1">oauth-grant-catalog+json<a href="#section-11.2.1-1.4.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.5">Required parameters:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.6">
-              <p id="section-12.2.1-1.6.1">N/A<a href="#section-12.2.1-1.6.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.5">Required parameters:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.6">
+              <p id="section-11.2.1-1.6.1">N/A<a href="#section-11.2.1-1.6.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.7">Optional parameters:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.8">
-              <p id="section-12.2.1-1.8.1">N/A<a href="#section-12.2.1-1.8.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.7">Optional parameters:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.8">
+              <p id="section-11.2.1-1.8.1">N/A<a href="#section-11.2.1-1.8.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.9">Encoding considerations:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.10">
-              <p id="section-12.2.1-1.10.1">binary; a document of this type is a JSON object <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span> encoded
-in UTF-8.<a href="#section-12.2.1-1.10.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.9">Encoding considerations:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.10">
+              <p id="section-11.2.1-1.10.1">binary; a document of this type is a JSON object <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span> encoded
+in UTF-8.<a href="#section-11.2.1-1.10.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.11">Security considerations:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.12">
-              <p id="section-12.2.1-1.12.1">See <a href="#security" class="auto internal xref">Section 10</a> of this specification.<a href="#section-12.2.1-1.12.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.11">Security considerations:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.12">
+              <p id="section-11.2.1-1.12.1">See <a href="#security" class="auto internal xref">Section 9</a> of this specification.<a href="#section-11.2.1-1.12.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.13">Interoperability considerations:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.14">
-              <p id="section-12.2.1-1.14.1">N/A<a href="#section-12.2.1-1.14.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.13">Interoperability considerations:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.14">
+              <p id="section-11.2.1-1.14.1">N/A<a href="#section-11.2.1-1.14.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.15">Published specification:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.16">
-              <p id="section-12.2.1-1.16.1"><a href="#relationship-view" class="auto internal xref">Section 4.2</a> and <a href="#view-document" class="auto internal xref">Section 6.7</a> of this specification<a href="#section-12.2.1-1.16.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.15">Published specification:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.16">
+              <p id="section-11.2.1-1.16.1"><a href="#relationship-view" class="auto internal xref">Section 4.2</a> and <a href="#view-document" class="auto internal xref">Section 6.7</a> of this specification<a href="#section-11.2.1-1.16.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.17">Applications that use this media type:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.18">
-              <p id="section-12.2.1-1.18.1">Authorization servers that publish an OAuth Authorization Grant
-Catalog, and authorization servers that retrieve one to issue grants.<a href="#section-12.2.1-1.18.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.17">Applications that use this media type:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.18">
+              <p id="section-11.2.1-1.18.1">Authorization servers that publish an OAuth Authorization Grant
+Catalog, and authorization servers that retrieve one to issue grants.<a href="#section-11.2.1-1.18.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.19">Fragment identifier considerations:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.20">
-              <p id="section-12.2.1-1.20.1">The syntax and semantics of fragment identifiers specified for
-<code>+json</code> in <span><a href="https://rfc-editor.org/rfc/rfc6839#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC6839" class="cite xref">RFC6839</a>]</span> apply.<a href="#section-12.2.1-1.20.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.19">Fragment identifier considerations:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.20">
+              <p id="section-11.2.1-1.20.1">The syntax and semantics of fragment identifiers specified for
+<code>+json</code> in <span><a href="https://rfc-editor.org/rfc/rfc6839#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC6839" class="cite xref">RFC6839</a>]</span> apply.<a href="#section-11.2.1-1.20.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.21">Additional information:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.22">
-              <p id="section-12.2.1-1.22.1">Deprecated alias names for this type: N/A<a href="#section-12.2.1-1.22.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.21">Additional information:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.22">
+              <p id="section-11.2.1-1.22.1">Deprecated alias names for this type: N/A<a href="#section-11.2.1-1.22.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.23"></dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.24">
-              <p id="section-12.2.1-1.24.1">Magic number(s): N/A<a href="#section-12.2.1-1.24.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.23"></dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.24">
+              <p id="section-11.2.1-1.24.1">Magic number(s): N/A<a href="#section-11.2.1-1.24.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.25"></dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.26">
-              <p id="section-12.2.1-1.26.1">File extension(s): N/A<a href="#section-12.2.1-1.26.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.25"></dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.26">
+              <p id="section-11.2.1-1.26.1">File extension(s): N/A<a href="#section-11.2.1-1.26.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.27"></dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.28">
-              <p id="section-12.2.1-1.28.1">Macintosh file type code(s): N/A<a href="#section-12.2.1-1.28.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.27"></dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.28">
+              <p id="section-11.2.1-1.28.1">Macintosh file type code(s): N/A<a href="#section-11.2.1-1.28.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.29">Person &amp; email address to contact for further information:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.30">
-              <p id="section-12.2.1-1.30.1">Karl McGuinness, public@karlmcguinness.com<a href="#section-12.2.1-1.30.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.29">Person &amp; email address to contact for further information:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.30">
+              <p id="section-11.2.1-1.30.1">Karl McGuinness, public@karlmcguinness.com<a href="#section-11.2.1-1.30.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.31">Intended usage:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.32">
-              <p id="section-12.2.1-1.32.1">COMMON<a href="#section-12.2.1-1.32.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.31">Intended usage:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.32">
+              <p id="section-11.2.1-1.32.1">COMMON<a href="#section-11.2.1-1.32.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.33">Restrictions on usage:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.34">
-              <p id="section-12.2.1-1.34.1">none<a href="#section-12.2.1-1.34.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.33">Restrictions on usage:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.34">
+              <p id="section-11.2.1-1.34.1">none<a href="#section-11.2.1-1.34.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.35">Author:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.36">
-              <p id="section-12.2.1-1.36.1">Karl McGuinness, public@karlmcguinness.com<a href="#section-12.2.1-1.36.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.35">Author:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.36">
+              <p id="section-11.2.1-1.36.1">Karl McGuinness, public@karlmcguinness.com<a href="#section-11.2.1-1.36.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.1-1.37">Change controller:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.1-1.38">
-              <p id="section-12.2.1-1.38.1">IETF<a href="#section-12.2.1-1.38.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.1-1.37">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.1-1.38">
+              <p id="section-11.2.1-1.38.1">IETF<a href="#section-11.2.1-1.38.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 </dl>
 </section>
 </div>
 <div id="applicationoauth-grant-catalog-accessjwt">
-<section id="section-12.2.2">
+<section id="section-11.2.2">
           <h4 id="name-application-oauth-grant-cata">
-<a href="#section-12.2.2" class="section-number selfRef">12.2.2. </a><a href="#name-application-oauth-grant-cata" class="section-name selfRef">application/oauth-grant-catalog-access+jwt</a>
+<a href="#section-11.2.2" class="section-number selfRef">11.2.2. </a><a href="#name-application-oauth-grant-cata" class="section-name selfRef">application/oauth-grant-catalog-access+jwt</a>
           </h4>
-<span class="break"></span><dl class="dlParallel" id="section-12.2.2-1">
-            <dt id="section-12.2.2-1.1">Type name:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.2">
-              <p id="section-12.2.2-1.2.1">application<a href="#section-12.2.2-1.2.1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-11.2.2-1">
+            <dt id="section-11.2.2-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.2">
+              <p id="section-11.2.2-1.2.1">application<a href="#section-11.2.2-1.2.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.3">Subtype name:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.4">
-              <p id="section-12.2.2-1.4.1">oauth-grant-catalog-access+jwt<a href="#section-12.2.2-1.4.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.3">Subtype name:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.4">
+              <p id="section-11.2.2-1.4.1">oauth-grant-catalog-access+jwt<a href="#section-11.2.2-1.4.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.5">Required parameters:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.6">
-              <p id="section-12.2.2-1.6.1">N/A<a href="#section-12.2.2-1.6.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.5">Required parameters:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.6">
+              <p id="section-11.2.2-1.6.1">N/A<a href="#section-11.2.2-1.6.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.7">Optional parameters:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.8">
-              <p id="section-12.2.2-1.8.1">N/A<a href="#section-12.2.2-1.8.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.7">Optional parameters:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.8">
+              <p id="section-11.2.2-1.8.1">N/A<a href="#section-11.2.2-1.8.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.9">Encoding considerations:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.10">
-              <p id="section-12.2.2-1.10.1">binary; a catalog access assertion is a JWT, which is a sequence of
-base64url-encoded values separated by period (".") characters.<a href="#section-12.2.2-1.10.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.9">Encoding considerations:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.10">
+              <p id="section-11.2.2-1.10.1">binary; a catalog access assertion is a JWT, which is a sequence of
+base64url-encoded values separated by period (".") characters.<a href="#section-11.2.2-1.10.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.11">Security considerations:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.12">
-              <p id="section-12.2.2-1.12.1">See <a href="#security" class="auto internal xref">Section 10</a> of this specification.<a href="#section-12.2.2-1.12.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.11">Security considerations:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.12">
+              <p id="section-11.2.2-1.12.1">See <a href="#security" class="auto internal xref">Section 9</a> of this specification.<a href="#section-11.2.2-1.12.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.13">Interoperability considerations:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.14">
-              <p id="section-12.2.2-1.14.1">N/A<a href="#section-12.2.2-1.14.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.13">Interoperability considerations:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.14">
+              <p id="section-11.2.2-1.14.1">N/A<a href="#section-11.2.2-1.14.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.15">Published specification:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.16">
-              <p id="section-12.2.2-1.16.1"><a href="#assertion" class="auto internal xref">Section 6.4</a> of this specification<a href="#section-12.2.2-1.16.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.15">Published specification:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.16">
+              <p id="section-11.2.2-1.16.1"><a href="#assertion" class="auto internal xref">Section 6.4</a> of this specification<a href="#section-11.2.2-1.16.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.17">Applications that use this media type:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.18">
-              <p id="section-12.2.2-1.18.1">Authorization servers that request a catalog access token for an
+<dt id="section-11.2.2-1.17">Applications that use this media type:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.18">
+              <p id="section-11.2.2-1.18.1">Authorization servers that request a catalog access token for an
 OAuth Authorization Grant Catalog, and authorization servers that
-issue one.<a href="#section-12.2.2-1.18.1" class="pilcrow">¶</a></p>
+issue one.<a href="#section-11.2.2-1.18.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.19">Fragment identifier considerations:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.20">
-              <p id="section-12.2.2-1.20.1">N/A<a href="#section-12.2.2-1.20.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.19">Fragment identifier considerations:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.20">
+              <p id="section-11.2.2-1.20.1">N/A<a href="#section-11.2.2-1.20.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.21">Additional information:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.22">
-              <p id="section-12.2.2-1.22.1">Deprecated alias names for this type: N/A<a href="#section-12.2.2-1.22.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.21">Additional information:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.22">
+              <p id="section-11.2.2-1.22.1">Deprecated alias names for this type: N/A<a href="#section-11.2.2-1.22.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.23"></dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.24">
-              <p id="section-12.2.2-1.24.1">Magic number(s): N/A<a href="#section-12.2.2-1.24.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.23"></dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.24">
+              <p id="section-11.2.2-1.24.1">Magic number(s): N/A<a href="#section-11.2.2-1.24.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.25"></dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.26">
-              <p id="section-12.2.2-1.26.1">File extension(s): N/A<a href="#section-12.2.2-1.26.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.25"></dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.26">
+              <p id="section-11.2.2-1.26.1">File extension(s): N/A<a href="#section-11.2.2-1.26.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.27"></dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.28">
-              <p id="section-12.2.2-1.28.1">Macintosh file type code(s): N/A<a href="#section-12.2.2-1.28.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.27"></dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.28">
+              <p id="section-11.2.2-1.28.1">Macintosh file type code(s): N/A<a href="#section-11.2.2-1.28.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.29">Person &amp; email address to contact for further information:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.30">
-              <p id="section-12.2.2-1.30.1">Karl McGuinness, public@karlmcguinness.com<a href="#section-12.2.2-1.30.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.29">Person &amp; email address to contact for further information:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.30">
+              <p id="section-11.2.2-1.30.1">Karl McGuinness, public@karlmcguinness.com<a href="#section-11.2.2-1.30.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.31">Intended usage:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.32">
-              <p id="section-12.2.2-1.32.1">COMMON<a href="#section-12.2.2-1.32.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.31">Intended usage:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.32">
+              <p id="section-11.2.2-1.32.1">COMMON<a href="#section-11.2.2-1.32.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.33">Restrictions on usage:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.34">
-              <p id="section-12.2.2-1.34.1">none<a href="#section-12.2.2-1.34.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.33">Restrictions on usage:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.34">
+              <p id="section-11.2.2-1.34.1">none<a href="#section-11.2.2-1.34.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.35">Author:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.36">
-              <p id="section-12.2.2-1.36.1">Karl McGuinness, public@karlmcguinness.com<a href="#section-12.2.2-1.36.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.35">Author:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.36">
+              <p id="section-11.2.2-1.36.1">Karl McGuinness, public@karlmcguinness.com<a href="#section-11.2.2-1.36.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-12.2.2-1.37">Change controller:</dt>
-            <dd style="margin-left: 1.5em" id="section-12.2.2-1.38">
-              <p id="section-12.2.2-1.38.1">IETF<a href="#section-12.2.2-1.38.1" class="pilcrow">¶</a></p>
+<dt id="section-11.2.2-1.37">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-11.2.2-1.38">
+              <p id="section-11.2.2-1.38.1">IETF<a href="#section-11.2.2-1.38.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 </dl>
-<p id="section-12.2.2-2">The registration of <code>application/oauth-grant-catalog-access+jwt</code>
+<p id="section-11.2.2-2">The registration of <code>application/oauth-grant-catalog-access+jwt</code>
 establishes the <code>typ</code> JOSE header parameter value
 <code>oauth-grant-catalog-access+jwt</code> used by catalog access assertions
-(<a href="#assertion" class="auto internal xref">Section 6.4</a>).<a href="#section-12.2.2-2" class="pilcrow">¶</a></p>
+(<a href="#assertion" class="auto internal xref">Section 6.4</a>).<a href="#section-11.2.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="oauth-scope-value">
-<section id="section-12.3">
+<section id="section-11.3">
         <h3 id="name-oauth-scope-value">
-<a href="#section-12.3" class="section-number selfRef">12.3. </a><a href="#name-oauth-scope-value" class="section-name selfRef">OAuth Scope Value</a>
+<a href="#section-11.3" class="section-number selfRef">11.3. </a><a href="#name-oauth-scope-value" class="section-name selfRef">OAuth Scope Value</a>
         </h3>
-<p id="section-12.3-1">No IANA registry exists for OAuth scope values, and this specification
+<p id="section-11.3-1">No IANA registry exists for OAuth scope values, and this specification
 requests no registration for <code>authorization_grant_catalog.read</code>
-(<a href="#token-request" class="auto internal xref">Section 6.5</a>).<a href="#section-12.3-1" class="pilcrow">¶</a></p>
+(<a href="#token-request" class="auto internal xref">Section 6.5</a>).<a href="#section-11.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="sec-combined-references">
-<section id="section-13">
+<section id="section-12">
       <h2 id="name-references">
-<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-13.1">
+<section id="section-12.1">
         <h3 id="name-normative-references">
-<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="ID-JAG">[ID-JAG]</dt>
@@ -5613,9 +5134,9 @@ requests no registration for <code>authorization_grant_catalog.read</code>
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-13.2">
+<section id="section-12.2">
         <h3 id="name-informative-references">
-<a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="AUTHORITY-METADATA">[AUTHORITY-METADATA]</dt>
@@ -5625,10 +5146,6 @@ requests no registration for <code>authorization_grant_catalog.read</code>
 <dt id="CIMD">[CIMD]</dt>
         <dd>
 <span class="refAuthor">Parecki, A.</span> and <span class="refAuthor">E. Smith</span>, <span class="refTitle">"OAuth Client ID Metadata Document"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-oauth-client-id-metadata-document-02</span>, <time datetime="2026-07-06" class="refDate">6 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-client-id-metadata-document-02">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-client-id-metadata-document-02</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="OpenID.Core">[OpenID.Core]</dt>
-        <dd>
-<span class="refAuthor">Sakimura, N.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">de Medeiros, B.</span>, and <span class="refAuthor">C. Mortimore</span>, <span class="refTitle">"OpenID Connect Core 1.0 incorporating errata set 2"</span>, <time datetime="2023-12-15" class="refDate">15 December 2023</time>, <span>&lt;<a href="https://openid.net/specs/openid-connect-core-1_0.html">https://openid.net/specs/openid-connect-core-1_0.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RAR-METADATA">[RAR-METADATA]</dt>
         <dd>
@@ -5653,7 +5170,7 @@ requests no registration for <code>authorization_grant_catalog.read</code>
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-example-grant-catalog" class="section-name selfRef">Example Grant Catalog</a>
       </h2>
 <p id="appendix-A-1">The following Grant Catalog has one entry for the ID-JAG profile
-(<a href="#id-jag" class="auto internal xref">Section 8</a>). Every ID-JAG issued using the entry is bound to a DPoP key
+(<a href="#id-jag" class="auto internal xref">Section 7</a>). Every ID-JAG issued using the entry is bound to a DPoP key
 and contains the scope value <code>messages.read</code>, the <code>email</code> claim, and a
 <code>sub_id</code> claim in the <code>saml-nameid</code> format; it can also contain the
 scope value <code>messages.write</code> and authorization details objects of type
@@ -5872,7 +5389,7 @@ such as authority metadata <span>[<a href="#AUTHORITY-METADATA" class="cite xref
 and authorization details types a relationship may use is specific to
 the relationship, so it belongs in the catalog. Entries identify items
 by the protocol values that authority metadata uses, so the two
-compose without a mapping (<a href="#authority-metadata" class="auto internal xref">Section 5.6.2</a>).<a href="#appendix-D-1.8.1" class="pilcrow">¶</a></p>
+compose without a mapping (<a href="#optional-metadata" class="auto internal xref">Section 5.6</a>).<a href="#appendix-D-1.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="appendix-D-1.9">Envelope without alternatives:</dt>
@@ -5917,10 +5434,7 @@ a tenant selector against the relationships permitted to a Grant
 Issuer authenticated as a client would instead leave each Resource
 Authorization Server to define its own selector and mapping, and a
 client credential authorized for many issuer tenants would carry the
-same broad authority (<a href="#sec-relationship" class="auto internal xref">Section 10.3</a>). Client discovery
-(<a href="#client-discovery" class="auto internal xref">Section 7</a>) does authorize a selector against an
-authenticated client, because its response describes only what applies
-to that client (<a href="#sec-client-discovery" class="auto internal xref">Section 10.13</a>).<a href="#appendix-D-1.18.1" class="pilcrow">¶</a></p>
+same broad authority (<a href="#sec-relationship" class="auto internal xref">Section 9.3</a>).<a href="#appendix-D-1.18.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="appendix-D-1.19">No client inventory:</dt>
@@ -5968,35 +5482,67 @@ client is open. Such a view would keep two parties distinct: the
 application client it describes, identified by its client identifier
 at the Resource Authorization Server, and the Issuer Relationship that
 retrieves it. The Issuer Relationship would need authorization to
-inspect that client's configuration, as client discovery requires for
-a client's own view (<a href="#client-disclosure" class="auto internal xref">Section 7.3</a>). The client context would
-include the target tenant where needed to identify the client
-registration (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-6.2" class="relref">Section 6.2</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>), and the response would
-identify that context for comparison with the request. Installed
+inspect that client's configuration; <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.7" class="relref">Section 9.7</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>
+requires client authentication for client-facing discovery. The client
+context would include the target tenant where needed to identify the
+client registration (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-6.2" class="relref">Section 6.2</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>), and the response
+would identify that context for comparison with the request. Installed
 state, revision comparisons, and approvals would be scoped to that
 context, and those approvals would apply only to grants identifying
 that client. The view would only narrow what the relationship permits.<a href="#appendix-E-1.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-E-1.4">
-          <p id="appendix-E-1.4.1">Registries: whether to establish registries for catalog members and
-grant binding methods, and with what registration policy, is open; a
-registry of members would record which members are part of the
-normative semantics of an entry.<a href="#appendix-E-1.4.1" class="pilcrow">¶</a></p>
+          <p id="appendix-E-1.4.1">Client-facing discovery: an application client retrieving its own
+view, the protected discovery mechanism that <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.7" class="relref">Section 9.7</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>
+permits, is a different consumer from the Grant Issuer. A design
+considered for this draft has the client authenticate at a discovery
+endpoint of the Resource Authorization Server, name the Grant Issuer,
+issuer tenant, and resource, and receive the Tenant Objects and
+entries of that Relationship View that it is authorized to learn
+about, with the same response for unknown and unauthorized contexts.
+Each Grant Profile would map an entry to request parameters, because
+members such as a required claim constrain the grant rather than the
+request. Such a view selects whole entries, so it cannot express a
+restriction for one client that is narrower than an entry, and the
+Grant Issuer can issue a grant using a different entry from the one
+the client used. Whether that contract is useful, and how it relates
+to the Grant Issuer's approvals, are open.<a href="#appendix-E-1.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-E-1.5">
-          <p id="appendix-E-1.5.1">Must-understand extensions: a mechanism by which an entry marks the
-extension members that a Grant Issuer must implement to use it, so
-that restrictive extensions can be defined without a distinct Grant
-Profile identifier (<a href="#extensibility" class="auto internal xref">Section 9</a>). It is to be added before the
-format stabilizes, or with the first restrictive extension. A related
-question is whether every extension is to preserve the principles in
-<a href="#overview" class="auto internal xref">Section 3</a> for a Grant Issuer that does not implement it.<a href="#appendix-E-1.5.1" class="pilcrow">¶</a></p>
+          <p id="appendix-E-1.5.1">Freshness and termination: a Grant Issuer stops issuing under state it
+cannot refresh only after a maximum age that it configures, which is a
+recommendation (<a href="#installation" class="auto internal xref">Section 5.5</a>), so the Resource Authorization
+Server has no deadline it can rely on after it ends a relationship
+(<a href="#sec-stale" class="auto internal xref">Section 9.7</a>). Whether to require a maximum age, or to let the
+Resource Authorization Server publish one, is open.<a href="#appendix-E-1.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-E-1.6">
-          <p id="appendix-E-1.6.1">Implementation experience: evidence that a Resource Authorization
+          <p id="appendix-E-1.6.1">Supporting metadata: how a Grant Issuer uses authorization details
+schemas to enforce policy, including retaining a schema and requiring
+new approval when it changes; how it matches authority metadata
+entries to the items of an entry; and how it uses declared attenuation
+when narrowing a request (<a href="#optional-metadata" class="auto internal xref">Section 5.6</a>).<a href="#appendix-E-1.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-E-1.7">
+          <p id="appendix-E-1.7.1">Registries: whether to establish registries for catalog members and
+grant binding methods, and with what registration policy, is open; a
+registry of members would record which members are part of the
+normative semantics of an entry.<a href="#appendix-E-1.7.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-E-1.8">
+          <p id="appendix-E-1.8.1">Must-understand extensions: a mechanism by which an entry marks the
+extension members that a Grant Issuer must implement to use it, so
+that restrictive extensions can be defined without a distinct Grant
+Profile identifier (<a href="#extensibility" class="auto internal xref">Section 8</a>). It is to be added before the
+format stabilizes, or with the first restrictive extension. A related
+question is whether every extension is to preserve the principles in
+<a href="#overview" class="auto internal xref">Section 3</a> for a Grant Issuer that does not implement it.<a href="#appendix-E-1.8.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-E-1.9">
+          <p id="appendix-E-1.9.1">Implementation experience: evidence that a Resource Authorization
 Server can generate entries and revisions from the configuration it
 enforces, and that independent Grant Issuers configure the same
-integration from one catalog with less manual work.<a href="#appendix-E-1.6.1" class="pilcrow">¶</a></p>
+integration from one catalog with less manual work.<a href="#appendix-E-1.9.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
