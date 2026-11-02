@@ -225,7 +225,8 @@ The following are outside the scope of this specification:
   ({{reconciliation}}).
 
 * A mechanism by which a client discovers whether a grant from a
-  particular Grant Issuer would be accepted ({{Section 9.7 of ID-JAG}}).
+  particular Grant Issuer would be accepted ({{Section 9.7 of ID-JAG}}),
+  which is an open issue ({{open-issues}}).
 
 * Establishment of an Onboarding Arrangement
   ({{relationship-authorization}}).
@@ -2677,10 +2678,11 @@ No client inventory:
   guarantees can also obtain one, so that existing authorization
   infrastructure can be used, is open.
 
-* Client-specific views: a Relationship View is relationship-wide
-  ({{clients}}). Whether Resource Authorization Servers restrict grant
-  configurations by client often enough to need an optional view for one
-  identified client is open. Such a view would keep two parties
+* Client-specific views for the Grant Issuer: a Relationship View is
+  relationship-wide ({{clients}}). Whether Resource Authorization
+  Servers restrict grant configurations by client often enough to need
+  an optional view, retrieved by the Grant Issuer, for one identified
+  client is open. Such a view would keep two parties
   distinct: the application client it describes, identified by its
   client identifier at the Resource Authorization Server, and the Issuer
   Relationship that retrieves it, which needs authorization to inspect
@@ -2692,6 +2694,26 @@ No client inventory:
   state, revision comparisons, and approvals would be scoped to that
   context, and those approvals would apply only to grants identifying
   that client. The view would only narrow what the relationship permits.
+
+* Client-facing discovery: a view that the client retrieves for itself
+  is a different consumer from the Grant Issuer. It would provide the
+  protected discovery mechanism that {{Section 9.7 of ID-JAG}} permits,
+  which requires client authentication and a response specific to that
+  client. The client would authenticate to the Resource Authorization
+  Server and identify the Grant Issuer, tenant context, and resource;
+  the Resource Authorization Server would return the entries that apply
+  to that client in that context; and the client would use them to
+  construct its request to the Grant Issuer, which still applies its
+  own approvals and runtime policy. This needs a client retrieval
+  mechanism, a response that identifies its context, and, for each
+  Grant Profile, rules that map an entry to request parameters, because
+  some members, such as a required claim, constrain the grant that the
+  Grant Issuer produces rather than the request. The view would describe
+  what a client can request; it would not establish user authorization,
+  consent, or the Grant Issuer's willingness to issue. Grants that an
+  authorization server issues for redemption at itself, such as
+  authorization codes, would remain outside this specification
+  ({{applicability}}).
 
 * Registries: whether to establish registries for catalog members and
   grant binding methods, and with what registration policy, is open; a
