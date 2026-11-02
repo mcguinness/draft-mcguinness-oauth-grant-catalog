@@ -292,7 +292,7 @@ Onboarding Arrangement:
 Relationship View:
 : The complete set of Tenant Objects, and the Grant Catalogs they
   reference, that a Resource Authorization Server makes available to one
-  Issuer Relationship at a point in time.
+  Issuer Relationship at a point in time ({{relationship-view}}).
 
 Tenant Object:
 : An object that binds one Resource Authorization Server tenant eligible
@@ -436,7 +436,30 @@ authorization decision ({{introduction}}).
 # Catalog Data Model {#data-model}
 
 The objects in this section describe what a Resource Authorization
-Server accepts in grants from one Issuer Relationship.
+Server accepts in grants from one Issuer Relationship. {{fig-model}}
+shows their structure, without the `display` and `description` members.
+A Tenant Object references a Grant Catalog by its `id`. The `scope`,
+`authorization_details`, `claims`, `sub_id`, and `grant_binding` members
+of an entry govern the inputs listed in {{tab-inputs}}.
+
+~~~ ascii-art
+Relationship View
+ |-- issuer
+ |-- issuer_relationship
+ |-- tenants[]: Tenant Object
+ |    |-- id
+ |    |-- target_tenant
+ |    `-- grant_catalog        (the id of a Grant Catalog)
+ `-- grant_catalogs[]: Grant Catalog
+      |-- issuer
+      |-- id
+      `-- entries[]: entry
+           |-- id, revision
+           |-- profile, resource
+           `-- scope, authorization_details, claims,
+               sub_id, grant_binding
+~~~
+{: #fig-model title="Structure of a Relationship View"}
 
 ## Common Conventions {#model-conventions}
 
@@ -481,6 +504,32 @@ carry protocol values, such as `issuer`, `target_tenant`, `profile`,
 `resource`, `scope`, `type`, `claim`, and the names in `formats` and
 `methods`, are compared using simple string comparison
 ({{Section 6.2.1 of RFC3986}}).
+
+## Relationship View {#relationship-view}
+
+A Relationship View is a JSON object with the following members:
+
+| Member | Status | Description |
+| --- | --- | --- |
+| `issuer` | REQUIRED | String; the issuer identifier of the Resource Authorization Server |
+| `issuer_relationship` | REQUIRED | Object; the Issuer Relationship that the Relationship View serves |
+| `tenants` | REQUIRED | Array containing every Tenant Object ({{tenant-object}}) eligible for the Issuer Relationship |
+| `grant_catalogs` | REQUIRED | Array containing each Grant Catalog ({{grant-catalog}}) that a Tenant Object references, each exactly once |
+{: title="Relationship View Members"}
+
+The `issuer` member of `issuer_relationship` is REQUIRED and contains
+the issuer identifier of the Grant Issuer. Its `tenant` member contains
+the issuer tenant identifier, and is present if and only if the Issuer
+Relationship has one ({{relationship-identity}}). The Resource
+Authorization Server derives this object from the Issuer Relationship
+that it used to select the Relationship View. Comparing it with the
+Issuer Relationship for which the Grant Issuer retrieved the view
+({{validation}}) detects errors in routing, caching, or the association
+of responses with requests; it does not show that the Resource
+Authorization Server selected the content of the view correctly.
+
+A Relationship View is complete and is not paged. If the Issuer
+Relationship has no eligible tenants, both arrays are empty.
 
 ## Tenant Object {#tenant-object}
 
@@ -873,19 +922,22 @@ Binding handles caching of representations.
 Before installing any part of a Relationship View, the Grant Issuer MUST
 verify the following:
 
-1. The `issuer` of every Grant Catalog, and any issuer identifier the
-   Retrieval Binding conveys, is identical to the issuer identifier of
+1. The `issuer` of the Relationship View and of every Grant Catalog, and
+   any other issuer identifier that the Retrieval Binding conveys, is
+   identical to the issuer identifier of
    the Resource Authorization Server with which the Grant Issuer
    associates the Issuer Relationship, using simple string comparison
    ({{Section 6.2.1 of RFC3986}}).
 
-2. The Issuer Relationship that the Retrieval Binding identifies with
-   the Relationship View is the one for which the Grant Issuer retrieved
-   it: the issuer identifiers are identical, and the issuer tenant
-   identifiers are identical or are both absent.
+2. The `issuer_relationship` of the Relationship View identifies the
+   Issuer Relationship for which the Grant Issuer retrieved it: its
+   `issuer` is identical to that relationship's issuer identifier, and
+   its `tenant` is identical to that relationship's issuer tenant
+   identifier, or both are absent.
 
-3. Every document conforms to I-JSON {{RFC7493}}. The structures that
-   the Retrieval Binding defines, every Tenant Object, and every Grant
+3. Every document conforms to I-JSON {{RFC7493}}. The Relationship
+   View, the structures that the Retrieval Binding defines, every Tenant
+   Object, and every Grant
    Catalog other than the contents of its entries satisfy their
    definitions: every REQUIRED member is present, and every member
    defined by this specification has the specified JSON type and meets
@@ -1584,43 +1636,11 @@ The Resource Authorization Server determines the Relationship View from
 the Issuer Relationship associated with the catalog access token
 ({{relationship-authorization}}) and responds with HTTP status code 200
 (OK) and a Relationship View document of media type
-`application/oauth-grant-catalog+json` ({{iana-media-types}}). The
-Resource Authorization Server MUST construct the document from one
-consistent state of the Issuer Relationship. The document is a JSON
-object with the following members:
-
-`issuer`:
-: REQUIRED. The issuer identifier of the Resource Authorization Server.
-
-`issuer_relationship`:
-: REQUIRED. A JSON object that identifies the Issuer Relationship that
-  the Relationship View serves. Its `issuer` member is REQUIRED and
-  contains the issuer identifier of the Grant Issuer. Its `tenant`
-  member contains the issuer tenant identifier, and is present if and
-  only if the Issuer Relationship has one ({{relationship-identity}}).
-  The Resource Authorization Server derives this object from the Issuer
-  Relationship that it used to select the Relationship View.
-
-`tenants`:
-: REQUIRED. A JSON array containing every Tenant Object
-  ({{tenant-object}}) eligible for the Issuer Relationship.
-
-`grant_catalogs`:
-: REQUIRED. A JSON array containing each Grant Catalog
-  ({{grant-catalog}}) that a Tenant Object references, each exactly
-  once.
-
-The document contains the complete Relationship View and is not paged.
-If the Issuer Relationship has no eligible tenants, both arrays are
-empty.
-
-The Grant Issuer validates the document as specified in {{validation}}:
-`issuer` is the issuer identifier that the binding conveys (check 1),
-and `issuer_relationship` identifies the Issuer Relationship with the
-view (check 2). Check 2 detects errors in routing, caching, or the
-association of responses with requests; it does not show that the
-Resource Authorization Server selected the content of the view
-correctly.
+`application/oauth-grant-catalog+json` ({{iana-media-types}}), whose
+content is the Relationship View ({{relationship-view}}). The Resource
+Authorization Server MUST construct the document from one consistent
+state of the Issuer Relationship. The Grant Issuer validates the
+document as specified in {{validation}}.
 
 The following is an example of a Relationship View document request and
 response, in which the `entries` of the Grant Catalog are abbreviated;
@@ -1965,11 +1985,9 @@ Retrieval Bindings:
 : A specification can define another Retrieval Binding. A Retrieval
   Binding authenticates the Issuer Relationship
   ({{relationship-identity}}) to the Resource Authorization Server, and
-  the Resource Authorization Server to the Grant Issuer; identifies,
-  with the Relationship View it delivers, the issuer identifier of the
-  Resource Authorization Server and the Issuer Relationship; carries the
-  objects of {{data-model}} unchanged; delivers a complete Relationship
-  View that reflects one consistent state of the Issuer Relationship;
+  the Resource Authorization Server to the Grant Issuer; delivers,
+  unchanged, a complete Relationship View ({{relationship-view}}) that
+  reflects one consistent state of the Issuer Relationship;
   and defines its discovery and error responses. A Grant Issuer obtains
   a Relationship View through one Retrieval Binding and does not combine
   objects retrieved through different ones.
