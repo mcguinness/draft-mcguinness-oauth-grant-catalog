@@ -1993,18 +1993,13 @@ Grant binding methods:
   it.
 
 Retrieval protocols:
-: A specification can define another retrieval protocol. A retrieval
-  protocol authenticates the Issuer Relationship
-  ({{relationship-identity}}) to the Resource Authorization Server, and
-  the Resource Authorization Server to the Grant Issuer; delivers,
-  unchanged, a complete Relationship View ({{relationship-view}}) that
-  reflects one consistent state of the Issuer Relationship; and defines
-  its discovery and error responses. A Grant Issuer obtains a
-  Relationship View through one retrieval protocol and does not combine
-  objects retrieved through different ones.
-
-Additional capabilities, such as change notification, can be defined as
-extensions that use the same objects.
+: A specification can define another retrieval protocol. It defines
+  discovery and error responses, authenticates the Issuer Relationship
+  ({{relationship-identity}}) to the Resource Authorization Server and
+  that server to the Grant Issuer, and delivers, unchanged, a complete
+  Relationship View ({{relationship-view}}) that reflects one
+  consistent state of the Issuer Relationship. A Grant Issuer does not
+  combine objects obtained through different retrieval protocols.
 
 ## Grant Profile Definitions {#profile-definitions}
 
