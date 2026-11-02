@@ -1892,8 +1892,8 @@ Grant Issuer still approves a subset before the entry is used
         <div class="lang-json sourcecode" id="section-4-3.1">
 <pre>
 {
-  "issuer": "https://ras.example/",
-  "issuer_relationship": {
+  "authorization_server": "https://ras.example/",
+  "grant_issuer": {
     "issuer": "https://idp.example/",
     "tenant": "org-acme"
   },
@@ -1906,7 +1906,7 @@ Grant Issuer still approves a subset before the entry is used
   ],
   "grant_catalogs": [
     {
-      "issuer": "https://ras.example/",
+      "authorization_server": "https://ras.example/",
       "id": "read-only",
       "entries": [
         {
@@ -1941,14 +1941,14 @@ the inputs that an entry can govern.<a href="#section-4-4" class="pilcrow">¶</a
         <div class="alignLeft art-ascii-art art-text artwork" id="section-4-5.1">
 <pre>
 Relationship View
- |-- issuer
- |-- issuer_relationship
+ |-- authorization_server
+ |-- grant_issuer
  |-- tenants[]: Tenant Object
  |    |-- id
  |    |-- target_tenant
  |    `-- grant_catalog        (the id of a Grant Catalog)
  `-- grant_catalogs[]: Grant Catalog
-      |-- issuer
+      |-- authorization_server
       |-- id
       `-- entries[]: entry
            |-- id, revision
@@ -2012,9 +2012,9 @@ values, the array <span class="bcp14">MUST NOT</span> contain the same value twi
 entry, each <code>scope</code> value within a <code>values</code> array, each <code>type</code> value
 within a <code>types</code> array, and each <code>claim</code> value within a <code>claims</code> array
 is unique and identifies an item. Members that carry protocol values,
-such as <code>issuer</code>, <code>target_tenant</code>, <code>profile</code>, <code>resource</code>, <code>scope</code>,
-<code>type</code>, <code>claim</code>, and the names in <code>formats</code> and <code>methods</code>, are compared
-using simple string comparison (<span><a href="https://rfc-editor.org/rfc/rfc3986#section-6.2.1" class="relref">Section 6.2.1</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>).<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+such as <code>authorization_server</code>, <code>target_tenant</code>, <code>profile</code>, <code>resource</code>,
+<code>scope</code>, <code>type</code>, <code>claim</code>, and the names in <code>formats</code> and <code>methods</code>, are
+compared using simple string comparison (<span><a href="https://rfc-editor.org/rfc/rfc3986#section-6.2.1" class="relref">Section 6.2.1</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>).<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="relationship-view">
@@ -2038,7 +2038,7 @@ using simple string comparison (<span><a href="https://rfc-editor.org/rfc/rfc398
           <tbody>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>issuer</code>
+                <code>authorization_server</code>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <span class="bcp14">REQUIRED</span>
@@ -2047,12 +2047,12 @@ using simple string comparison (<span><a href="https://rfc-editor.org/rfc/rfc398
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>issuer_relationship</code>
+                <code>grant_issuer</code>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <span class="bcp14">REQUIRED</span>
 </td>
-              <td class="text-left" rowspan="1" colspan="1">Object; the Issuer Relationship that the Relationship View serves</td>
+              <td class="text-left" rowspan="1" colspan="1">Object; identifies the Issuer Relationship that the Relationship View serves</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">
@@ -2074,9 +2074,9 @@ using simple string comparison (<span><a href="https://rfc-editor.org/rfc/rfc398
             </tr>
           </tbody>
         </table>
-<p id="section-4.2-3">The <code>issuer</code> member of <code>issuer_relationship</code> is <span class="bcp14">REQUIRED</span> and contains
-the issuer identifier of the Grant Issuer. The <code>tenant</code> member of
-<code>issuer_relationship</code> contains
+<p id="section-4.2-3">The <code>issuer</code> member of <code>grant_issuer</code> is <span class="bcp14">REQUIRED</span> and contains the
+issuer identifier of the Grant Issuer. The <code>tenant</code> member of
+<code>grant_issuer</code> contains
 the issuer tenant identifier, and is present if and only if the Issuer
 Relationship has one (<a href="#relationship-identity" class="auto internal xref">Section 6.1</a>). The Resource
 Authorization Server derives this object from the Issuer Relationship
@@ -2204,7 +2204,7 @@ assembled from parts.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
           <tbody>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>issuer</code>
+                <code>authorization_server</code>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <span class="bcp14">REQUIRED</span>
@@ -2837,7 +2837,8 @@ Object that references the Grant Catalog containing the entry, when all
 of the following are true:<a href="#section-4.6-2" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-4.6-3">
 <li id="section-4.6-3.1">
-            <p id="section-4.6-3.1.1">The grant conveys the <code>issuer</code> of the Grant Catalog as its only
+            <p id="section-4.6-3.1.1">The grant conveys the <code>authorization_server</code> of the Grant Catalog as
+its only
 audience.<a href="#section-4.6-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-4.6-3.2">
@@ -3002,7 +3003,8 @@ protocol handles caching of representations.<a href="#section-4.7-5" class="pilc
 verify the following:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-2">
 <li id="section-5.1-2.1">
-            <p id="section-5.1-2.1.1">The <code>issuer</code> of the Relationship View and of every Grant Catalog, and
+            <p id="section-5.1-2.1.1">The <code>authorization_server</code> of the Relationship View and of every
+Grant Catalog, and
 any other issuer identifier that the retrieval protocol conveys, are
 identical to the issuer identifier of the Resource Authorization
 Server with which the Grant Issuer associates the Issuer
@@ -3010,10 +3012,10 @@ Relationship, using simple string comparison
 (<span><a href="https://rfc-editor.org/rfc/rfc3986#section-6.2.1" class="relref">Section 6.2.1</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>).<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1">The <code>issuer_relationship</code> of the Relationship View identifies the
+            <p id="section-5.1-2.2.1">The <code>grant_issuer</code> of the Relationship View identifies the
 Issuer Relationship for which the Grant Issuer retrieved it: the
-<code>issuer</code> of <code>issuer_relationship</code> is identical to that relationship's
-issuer identifier, and the <code>tenant</code> of <code>issuer_relationship</code> is
+<code>issuer</code> of <code>grant_issuer</code> is identical to that relationship's
+issuer identifier, and the <code>tenant</code> of <code>grant_issuer</code> is
 identical to that
 relationship's issuer tenant identifier, or both are absent.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
@@ -3091,7 +3093,7 @@ public metadata as follows:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
             <p id="section-5.2-2.1.1">Retrieve and validate the Resource Authorization Server's
 Authorization Server Metadata (<span><a href="https://rfc-editor.org/rfc/rfc8414#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>), and
 verify that its issuer identifier is identical to the Grant Catalog
-<code>issuer</code>.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
+<code>authorization_server</code>.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.2">
             <p id="section-5.2-2.2.1">If the entry's <code>resource</code> is a URL that uses the <code>https</code> scheme
@@ -3956,8 +3958,8 @@ Cache-Control: no-store
 ETag: "view-a24f91"
 
 {
-  "issuer": "https://ras.example/",
-  "issuer_relationship": {
+  "authorization_server": "https://ras.example/",
+  "grant_issuer": {
     "issuer": "https://idp.example/",
     "tenant": "acme-workforce"
   },
@@ -3977,12 +3979,12 @@ ETag: "view-a24f91"
   ],
   "grant_catalogs": [
     {
-      "issuer": "https://ras.example/",
+      "authorization_server": "https://ras.example/",
       "id": "read-only",
       "entries": [ ... ]
     },
     {
-      "issuer": "https://ras.example/",
+      "authorization_server": "https://ras.example/",
       "id": "standard",
       "display": "Standard API access",
       "entries": [ ... ]
@@ -5178,7 +5180,7 @@ scope value <code>messages.write</code> and authorization details objects of typ
 <div class="breakable lang-json sourcecode" id="appendix-A-2">
 <pre>
 {
-  "issuer": "https://ras.example/",
+  "authorization_server": "https://ras.example/",
   "id": "standard",
   "display": "Standard API access",
   "entries": [
@@ -5251,7 +5253,7 @@ Server publishes two entries:<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="appendix-B-2">
 <pre>
 {
-  "issuer": "https://ras.example/",
+  "authorization_server": "https://ras.example/",
   "id": "reports",
   "entries": [
     {

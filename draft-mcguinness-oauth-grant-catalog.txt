@@ -505,8 +505,8 @@ Table of Contents
    (Section 5.3).
 
    {
-     "issuer": "https://ras.example/",
-     "issuer_relationship": {
+     "authorization_server": "https://ras.example/",
+     "grant_issuer": {
        "issuer": "https://idp.example/",
        "tenant": "org-acme"
      },
@@ -519,7 +519,7 @@ Table of Contents
      ],
      "grant_catalogs": [
        {
-         "issuer": "https://ras.example/",
+         "authorization_server": "https://ras.example/",
          "id": "read-only",
          "entries": [
            {
@@ -548,14 +548,14 @@ Table of Contents
    inputs that an entry can govern.
 
    Relationship View
-    |-- issuer
-    |-- issuer_relationship
+    |-- authorization_server
+    |-- grant_issuer
     |-- tenants[]: Tenant Object
     |    |-- id
     |    |-- target_tenant
     |    `-- grant_catalog        (the id of a Grant Catalog)
     `-- grant_catalogs[]: Grant Catalog
-         |-- issuer
+         |-- authorization_server
          |-- id
          `-- entries[]: entry
               |-- id, revision
@@ -602,48 +602,48 @@ Table of Contents
    entry, each scope value within a values array, each type value within
    a types array, and each claim value within a claims array is unique
    and identifies an item.  Members that carry protocol values, such as
-   issuer, target_tenant, profile, resource, scope, type, claim, and the
-   names in formats and methods, are compared using simple string
-   comparison (Section 6.2.1 of [RFC3986]).
+   authorization_server, target_tenant, profile, resource, scope, type,
+   claim, and the names in formats and methods, are compared using
+   simple string comparison (Section 6.2.1 of [RFC3986]).
 
 4.2.  Relationship View
 
    A Relationship View is a JSON object with the following members:
 
-    +=====================+==========+===============================+
-    | Member              | Status   | Description                   |
-    +=====================+==========+===============================+
-    | issuer              | REQUIRED | String; the issuer identifier |
-    |                     |          | of the Resource Authorization |
-    |                     |          | Server                        |
-    +---------------------+----------+-------------------------------+
-    | issuer_relationship | REQUIRED | Object; the Issuer            |
-    |                     |          | Relationship that the         |
-    |                     |          | Relationship View serves      |
-    +---------------------+----------+-------------------------------+
-    | tenants             | REQUIRED | Array containing every Tenant |
-    |                     |          | Object (Section 4.3) eligible |
-    |                     |          | for the Issuer Relationship   |
-    +---------------------+----------+-------------------------------+
-    | grant_catalogs      | REQUIRED | Array containing each Grant   |
-    |                     |          | Catalog (Section 4.4) that a  |
-    |                     |          | Tenant Object references,     |
-    |                     |          | each exactly once             |
-    +---------------------+----------+-------------------------------+
+    +======================+==========+===============================+
+    | Member               | Status   | Description                   |
+    +======================+==========+===============================+
+    | authorization_server | REQUIRED | String; the issuer identifier |
+    |                      |          | of the Resource Authorization |
+    |                      |          | Server                        |
+    +----------------------+----------+-------------------------------+
+    | grant_issuer         | REQUIRED | Object; identifies the Issuer |
+    |                      |          | Relationship that the         |
+    |                      |          | Relationship View serves      |
+    +----------------------+----------+-------------------------------+
+    | tenants              | REQUIRED | Array containing every Tenant |
+    |                      |          | Object (Section 4.3) eligible |
+    |                      |          | for the Issuer Relationship   |
+    +----------------------+----------+-------------------------------+
+    | grant_catalogs       | REQUIRED | Array containing each Grant   |
+    |                      |          | Catalog (Section 4.4) that a  |
+    |                      |          | Tenant Object references,     |
+    |                      |          | each exactly once             |
+    +----------------------+----------+-------------------------------+
 
-                    Table 2: Relationship View Members
+                     Table 2: Relationship View Members
 
-   The issuer member of issuer_relationship is REQUIRED and contains the
-   issuer identifier of the Grant Issuer.  The tenant member of
-   issuer_relationship contains the issuer tenant identifier, and is
-   present if and only if the Issuer Relationship has one (Section 6.1).
-   The Resource Authorization Server derives this object from the Issuer
-   Relationship that it used to select the Relationship View.  Comparing
-   it with the Issuer Relationship for which the Grant Issuer retrieved
-   the view (Section 5.1) detects errors in routing, caching, or the
-   association of responses with requests.  The comparison does not show
-   that the Resource Authorization Server selected the content of the
-   view correctly.
+   The issuer member of grant_issuer is REQUIRED and contains the issuer
+   identifier of the Grant Issuer.  The tenant member of grant_issuer
+   contains the issuer tenant identifier, and is present if and only if
+   the Issuer Relationship has one (Section 6.1).  The Resource
+   Authorization Server derives this object from the Issuer Relationship
+   that it used to select the Relationship View.  Comparing it with the
+   Issuer Relationship for which the Grant Issuer retrieved the view
+   (Section 5.1) detects errors in routing, caching, or the association
+   of responses with requests.  The comparison does not show that the
+   Resource Authorization Server selected the content of the view
+   correctly.
 
    A Relationship View is complete and is not paged.  If the Issuer
    Relationship has no eligible tenants, both arrays are empty.
@@ -712,23 +712,25 @@ Table of Contents
    A Grant Catalog is a complete set of entries and is never paged or
    assembled from parts.
 
-   +=============+==========+=========================================+
-   | Member      | Status   | Description                             |
-   +=============+==========+=========================================+
-   | issuer      | REQUIRED | String; the issuer identifier [RFC8414] |
-   |             |          | of the Resource Authorization Server,   |
-   |             |          | which is the audience of grants issued  |
-   |             |          | using the Grant Catalog (Section 4.6)   |
-   +-------------+----------+-----------------------------------------+
-   | id          | REQUIRED | Identifier (Section 4.1)                |
-   +-------------+----------+-----------------------------------------+
-   | display,    | OPTIONAL | See Section 4.1                         |
-   | description |          |                                         |
-   +-------------+----------+-----------------------------------------+
-   | entries     | REQUIRED | Array of entries (Section 4.5)          |
-   +-------------+----------+-----------------------------------------+
+    +======================+==========+===============================+
+    | Member               | Status   | Description                   |
+    +======================+==========+===============================+
+    | authorization_server | REQUIRED | String; the issuer identifier |
+    |                      |          | [RFC8414] of the Resource     |
+    |                      |          | Authorization Server, which   |
+    |                      |          | is the audience of grants     |
+    |                      |          | issued using the Grant        |
+    |                      |          | Catalog (Section 4.6)         |
+    +----------------------+----------+-------------------------------+
+    | id                   | REQUIRED | Identifier (Section 4.1)      |
+    +----------------------+----------+-------------------------------+
+    | display, description | OPTIONAL | See Section 4.1               |
+    +----------------------+----------+-------------------------------+
+    | entries              | REQUIRED | Array of entries              |
+    |                      |          | (Section 4.5)                 |
+    +----------------------+----------+-------------------------------+
 
-                      Table 4: Grant Catalog Members
+                       Table 4: Grant Catalog Members
 
    An empty entries array indicates that the Resource Authorization
    Server accepts no grants for the tenants whose Tenant Objects
@@ -1029,8 +1031,8 @@ Table of Contents
    Tenant Object that references the Grant Catalog containing the entry,
    when all of the following are true:
 
-   1.  The grant conveys the issuer of the Grant Catalog as its only
-       audience.
+   1.  The grant conveys the authorization_server of the Grant Catalog
+       as its only audience.
 
    2.  If the Tenant Object contains target_tenant, the grant conveys
        that value as its target tenant.  Otherwise, the grant conveys no
@@ -1152,19 +1154,18 @@ Table of Contents
    Before installing any part of a Relationship View, the Grant Issuer
    MUST verify the following:
 
-   1.  The issuer of the Relationship View and of every Grant Catalog,
-       and any other issuer identifier that the retrieval protocol
-       conveys, are identical to the issuer identifier of the Resource
-       Authorization Server with which the Grant Issuer associates the
-       Issuer Relationship, using simple string comparison
-       (Section 6.2.1 of [RFC3986]).
+   1.  The authorization_server of the Relationship View and of every
+       Grant Catalog, and any other issuer identifier that the retrieval
+       protocol conveys, are identical to the issuer identifier of the
+       Resource Authorization Server with which the Grant Issuer
+       associates the Issuer Relationship, using simple string
+       comparison (Section 6.2.1 of [RFC3986]).
 
-   2.  The issuer_relationship of the Relationship View identifies the
-       Issuer Relationship for which the Grant Issuer retrieved it: the
-       issuer of issuer_relationship is identical to that relationship's
-       issuer identifier, and the tenant of issuer_relationship is
-       identical to that relationship's issuer tenant identifier, or
-       both are absent.
+   2.  The grant_issuer of the Relationship View identifies the Issuer
+       Relationship for which the Grant Issuer retrieved it: the issuer
+       of grant_issuer is identical to that relationship's issuer
+       identifier, and the tenant of grant_issuer is identical to that
+       relationship's issuer tenant identifier, or both are absent.
 
    3.  Every document conforms to I-JSON [RFC7493].  The Relationship
        View, the structures that the retrieval protocol defines, every
@@ -1227,7 +1228,7 @@ Table of Contents
    1.  Retrieve and validate the Resource Authorization Server's
        Authorization Server Metadata (Section 3.3 of [RFC8414]), and
        verify that its issuer identifier is identical to the Grant
-       Catalog issuer.
+       Catalog authorization_server.
 
    2.  If the entry's resource is a URL that uses the https scheme
        (Section 1.2 of [RFC9728]), request its Protected Resource
@@ -1940,8 +1941,8 @@ Table of Contents
    ETag: "view-a24f91"
 
    {
-     "issuer": "https://ras.example/",
-     "issuer_relationship": {
+     "authorization_server": "https://ras.example/",
+     "grant_issuer": {
        "issuer": "https://idp.example/",
        "tenant": "acme-workforce"
      },
@@ -1961,12 +1962,12 @@ Table of Contents
      ],
      "grant_catalogs": [
        {
-         "issuer": "https://ras.example/",
+         "authorization_server": "https://ras.example/",
          "id": "read-only",
          "entries": [ ... ]
        },
        {
-         "issuer": "https://ras.example/",
+         "authorization_server": "https://ras.example/",
          "id": "standard",
          "display": "Standard API access",
          "entries": [ ... ]
@@ -2847,7 +2848,7 @@ Appendix A.  Example Grant Catalog
    message_channel.
 
    {
-     "issuer": "https://ras.example/",
+     "authorization_server": "https://ras.example/",
      "id": "standard",
      "display": "Standard API access",
      "entries": [
@@ -2913,7 +2914,7 @@ Appendix B.  Example of Alternative Entries
    Server publishes two entries:
 
    {
-     "issuer": "https://ras.example/",
+     "authorization_server": "https://ras.example/",
      "id": "reports",
      "entries": [
        {
