@@ -107,8 +107,7 @@ called the Grant Issuer in this specification, has to know which
 tenants, protected resources, scope values, authorization details types
 {{RFC9396}}, claims, subject identifiers, and grant bindings the
 receiving authorization server, called the Resource Authorization
-Server, accepts from it. The Resource Authorization Server rejects any
-other grant.
+Server, accepts from it.
 
 Public metadata does not convey this information. OAuth 2.0
 Authorization Server Metadata {{RFC8414}} and OAuth 2.0 Protected
@@ -193,7 +192,7 @@ question:
 | Protected Resource Metadata {{RFC9728}} | Which authorization servers and capabilities does a protected resource advertise? |
 | Authorization details types metadata {{RAR-METADATA}} | What structure does an authorization details object of a given type have? |
 | Authority metadata {{AUTHORITY-METADATA}} | What does a scope value or authorization details type authorize? |
-| Relationship View | Which grants does the Resource Authorization Server accept from this Issuer Relationship? |
+| Relationship View | Which grants does the Resource Authorization Server offer to this Issuer Relationship? |
 | Grant Issuer approval | Which of those grants may the Grant Issuer issue? |
 | Runtime authorization | Is this request allowed now? |
 {: title="Sources of Information Used to Issue a Grant"}
@@ -516,10 +515,10 @@ used by several objects:
   string of at most 255 octets when encoded in UTF-8. Identifiers are
   opaque and case-sensitive, and are compared using simple string
   comparison ({{Section 6.2.1 of RFC3986}}). The length limit bounds the
-  identifiers that a Grant Issuer retains with each approval
-  ({{installation}}). Grant Catalog identifiers are unique within a
-  Relationship View, and entry identifiers are unique within a Grant
-  Catalog.
+  Grant Catalog and entry identifiers that a Grant Issuer retains with
+  each approval ({{installation}}). Grant Catalog identifiers are unique
+  within a Relationship View, and entry identifiers are unique within a
+  Grant Catalog.
 
 `display`:
 : OPTIONAL. A JSON string containing a short, human-readable name for
@@ -629,7 +628,7 @@ assembled from parts.
 {: title="Grant Catalog Members"}
 
 An empty `entries` array indicates that the Resource Authorization
-Server accepts no grants for the tenants whose Tenant Objects reference
+Server offers no grants for the tenants whose Tenant Objects reference
 this Grant Catalog. A Grant Catalog can contain entries for several
 Grant Profiles.
 
@@ -1258,8 +1257,8 @@ Issuer uses schemas or authority descriptions to enforce or narrow
 policy.
 
 The Grant Issuer MUST NOT send a credential obtained through a retrieval
-protocol when dereferencing a `schema_uri`, `documentation_uri`, or
-`definition_uri`.
+protocol when dereferencing a `schema_uri` ({{RAR-METADATA}}),
+`documentation_uri`, or `definition_uri`.
 
 # Retrieving a Catalog {#oauth-binding}
 
@@ -1344,8 +1343,6 @@ retrieval protocol:
   ],
   "token_endpoint_auth_methods_supported": ["private_key_jwt"],
   "dpop_signing_alg_values_supported": ["ES256"],
-  "authorization_details_types_metadata_endpoint":
-    "https://ras.example/oauth2/authorization-details-types",
   "authorization_grant_catalog_endpoint":
     "https://ras.example/oauth2/grant-catalog"
 }
@@ -1676,7 +1673,8 @@ document as specified in {{validation}}, and treats a response of any
 other media type as an incomplete retrieval ({{installation}}).
 
 The following is an example of a Relationship View document request and
-response for an Issuer Relationship with two eligible tenants. The
+response for another Issuer Relationship, with the issuer tenant
+`acme-workforce` and two eligible tenants. The
 `entries` of each Grant Catalog are abbreviated; {{example-catalog}}
 shows the Grant Catalog `standard` in full:
 
@@ -1915,8 +1913,8 @@ The Grant Profile, not an entry, determines whether a grant conveys a
 client identifier or an actor. The other claims that
 {{Section 3.1 of ID-JAG}} defines (`auth_time`, `acr`, `amr`,
 `aud_sub`, and `email`) are Catalog-Governed Claims. An ID-JAG has the
-`typ` value `oauth-id-jag+jwt` ({{Section 3.1 of ID-JAG}},
-{{sec-cross-jwt}}).
+`typ` value `oauth-id-jag+jwt` ({{Section 3.1 of ID-JAG}}); see
+{{sec-cross-jwt}}.
 
 ## Composition Checks {#jwt-composition}
 
@@ -2616,7 +2614,7 @@ Authority in public metadata, eligibility in the catalog:
   and authorization details types a relationship may use is specific to
   the relationship, so it belongs in the catalog. Entries identify items
   by the protocol values that authority metadata uses, so the two
-  compose without a mapping ({{optional-metadata}}).
+  compose without a mapping.
 
 Envelope without alternatives:
 : An Authorization Envelope that is a product of independent selections
