@@ -395,9 +395,10 @@ authorization decision ({{introduction}}).
    Arrangement authorizes ({{relationship-authorization}}).
 
 2. Whole views: a Relationship View is delivered complete, and the Grant
-   Issuer installs all of it or none of it. A failed retrieval leaves
-   earlier state in force, subject to a maximum age, and is never
-   treated as a withdrawal ({{installation}}).
+   Issuer installs all of it or none of it. A failed retrieval is never
+   a withdrawal and leaves earlier state installed; {{installation}}
+   recommends that the Grant Issuer stop issuance when that state
+   exceeds its configured maximum age.
 
 3. Closed world: a grant issued using an entry conveys a
    Catalog-Governed Input only as the entry permits. An absent member
@@ -408,8 +409,9 @@ authorization decision ({{introduction}}).
    one entry, for one audience and one protected resource. Inputs
    permitted by different entries are never combined ({{envelope}}).
 
-5. No logic in entries: the catalog has no defaults, inheritance,
-   alternatives, exclusions, or conditions. A Resource Authorization
+5. Independent selections: the catalog has no inheritance, no
+   alternatives between sets of items, and no exclusions or conditions
+   beyond those this specification states. A Resource Authorization
    Server that accepts only some combinations publishes separate entries
    ({{tenant-object}}, {{envelope}}).
 
@@ -429,9 +431,9 @@ authorization decision ({{introduction}}).
    {{reconciliation}}).
 
 9. Safe extension: a Grant Issuer ignores members it does not
-   understand, and an extension member that narrows an entry also
-   prevents Grant Issuers that do not implement it from using the entry
-   ({{extensibility}}).
+   understand. A specification that defines a restrictive member also
+   defines a mechanism that prevents Grant Issuers that do not implement
+   that member from using the entry ({{extensibility}}).
 
 # Catalog Data Model {#data-model}
 
