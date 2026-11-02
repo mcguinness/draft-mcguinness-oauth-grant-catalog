@@ -2195,7 +2195,8 @@ Resource Metadata the Grant Issuer requests during composition
 can alter catalog responses, chooses these URIs
 ({{Section 7.7 of RFC9728}}). A Grant Issuer that dereferences them
 does not send a credential obtained through a Retrieval Binding
-({{rar-metadata}}), applies the protections against server-side request
+({{rar-metadata}}, {{view-document}}), applies the protections against
+server-side request
 forgery that it applies to other URLs obtained from external parties,
 and treats the content, which the Retrieval Binding does not
 authenticate, as untrusted input and not as catalog content. A Grant
