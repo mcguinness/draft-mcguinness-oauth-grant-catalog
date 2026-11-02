@@ -1529,7 +1529,7 @@ grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer
 &client_id=https%3A%2F%2Fidp.example%2F
 &client_assertion_type=
  urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
-&client_assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6Imlzc3Vlci1rZXktMSJ9...
+&client_assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6ImNsaWVudC1rZXktMSJ9...
 ~~~
 
 The Resource Authorization Server processes the request as follows:
