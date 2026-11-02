@@ -1842,8 +1842,9 @@ Grant Profile identifier:
 Grant binding:
 : The IdP Authorization Server selects the binding as described in
   {{Section 9.11 of ID-JAG}}. When the client presents a valid DPoP
-  proof, ID-JAG requires it to bind the ID-JAG to the DPoP key or a
-  client certificate ({{Section 9.11.1.1 of ID-JAG}}); either method
+  proof, ID-JAG requires the IdP Authorization Server to bind the ID-JAG
+  to the DPoP key or a client certificate
+  ({{Section 9.11.1.1 of ID-JAG}}); either method
   satisfies that requirement if the approved subset permits it
   ({{entry-grant-binding}}).
 
