@@ -3094,12 +3094,14 @@ verify that its issuer identifier is identical to the Grant Catalog
 <code>issuer</code>.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.2">
-            <p id="section-5.2-2.2.1">Request the Protected Resource Metadata for the entry's <code>resource</code>
-(<span><a href="https://rfc-editor.org/rfc/rfc9728#section-3" class="relref">Section 3</a> of [<a href="#RFC9728" class="cite xref">RFC9728</a>]</span>). If the response has HTTP status code 200
-(OK), validate the metadata as specified in
-<span><a href="https://rfc-editor.org/rfc/rfc9728#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9728" class="cite xref">RFC9728</a>]</span>. Any other response, or no response,
-leaves this step without effect, because publishing Protected
-Resource Metadata is optional.<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-2.2.1">If the entry's <code>resource</code> is a URL that uses the <code>https</code> scheme
+(<span><a href="https://rfc-editor.org/rfc/rfc9728#section-1.2" class="relref">Section 1.2</a> of [<a href="#RFC9728" class="cite xref">RFC9728</a>]</span>), request its Protected Resource Metadata
+using the <code>oauth-protected-resource</code> well-known URI suffix
+(<span><a href="https://rfc-editor.org/rfc/rfc9728#section-3" class="relref">Section 3</a> of [<a href="#RFC9728" class="cite xref">RFC9728</a>]</span>); otherwise, this step has no effect. If
+the response has HTTP status code 200 (OK), validate the metadata as
+specified in <span><a href="https://rfc-editor.org/rfc/rfc9728#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9728" class="cite xref">RFC9728</a>]</span>. Any other response, or no
+response, leaves this step without effect, because publishing
+Protected Resource Metadata is optional.<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.3">
             <p id="section-5.2-2.3.1">For each member in the following table that the Authorization Server
@@ -5458,14 +5460,15 @@ Issuer Relationship is authorized to inspect discloses no inventory
 <p id="appendix-E-1">RFC Editor: please remove this appendix before publication.<a href="#appendix-E-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-E-2.1">
-          <p id="appendix-E-2.1.1">Reapproval: every revision change suspends issuance until an
-administrator approves the changed entry (<a href="#installation" class="auto internal xref">Section 5.5</a>), even when
-the change only adds an item that no approval includes
-(<a href="#example-lifecycle" class="auto internal xref">Appendix C</a>). The essential invariant is that no change
-expands an approval. Whether issuance can continue while the approved
-subset remains within the changed entry's Authorization Envelope, and
-what a Resource Authorization Server would publish to make that safe,
-are open. Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/12">issue
+          <p id="appendix-E-2.1.1">Reapproval: when the revision of an entry changes to one for which no
+approval already applies, issuance stops until an administrator
+approves the changed entry (<a href="#installation" class="auto internal xref">Section 5.5</a>), even when the change
+only adds an item that no approval includes (<a href="#example-lifecycle" class="auto internal xref">Appendix C</a>).
+The essential invariant is that no change expands an approval. Whether
+issuance can continue while the approved subset remains within the
+changed entry's Authorization Envelope, and what a Resource
+Authorization Server would publish to make that safe, are open.
+Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/12">issue
 #12</a>.<a href="#appendix-E-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-E-2.2">
