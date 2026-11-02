@@ -1922,14 +1922,69 @@ that member from using the entry (<a href="#extensibility" class="auto internal 
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-catalog-data-model" class="section-name selfRef">Catalog Data Model</a>
       </h2>
 <p id="section-5-1">The objects in this section describe what a Resource Authorization
-Server accepts in grants from one Issuer Relationship. <a href="#fig-model" class="auto internal xref">Figure 2</a>
-shows their structure, without the <code>display</code> and <code>description</code> members.
-A Tenant Object references a Grant Catalog by its <code>id</code>. The <code>scope</code>,
+Server accepts in grants from one Issuer Relationship. A Tenant Object
+references a Grant Catalog by its <code>id</code>. The <code>scope</code>,
 <code>authorization_details</code>, <code>claims</code>, <code>sub_id</code>, and <code>grant_binding</code> members
 of an entry govern the inputs listed in <a href="#tab-inputs" class="auto internal xref">Table 14</a>.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<span id="name-structure-of-a-relationship"></span><div id="fig-model">
+<p id="section-5-2"><a href="#fig-model-example" class="auto internal xref">Figure 2</a> shows a complete Relationship View with one Tenant
+Object and one Grant Catalog. The Tenant Object references the catalog
+<code>read-only</code>, whose single entry permits ID-JAGs for the Messages API.
+Grants issued using this entry contain the scope value <code>messages.read</code>
+and are bound to a DPoP key. The view describes what the Resource
+Authorization Server accepts; an administrator of the Grant Issuer still
+approves a subset before the entry is used (<a href="#narrowing" class="auto internal xref">Section 6.4</a>).<a href="#section-5-2" class="pilcrow">¶</a></p>
+<span id="name-example-relationship-view"></span><div id="fig-model-example">
 <figure id="figure-2">
-        <div class="alignLeft art-ascii-art art-text artwork" id="section-5-2.1">
+        <div class="lang-json sourcecode" id="section-5-3.1">
+<pre>
+{
+  "issuer": "https://ras.example/",
+  "issuer_relationship": {
+    "issuer": "https://idp.example/",
+    "tenant": "org-acme"
+  },
+  "tenants": [
+    {
+      "id": "tenant-123",
+      "target_tenant": "customer-acme",
+      "grant_catalog": "read-only"
+    }
+  ],
+  "grant_catalogs": [
+    {
+      "issuer": "https://ras.example/",
+      "id": "read-only",
+      "entries": [
+        {
+          "id": "messages-read",
+          "revision": "1",
+          "profile": "urn:ietf:params:oauth:grant-profile:id-jag",
+          "resource": "https://api.example/messages",
+          "scope": {
+            "requirement": "required",
+            "values": [{"scope": "messages.read"}]
+          },
+          "grant_binding": {
+            "requirement": "required",
+            "methods": ["dpop"]
+          }
+        }
+      ]
+    }
+  ]
+}
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-example-relationship-view" class="selfRef">Example Relationship View</a>
+        </figcaption></figure>
+</div>
+<p id="section-5-4"><a href="#fig-model" class="auto internal xref">Figure 3</a> shows the object structure, without the <code>display</code> and
+<code>description</code> members. <a href="#example-catalog" class="auto internal xref">Appendix A</a> provides a fuller example of
+the inputs that an entry can govern.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<span id="name-structure-of-a-relationship"></span><div id="fig-model">
+<figure id="figure-3">
+        <div class="alignLeft art-ascii-art art-text artwork" id="section-5-5.1">
 <pre>
 Relationship View
  |-- issuer
@@ -1948,7 +2003,7 @@ Relationship View
                sub_id, grant_binding
 </pre>
 </div>
-<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
 <a href="#name-structure-of-a-relationship" class="selfRef">Structure of a Relationship View</a>
         </figcaption></figure>
 </div>
@@ -3291,7 +3346,7 @@ it, when its policy permits issuing values that the client did not
 request (<span><a href="https://rfc-editor.org/rfc/rfc6749#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>), or does not issue a grant using
 that entry.<a href="#section-6.4-3" class="pilcrow">¶</a></p>
 <p id="section-6.4-4">For example:<a href="#section-6.4-4" class="pilcrow">¶</a></p>
-<span id="name-narrowing-of-scope-values"></span><figure id="figure-3">
+<span id="name-narrowing-of-scope-values"></span><figure id="figure-4">
           <div class="alignLeft art-ascii-art art-text artwork" id="section-6.4-5.1">
 <pre>
 Publicly advertised scopes:  messages.read, messages.write,
@@ -3302,7 +3357,7 @@ Requested by the client:     messages.read, messages.write
 Issued in the grant:         messages.read
 </pre>
 </div>
-<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
 <a href="#name-narrowing-of-scope-values" class="selfRef">Narrowing of Scope Values</a>
           </figcaption></figure>
 <p id="section-6.4-6">The Grant Issuer cannot issue <code>messages.admin</code> merely because public

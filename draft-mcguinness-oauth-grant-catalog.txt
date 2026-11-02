@@ -511,11 +511,61 @@ Table of Contents
 5.  Catalog Data Model
 
    The objects in this section describe what a Resource Authorization
-   Server accepts in grants from one Issuer Relationship.  Figure 2
-   shows their structure, without the display and description members.
-   A Tenant Object references a Grant Catalog by its id.  The scope,
+   Server accepts in grants from one Issuer Relationship.  A Tenant
+   Object references a Grant Catalog by its id.  The scope,
    authorization_details, claims, sub_id, and grant_binding members of
    an entry govern the inputs listed in Table 14.
+
+   Figure 2 shows a complete Relationship View with one Tenant Object
+   and one Grant Catalog.  The Tenant Object references the catalog
+   read-only, whose single entry permits ID-JAGs for the Messages API.
+   Grants issued using this entry contain the scope value messages.read
+   and are bound to a DPoP key.  The view describes what the Resource
+   Authorization Server accepts; an administrator of the Grant Issuer
+   still approves a subset before the entry is used (Section 6.4).
+
+   {
+     "issuer": "https://ras.example/",
+     "issuer_relationship": {
+       "issuer": "https://idp.example/",
+       "tenant": "org-acme"
+     },
+     "tenants": [
+       {
+         "id": "tenant-123",
+         "target_tenant": "customer-acme",
+         "grant_catalog": "read-only"
+       }
+     ],
+     "grant_catalogs": [
+       {
+         "issuer": "https://ras.example/",
+         "id": "read-only",
+         "entries": [
+           {
+             "id": "messages-read",
+             "revision": "1",
+             "profile": "urn:ietf:params:oauth:grant-profile:id-jag",
+             "resource": "https://api.example/messages",
+             "scope": {
+               "requirement": "required",
+               "values": [{"scope": "messages.read"}]
+             },
+             "grant_binding": {
+               "requirement": "required",
+               "methods": ["dpop"]
+             }
+           }
+         ]
+       }
+     ]
+   }
+
+                    Figure 2: Example Relationship View
+
+   Figure 3 shows the object structure, without the display and
+   description members.  Appendix A provides a fuller example of the
+   inputs that an entry can govern.
 
    Relationship View
     |-- issuer
@@ -533,7 +583,7 @@ Table of Contents
               `-- scope, authorization_details, claims,
                   sub_id, grant_binding
 
-                 Figure 2: Structure of a Relationship View
+                 Figure 3: Structure of a Relationship View
 
 5.1.  Common Conventions
 
@@ -1382,7 +1432,7 @@ Table of Contents
    Requested by the client:     messages.read, messages.write
    Issued in the grant:         messages.read
 
-                    Figure 3: Narrowing of Scope Values
+                    Figure 4: Narrowing of Scope Values
 
    The Grant Issuer cannot issue messages.admin merely because public
    metadata advertises it, and cannot issue messages.write merely
