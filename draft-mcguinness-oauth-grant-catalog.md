@@ -435,8 +435,8 @@ Grant Issuer still approves a subset before the entry is used
 
 ~~~ json
 {
-  "issuer": "https://ras.example/",
-  "issuer_relationship": {
+  "authorization_server": "https://ras.example/",
+  "grant_issuer": {
     "issuer": "https://idp.example/",
     "tenant": "org-acme"
   },
@@ -449,7 +449,7 @@ Grant Issuer still approves a subset before the entry is used
   ],
   "grant_catalogs": [
     {
-      "issuer": "https://ras.example/",
+      "authorization_server": "https://ras.example/",
       "id": "read-only",
       "entries": [
         {
@@ -479,14 +479,14 @@ the inputs that an entry can govern.
 
 ~~~ ascii-art
 Relationship View
- |-- issuer
- |-- issuer_relationship
+ |-- authorization_server
+ |-- grant_issuer
  |-- tenants[]: Tenant Object
  |    |-- id
  |    |-- target_tenant
  |    `-- grant_catalog        (the id of a Grant Catalog)
  `-- grant_catalogs[]: Grant Catalog
-      |-- issuer
+      |-- authorization_server
       |-- id
       `-- entries[]: entry
            |-- id, revision
@@ -536,9 +536,9 @@ values, the array MUST NOT contain the same value twice. Within an
 entry, each `scope` value within a `values` array, each `type` value
 within a `types` array, and each `claim` value within a `claims` array
 is unique and identifies an item. Members that carry protocol values,
-such as `issuer`, `target_tenant`, `profile`, `resource`, `scope`,
-`type`, `claim`, and the names in `formats` and `methods`, are compared
-using simple string comparison ({{Section 6.2.1 of RFC3986}}).
+such as `authorization_server`, `target_tenant`, `profile`, `resource`,
+`scope`, `type`, `claim`, and the names in `formats` and `methods`, are
+compared using simple string comparison ({{Section 6.2.1 of RFC3986}}).
 
 ## Relationship View {#relationship-view}
 
@@ -546,15 +546,15 @@ A Relationship View is a JSON object with the following members:
 
 | Member | Status | Description |
 | --- | --- | --- |
-| `issuer` | REQUIRED | String; the issuer identifier of the Resource Authorization Server |
-| `issuer_relationship` | REQUIRED | Object; the Issuer Relationship that the Relationship View serves |
+| `authorization_server` | REQUIRED | String; the issuer identifier of the Resource Authorization Server |
+| `grant_issuer` | REQUIRED | Object; identifies the Issuer Relationship that the Relationship View serves |
 | `tenants` | REQUIRED | Array containing every Tenant Object ({{tenant-object}}) eligible for the Issuer Relationship |
 | `grant_catalogs` | REQUIRED | Array containing each Grant Catalog ({{grant-catalog}}) that a Tenant Object references, each exactly once |
 {: title="Relationship View Members"}
 
-The `issuer` member of `issuer_relationship` is REQUIRED and contains
-the issuer identifier of the Grant Issuer. The `tenant` member of
-`issuer_relationship` contains
+The `issuer` member of `grant_issuer` is REQUIRED and contains the
+issuer identifier of the Grant Issuer. The `tenant` member of
+`grant_issuer` contains
 the issuer tenant identifier, and is present if and only if the Issuer
 Relationship has one ({{relationship-identity}}). The Resource
 Authorization Server derives this object from the Issuer Relationship
@@ -625,7 +625,7 @@ assembled from parts.
 
 | Member | Status | Description |
 | --- | --- | --- |
-| `issuer` | REQUIRED | String; the issuer identifier {{RFC8414}} of the Resource Authorization Server, which is the audience of grants issued using the Grant Catalog ({{envelope}}) |
+| `authorization_server` | REQUIRED | String; the issuer identifier {{RFC8414}} of the Resource Authorization Server, which is the audience of grants issued using the Grant Catalog ({{envelope}}) |
 | `id` | REQUIRED | Identifier ({{model-conventions}}) |
 | `display`, `description` | OPTIONAL | See {{model-conventions}} |
 | `entries` | REQUIRED | Array of entries ({{entry}}) |
@@ -839,7 +839,8 @@ A grant is within the Authorization Envelope of an entry, for a Tenant
 Object that references the Grant Catalog containing the entry, when all
 of the following are true:
 
-1. The grant conveys the `issuer` of the Grant Catalog as its only
+1. The grant conveys the `authorization_server` of the Grant Catalog as
+   its only
    audience.
 
 2. If the Tenant Object contains `target_tenant`, the grant conveys that
@@ -942,17 +943,18 @@ protocol handles caching of representations.
 Before installing any part of a Relationship View, the Grant Issuer MUST
 verify the following:
 
-1. The `issuer` of the Relationship View and of every Grant Catalog, and
+1. The `authorization_server` of the Relationship View and of every
+   Grant Catalog, and
    any other issuer identifier that the retrieval protocol conveys, are
    identical to the issuer identifier of the Resource Authorization
    Server with which the Grant Issuer associates the Issuer
    Relationship, using simple string comparison
    ({{Section 6.2.1 of RFC3986}}).
 
-2. The `issuer_relationship` of the Relationship View identifies the
+2. The `grant_issuer` of the Relationship View identifies the
    Issuer Relationship for which the Grant Issuer retrieved it: the
-   `issuer` of `issuer_relationship` is identical to that relationship's
-   issuer identifier, and the `tenant` of `issuer_relationship` is
+   `issuer` of `grant_issuer` is identical to that relationship's
+   issuer identifier, and the `tenant` of `grant_issuer` is
    identical to that
    relationship's issuer tenant identifier, or both are absent.
 
@@ -1016,7 +1018,7 @@ public metadata as follows:
 1. Retrieve and validate the Resource Authorization Server's
    Authorization Server Metadata ({{Section 3.3 of RFC8414}}), and
    verify that its issuer identifier is identical to the Grant Catalog
-   `issuer`.
+   `authorization_server`.
 
 2. If the entry's `resource` is a URL that uses the `https` scheme
    ({{Section 1.2 of RFC9728}}), request its Protected Resource Metadata
@@ -1702,8 +1704,8 @@ Cache-Control: no-store
 ETag: "view-a24f91"
 
 {
-  "issuer": "https://ras.example/",
-  "issuer_relationship": {
+  "authorization_server": "https://ras.example/",
+  "grant_issuer": {
     "issuer": "https://idp.example/",
     "tenant": "acme-workforce"
   },
@@ -1723,12 +1725,12 @@ ETag: "view-a24f91"
   ],
   "grant_catalogs": [
     {
-      "issuer": "https://ras.example/",
+      "authorization_server": "https://ras.example/",
       "id": "read-only",
       "entries": [ ... ]
     },
     {
-      "issuer": "https://ras.example/",
+      "authorization_server": "https://ras.example/",
       "id": "standard",
       "display": "Standard API access",
       "entries": [ ... ]
@@ -2452,7 +2454,7 @@ scope value `messages.write` and authorization details objects of type
 
 ~~~ json
 {
-  "issuer": "https://ras.example/",
+  "authorization_server": "https://ras.example/",
   "id": "standard",
   "display": "Standard API access",
   "entries": [
@@ -2520,7 +2522,7 @@ Server publishes two entries:
 
 ~~~ json
 {
-  "issuer": "https://ras.example/",
+  "authorization_server": "https://ras.example/",
   "id": "reports",
   "entries": [
     {
