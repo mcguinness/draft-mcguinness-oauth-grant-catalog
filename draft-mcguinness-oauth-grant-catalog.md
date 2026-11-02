@@ -361,7 +361,7 @@ Authorization Envelope:
 (F)
 : When a client requests a grant, the Grant Issuer authenticates the
   client and the subject, applies its policy, and issues a grant that is
-  within the approved subset of one entry ({{envelope}}).
+  within the approved subset of one entry ({{issuing}}).
 
 (G)
 : The client presents the grant to the Resource Authorization Server,
@@ -602,10 +602,7 @@ the target tenant. A Relationship View MUST NOT contain more than one
 Tenant Object without `target_tenant`, or two Tenant Objects with the
 same value of `target_tenant`.
 
-The Grant Issuer MUST NOT derive a target tenant identifier from
-the Tenant Object `id`, from the number of Tenant Objects in a
-Relationship View, or from the form of an issuer identifier. A Tenant
-Object that contains `target_tenant` is usable only with entries whose
+A Tenant Object that contains `target_tenant` is usable only with entries whose
 Grant Profile can convey a target tenant ({{envelope}}).
 
 Several Tenant Objects can reference the same Grant Catalog. Tenant
@@ -797,11 +794,6 @@ the claim to be present, not a particular value. The `definition_uri`
 member is descriptive and does not establish the truth or provenance of
 a claim.
 
-The Grant Issuer decides whether it releases a claim value. If an entry
-requires a claim that the Grant Issuer's policy does not permit it to
-release for a subject, the Grant Issuer MUST NOT issue a grant using
-that entry for that subject.
-
 ### Subject Identifier {#entry-sub-id}
 
 The `sub_id` member of an entry is a JSON object with the following
@@ -837,19 +829,6 @@ This specification defines the following grant binding methods:
 `mtls`:
 : The grant is bound to an X.509 certificate {{RFC8705}}, and the client
   presents that certificate when presenting the grant.
-
-An entry does not create a binding. The Grant Issuer binds a grant only
-to a key or certificate whose possession the client has demonstrated,
-and selects the binding as the Grant Profile Definition specifies. Where
-the Grant Profile allows a choice of method, the Grant Issuer chooses a
-method that the entry permits. The Grant Issuer MUST NOT issue a grant
-using an entry in either of the following cases:
-
-* the entry requires binding and the client has not demonstrated
-  possession using any listed method; or
-
-* the Grant Profile requires the Grant Issuer to bind the grant, and the
-  entry permits none of the methods that would satisfy that requirement.
 
 The catalog does not describe client authentication to the Resource
 Authorization Server or sender-constraining of the access token it
@@ -894,12 +873,6 @@ of the following are true:
 | Subject identifier in addition to the subject (`sub_id`, {{entry-sub-id}}) | Each name in `formats` | Conveys a subject identifier in that format |
 | Grant binding (`grant_binding`, {{entry-grant-binding}}) | Each name in `methods` | Is bound using that method |
 {: #tab-inputs title="Inputs Governed by Members of an Entry"}
-
-When a Grant Issuer issues a grant using an entry, the Grant Issuer MUST
-ensure that the grant is within the Authorization Envelope of the subset
-of that entry approved for the Tenant Object ({{narrowing}}). The Grant
-Issuer issues each grant using exactly one entry, and MUST NOT combine
-inputs permitted by different entries in one grant.
 
 The inputs are independent: any selection of items that one member
 permits is permitted together with any selection that each other member
@@ -1101,8 +1074,8 @@ binding is required and `dpop` is the only method. How a Grant Issuer
 records approval, and whether it approves entries for particular
 clients or subjects, is a matter of Grant Issuer policy.
 
-The rules in {{entry-claims}} and {{entry-grant-binding}} that refer to
-what an entry requires or permits apply to the approved subset.
+The rules in {{issuing}} that refer to what an entry requires or
+permits apply to the approved subset.
 
 At runtime, the Grant Issuer applies subject, client, consent, and other
 local policy, and the client's request, to narrow the approved subset
@@ -1132,6 +1105,12 @@ details types, claims, subject identifier formats, and grant binding.
 
 ## Issuing a Grant {#issuing}
 
+When a Grant Issuer issues a grant using an entry, the Grant Issuer MUST
+ensure that the grant is within the Authorization Envelope of the subset
+of that entry approved for the Tenant Object ({{narrowing}}). The Grant
+Issuer issues each grant using exactly one entry, and MUST NOT combine
+inputs permitted by different entries in one grant.
+
 After authenticating the client and the subject and applying its policy,
 the Grant Issuer issues a grant as specified by the Grant Profile, using
 one approved Tenant Object and one approved entry. The Grant Issuer
@@ -1151,6 +1130,27 @@ Issuer Relationship unless the grant identifies its issuer by the issuer
 identifier of that relationship and, when the relationship has an issuer
 tenant, identifies that issuer tenant, as the Grant Profile Definition
 specifies ({{profile-definitions}}).
+
+The Grant Issuer MUST NOT derive a target tenant identifier from
+the Tenant Object `id`, from the number of Tenant Objects in a
+Relationship View, or from the form of an issuer identifier.
+The Grant Issuer decides whether it releases a claim value. If an entry
+requires a claim that the Grant Issuer's policy does not permit it to
+release for a subject, the Grant Issuer MUST NOT issue a grant using
+that entry for that subject.
+
+An entry does not create a binding. The Grant Issuer binds a grant only
+to a key or certificate whose possession the client has demonstrated,
+and selects the binding as the Grant Profile Definition specifies. Where
+the Grant Profile allows a choice of method, the Grant Issuer chooses a
+method that the entry permits. The Grant Issuer MUST NOT issue a grant
+using an entry in either of the following cases:
+
+* the entry requires binding and the client has not demonstrated
+  possession using any listed method; or
+
+* the Grant Profile requires the Grant Issuer to bind the grant, and the
+  entry permits none of the methods that would satisfy that requirement.
 
 When the Grant Issuer does not issue a grant because no approved entry
 permits the request, it responds to the client as the Grant Profile
