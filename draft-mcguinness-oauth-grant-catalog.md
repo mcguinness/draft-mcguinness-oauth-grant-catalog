@@ -997,9 +997,10 @@ A Relationship View is relationship-wide and does not establish
 eligibility for a particular application client: a Resource
 Authorization Server can permit a grant configuration for one
 application client and reject an otherwise equivalent configuration for
-another. A Grant Profile whose grants identify the client by its client
-identifier at the Resource Authorization Server specifies how the Grant
-Issuer obtains that identifier, as {{id-jag}} does for ID-JAG; such an
+another. The Grant Profile Definition of a Grant Profile whose grants
+identify the client by its client identifier at the Resource
+Authorization Server specifies how the Grant Issuer obtains that
+identifier, as {{id-jag}} does for ID-JAG; such an
 identifier can be shared across trust domains {{CIMD}}.
 
 # Catalog Processing {#processing}
