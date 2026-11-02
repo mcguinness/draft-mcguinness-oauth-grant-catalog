@@ -1853,8 +1853,8 @@ excludes (<a href="#narrowing" class="auto internal xref">Section 5.3</a>, <a hr
 <a href="#optional-metadata" class="auto internal xref">Section 5.6</a>).<a href="#section-3-6.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-6.4">
-          <p id="section-3-6.4.1">When the <code>revision</code> of an entry, or the <code>target_tenant</code> or
-<code>grant_catalog</code> of a Tenant Object, changes, issuance under approvals
+          <p id="section-3-6.4.1">When the <code>revision</code> of an entry or the <code>grant_catalog</code> of a Tenant
+Object changes, issuance under approvals
 made for the previous value stops, and resumes only under an approval
 made for the new value (<a href="#installation" class="auto internal xref">Section 5.5</a>).<a href="#section-3-6.4.1" class="pilcrow">¶</a></p>
 </li>
@@ -1899,14 +1899,12 @@ Grant Issuer still approves a subset before the entry is used
   },
   "tenants": [
     {
-      "id": "tenant-123",
-      "target_tenant": "customer-acme",
+      "tenant_id": "customer-acme",
       "grant_catalog": "read-only"
     }
   ],
   "grant_catalogs": [
     {
-      "authorization_server": "https://ras.example/",
       "id": "read-only",
       "entries": [
         {
@@ -1944,11 +1942,9 @@ Relationship View
  |-- authorization_server
  |-- grant_issuer
  |-- tenants[]: Tenant Object
- |    |-- id
- |    |-- target_tenant
+ |    |-- tenant_id
  |    `-- grant_catalog        (the id of a Grant Catalog)
  `-- grant_catalogs[]: Grant Catalog
-      |-- authorization_server
       |-- id
       `-- entries[]: entry
            |-- id, revision
@@ -1983,9 +1979,9 @@ string of at most 255 octets when encoded in UTF-8. Identifiers are
 opaque and case-sensitive, and are compared using simple string
 comparison (<span><a href="https://rfc-editor.org/rfc/rfc3986#section-6.2.1" class="relref">Section 6.2.1</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>). The length limit bounds the
 identifiers that a Grant Issuer retains with each approval
-(<a href="#installation" class="auto internal xref">Section 5.5</a>). Tenant Object identifiers and Grant Catalog
-identifiers are each unique within a Relationship View, and entry
-identifiers are unique within a Grant Catalog.<a href="#section-4.1-3.2.1" class="pilcrow">¶</a></p>
+(<a href="#installation" class="auto internal xref">Section 5.5</a>). Grant Catalog identifiers are unique within a
+Relationship View, and entry identifiers are unique within a Grant
+Catalog.<a href="#section-4.1-3.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-4.1-3.3">
@@ -2012,7 +2008,7 @@ values, the array <span class="bcp14">MUST NOT</span> contain the same value twi
 entry, each <code>scope</code> value within a <code>values</code> array, each <code>type</code> value
 within a <code>types</code> array, and each <code>claim</code> value within a <code>claims</code> array
 is unique and identifies an item. Members that carry protocol values,
-such as <code>authorization_server</code>, <code>target_tenant</code>, <code>profile</code>, <code>resource</code>,
+such as <code>authorization_server</code>, <code>tenant_id</code>, <code>profile</code>, <code>resource</code>,
 <code>scope</code>, <code>type</code>, <code>claim</code>, and the names in <code>formats</code> and <code>methods</code>, are
 compared using simple string comparison (<span><a href="https://rfc-editor.org/rfc/rfc3986#section-6.2.1" class="relref">Section 6.2.1</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>).<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 </section>
@@ -2113,12 +2109,12 @@ it.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
           <tbody>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>id</code>
+                <code>tenant_id</code>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span class="bcp14">REQUIRED</span>
+                <span class="bcp14">OPTIONAL</span>
 </td>
-              <td class="text-left" rowspan="1" colspan="1">Identifier (<a href="#model-conventions" class="auto internal xref">Section 4.1</a>)</td>
+              <td class="text-left" rowspan="1" colspan="1">String; the exact tenant identifier (<a href="#conventions" class="auto internal xref">Section 2</a>) of the Resource Authorization Server tenant, which a grant issued for this tenant conveys as its target tenant (<a href="#envelope" class="auto internal xref">Section 4.6</a>)</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">
@@ -2132,15 +2128,6 @@ it.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>target_tenant</code>
-</td>
-              <td class="text-left" rowspan="1" colspan="1">
-                <span class="bcp14">OPTIONAL</span>
-</td>
-              <td class="text-left" rowspan="1" colspan="1">String; the exact tenant identifier (<a href="#conventions" class="auto internal xref">Section 2</a>) that a grant issued for this tenant conveys as its target tenant (<a href="#envelope" class="auto internal xref">Section 4.6</a>)</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">
                 <code>grant_catalog</code>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
@@ -2150,35 +2137,32 @@ it.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
             </tr>
           </tbody>
         </table>
-<p id="section-4.3-3">A Tenant Object identifier identifies one logical Resource
-Authorization Server tenant. The Resource Authorization Server <span class="bcp14">MUST NOT</span> use the identifier of a Tenant Object for a different tenant in
-any later Relationship View for the same Issuer Relationship.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
-<p id="section-4.3-4">An ID-JAG conveys <code>target_tenant</code> in the <code>aud_tenant</code> claim
-(<a href="#jwt-representation" class="auto internal xref">Section 7.1</a>). The Resource Authorization Server <span class="bcp14">MUST</span>
-include <code>target_tenant</code> unless its issuer identifier alone identifies
-the target tenant. A Relationship View <span class="bcp14">MUST NOT</span> contain more than one
-Tenant Object without <code>target_tenant</code>, or two Tenant Objects with the
-same value of <code>target_tenant</code>.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
-<p id="section-4.3-5">A Tenant Object that contains <code>target_tenant</code> is usable only with
+<p id="section-4.3-3">A Tenant Object is identified by its <code>tenant_id</code>, or, for the one
+Tenant Object that may omit it, by that absence. An ID-JAG conveys
+<code>tenant_id</code> in the <code>aud_tenant</code> claim (<a href="#jwt-representation" class="auto internal xref">Section 7.1</a>). The
+Resource Authorization Server <span class="bcp14">MUST</span> include <code>tenant_id</code> unless its issuer
+identifier alone identifies the target tenant. A Relationship View <span class="bcp14">MUST NOT</span> contain more than one Tenant Object without <code>tenant_id</code>, or two
+Tenant Objects with the same value of <code>tenant_id</code>.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.3-4">A Tenant Object that contains <code>tenant_id</code> is usable only with
 entries whose Grant Profile can convey a target tenant (<a href="#envelope" class="auto internal xref">Section 4.6</a>,
-<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-4.3-5" class="pilcrow">¶</a></p>
-<p id="section-4.3-6">Several Tenant Objects can reference the same Grant Catalog. Tenant
+<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-4.3-4" class="pilcrow">¶</a></p>
+<p id="section-4.3-5">Several Tenant Objects can reference the same Grant Catalog. Tenant
 Objects for tenants that differ in any input that an entry governs
 (<a href="#envelope" class="auto internal xref">Section 4.6</a>) reference different Grant Catalogs. A Tenant Object has
 no default Grant Catalog, and Grant Catalogs have no inheritance,
-partial overrides, or merge rules.<a href="#section-4.3-6" class="pilcrow">¶</a></p>
-<p id="section-4.3-7"><a href="#installation" class="auto internal xref">Section 5.5</a> specifies how a change to <code>target_tenant</code> or
-<code>grant_catalog</code> affects approvals.<a href="#section-4.3-7" class="pilcrow">¶</a></p>
-<p id="section-4.3-8">The following is an example of a Tenant Object:<a href="#section-4.3-8" class="pilcrow">¶</a></p>
-<div class="lang-json sourcecode" id="section-4.3-9">
+partial overrides, or merge rules.<a href="#section-4.3-5" class="pilcrow">¶</a></p>
+<p id="section-4.3-6"><a href="#installation" class="auto internal xref">Section 5.5</a> specifies how a change to <code>grant_catalog</code> affects
+approvals; a Tenant Object with a different <code>tenant_id</code> is a different
+Tenant Object.<a href="#section-4.3-6" class="pilcrow">¶</a></p>
+<p id="section-4.3-7">The following is an example of a Tenant Object:<a href="#section-4.3-7" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="section-4.3-8">
 <pre>
 {
-  "id": "tenant-123",
+  "tenant_id": "customer-acme",
   "display": "Acme",
-  "target_tenant": "customer-acme",
   "grant_catalog": "read-only"
 }
-</pre><a href="#section-4.3-9" class="pilcrow">¶</a>
+</pre><a href="#section-4.3-8" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2202,15 +2186,6 @@ assembled from parts.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">
-                <code>authorization_server</code>
-</td>
-              <td class="text-left" rowspan="1" colspan="1">
-                <span class="bcp14">REQUIRED</span>
-</td>
-              <td class="text-left" rowspan="1" colspan="1">String; the issuer identifier <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span> of the Resource Authorization Server, which is the audience of grants issued using the Grant Catalog (<a href="#envelope" class="auto internal xref">Section 4.6</a>)</td>
-            </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>id</code>
@@ -2837,12 +2812,11 @@ Object that references the Grant Catalog containing the entry, when all
 of the following are true:<a href="#section-4.6-2" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-4.6-3">
 <li id="section-4.6-3.1">
-            <p id="section-4.6-3.1.1">The grant conveys the <code>authorization_server</code> of the Grant Catalog as
-its only
-audience.<a href="#section-4.6-3.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.6-3.1.1">The grant conveys the <code>authorization_server</code> of the Relationship View
+that contains the Grant Catalog as its only audience.<a href="#section-4.6-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-4.6-3.2">
-            <p id="section-4.6-3.2.1">If the Tenant Object contains <code>target_tenant</code>, the grant conveys that
+            <p id="section-4.6-3.2.1">If the Tenant Object contains <code>tenant_id</code>, the grant conveys that
 value as its target tenant. Otherwise, the grant conveys no target
 tenant.<a href="#section-4.6-3.2.1" class="pilcrow">¶</a></p>
 </li>
@@ -3003,10 +2977,9 @@ protocol handles caching of representations.<a href="#section-4.7-5" class="pilc
 verify the following:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-2">
 <li id="section-5.1-2.1">
-            <p id="section-5.1-2.1.1">The <code>authorization_server</code> of the Relationship View and of every
-Grant Catalog, and
-any other issuer identifier that the retrieval protocol conveys, are
-identical to the issuer identifier of the Resource Authorization
+            <p id="section-5.1-2.1.1">The <code>authorization_server</code> of the Relationship View, and any other
+issuer identifier that the retrieval protocol conveys, are identical
+to the issuer identifier of the Resource Authorization
 Server with which the Grant Issuer associates the Issuer
 Relationship, using simple string comparison
 (<span><a href="https://rfc-editor.org/rfc/rfc3986#section-6.2.1" class="relref">Section 6.2.1</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>).<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
@@ -3025,8 +2998,8 @@ the structures that the retrieval protocol defines, every Tenant
 Object, and every Grant Catalog other than the contents of its
 entries satisfy their definitions: every <span class="bcp14">REQUIRED</span> member is present,
 and every member defined by this specification has the specified JSON
-type and meets the constraints stated for it. Tenant Object, Grant
-Catalog, and entry identifiers satisfy <a href="#model-conventions" class="auto internal xref">Section 4.1</a>.<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
+type and meets the constraints stated for it. Grant Catalog and
+entry identifiers satisfy <a href="#model-conventions" class="auto internal xref">Section 4.1</a>.<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.4">
             <p id="section-5.1-2.4.1">The <code>grant_catalog</code> of every Tenant Object identifies a Grant Catalog
@@ -3034,8 +3007,8 @@ in the Relationship View, and every Grant Catalog in the Relationship
 View is referenced by at least one Tenant Object.<a href="#section-5.1-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.5">
-            <p id="section-5.1-2.5.1">At most one Tenant Object omits <code>target_tenant</code>, and no two Tenant
-Objects have the same <code>target_tenant</code>.<a href="#section-5.1-2.5.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.5.1">At most one Tenant Object omits <code>tenant_id</code>, and no two Tenant
+Objects have the same <code>tenant_id</code>.<a href="#section-5.1-2.5.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.6">
             <p id="section-5.1-2.6.1">No entry has a Resource Authorization Server issuer identifier,
@@ -3092,8 +3065,8 @@ public metadata as follows:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <li id="section-5.2-2.1">
             <p id="section-5.2-2.1.1">Retrieve and validate the Resource Authorization Server's
 Authorization Server Metadata (<span><a href="https://rfc-editor.org/rfc/rfc8414#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>), and
-verify that its issuer identifier is identical to the Grant Catalog
-<code>authorization_server</code>.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
+verify that its issuer identifier is identical to the
+<code>authorization_server</code> of the Relationship View.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.2">
             <p id="section-5.2-2.2.1">If the entry's <code>resource</code> is a URL that uses the <code>https</code> scheme
@@ -3249,9 +3222,9 @@ Issuer Relationship unless the grant identifies its issuer by the issuer
 identifier of that relationship and, when the relationship has an issuer
 tenant, identifies that issuer tenant, as the Grant Profile Definition
 specifies (<a href="#profile-definitions" class="auto internal xref">Section 8.1</a>).<a href="#section-5.4-3" class="pilcrow">¶</a></p>
-<p id="section-5.4-4">The Grant Issuer <span class="bcp14">MUST NOT</span> derive a target tenant identifier from
-the Tenant Object <code>id</code>, from the number of Tenant Objects in a
-Relationship View, or from the form of an issuer identifier.<a href="#section-5.4-4" class="pilcrow">¶</a></p>
+<p id="section-5.4-4">The Grant Issuer <span class="bcp14">MUST NOT</span> derive a target tenant identifier from the
+number of Tenant Objects in a Relationship View or from the form of an
+issuer identifier.<a href="#section-5.4-4" class="pilcrow">¶</a></p>
 <p id="section-5.4-5">The Grant Issuer decides whether it releases a claim value. If an entry
 requires a claim that the Grant Issuer's policy does not permit it to
 release for a subject, the Grant Issuer <span class="bcp14">MUST NOT</span> issue a grant using
@@ -3284,7 +3257,7 @@ following hold:<a href="#section-5.4-8" class="pilcrow">¶</a></p>
 conflict with public metadata (<a href="#composition" class="auto internal xref">Section 5.2</a>).<a href="#section-5.4-9.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.4-9.3">
-            <p id="section-5.4-9.3.1">If the Tenant Object contains <code>target_tenant</code>, the entry's Grant
+            <p id="section-5.4-9.3.1">If the Tenant Object contains <code>tenant_id</code>, the entry's Grant
 Profile can convey a target tenant (<a href="#tenant-object" class="auto internal xref">Section 4.3</a>).<a href="#section-5.4-9.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.4-9.4">
@@ -3328,18 +3301,19 @@ validation, or the Resource Authorization Server rejects the Grant
 Issuer's credentials. After a complete retrieval, the Grant Issuer
 replaces the installed state for the Issuer Relationship with the new
 Relationship View. A Tenant Object, Grant Catalog, or entry that the new
-Relationship View omits, or contains with a different <code>target_tenant</code>,
-<code>grant_catalog</code>, or <code>revision</code>, is withdrawn.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+Relationship View omits, or contains with a different <code>grant_catalog</code> or
+<code>revision</code>, is withdrawn.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
 <p id="section-5.5-2">A Grant Issuer retains, with each approval, the Resource Authorization
-Server issuer identifier, the Issuer Relationship, the Tenant Object
-<code>id</code> and <code>target_tenant</code>, the Grant Catalog <code>id</code>, the entry <code>id</code> and
+Server issuer identifier, the Issuer Relationship, the Tenant Object's
+<code>tenant_id</code>, if any, the Grant Catalog <code>id</code>, the entry <code>id</code> and
 <code>revision</code>, the approved subset, and any client identifier mapping that
 the Grant Profile requires. The items of the approved subset are
 identified by their protocol values. State that is specific to a
 retrieval protocol, such as a URI or an HTTP entity tag, is retained
 separately and is not part of an approval.<a href="#section-5.5-2" class="pilcrow">¶</a></p>
 <p id="section-5.5-3">An approval applies while the installed Relationship View contains a
-Tenant Object with the approved <code>id</code>, <code>target_tenant</code>, and
+Tenant Object with the approved <code>tenant_id</code>, or without one if the
+approved Tenant Object had none, and with the approved
 <code>grant_catalog</code>, and the Grant Catalog that the Tenant Object references
 contains an entry with the approved <code>id</code> and <code>revision</code>. The
 Grant Issuer applies the rules in <a href="#tab-transitions" class="auto internal xref">Table 16</a> when a retrieval
@@ -3370,7 +3344,7 @@ completes or fails.<a href="#section-5.5-3" class="pilcrow">¶</a></p>
               <td class="text-left" rowspan="1" colspan="1">A change to an entry <span class="bcp14">MUST NOT</span>, by itself, expand an existing approval.</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Only members outside the normative semantics of an entry change (<a href="#revision" class="auto internal xref">Section 4.7</a>), and every approved <code>id</code>, <code>target_tenant</code>, <code>grant_catalog</code>, and <code>revision</code> is unchanged</td>
+              <td class="text-left" rowspan="1" colspan="1">Only members outside the normative semantics of an entry change (<a href="#revision" class="auto internal xref">Section 4.7</a>), and every approved identifier, <code>grant_catalog</code>, and <code>revision</code> is unchanged</td>
               <td class="text-left" rowspan="1" colspan="1">Approvals that depend on the changed objects continue to apply.</td>
             </tr>
             <tr>
@@ -3378,18 +3352,18 @@ completes or fails.<a href="#section-5.5-3" class="pilcrow">¶</a></p>
               <td class="text-left" rowspan="1" colspan="1">The Grant Issuer <span class="bcp14">MUST</span> stop issuing grants that depend on it in its previous form, and suspends issuance under the approvals that depend on it.</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">The <code>target_tenant</code> or <code>grant_catalog</code> of a Tenant Object, or the <code>revision</code> of an entry, changes</td>
+              <td class="text-left" rowspan="1" colspan="1">The <code>grant_catalog</code> of a Tenant Object, or the <code>revision</code> of an entry, changes</td>
               <td class="text-left" rowspan="1" colspan="1">The Grant Issuer <span class="bcp14">MUST NOT</span> issue grants under an approval made for the previous value. Issuance resumes only under an approval made for the new value.</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">A later complete retrieval contains a withdrawn object again with the approved identifiers, <code>target_tenant</code>, <code>grant_catalog</code>, and <code>revision</code>
+              <td class="text-left" rowspan="1" colspan="1">A later complete retrieval contains a withdrawn object again with the approved identifiers, <code>grant_catalog</code>, and <code>revision</code>
 </td>
               <td class="text-left" rowspan="1" colspan="1">The approval applies again without new approval.</td>
             </tr>
           </tbody>
         </table>
 </div>
-<p id="section-5.5-5">A change of <code>target_tenant</code>, <code>grant_catalog</code>, or <code>revision</code> also
+<p id="section-5.5-5">A change of <code>grant_catalog</code> or <code>revision</code> also
 withdraws the previous form of the object, so the withdrawal row applies
 to it as well.<a href="#section-5.5-5" class="pilcrow">¶</a></p>
 <p id="section-5.5-6">These rules apply to every change of revision, including a change that
@@ -3965,26 +3939,22 @@ ETag: "view-a24f91"
   },
   "tenants": [
     {
-      "id": "tenant-123",
+      "tenant_id": "customer-acme",
       "display": "Acme",
-      "target_tenant": "customer-acme",
       "grant_catalog": "read-only"
     },
     {
-      "id": "tenant-456",
+      "tenant_id": "customer-acme-eu",
       "display": "Acme Europe",
-      "target_tenant": "customer-acme-eu",
       "grant_catalog": "standard"
     }
   ],
   "grant_catalogs": [
     {
-      "authorization_server": "https://ras.example/",
       "id": "read-only",
       "entries": [ ... ]
     },
     {
-      "authorization_server": "https://ras.example/",
       "id": "standard",
       "display": "Standard API access",
       "entries": [ ... ]
@@ -4128,7 +4098,7 @@ the entry lists it (<a href="#entry-claims" class="auto internal xref">Section 4
 allows any claim valid in an ID Token and recommends the <code>email</code> and
 <code>aud_sub</code> claims for subject resolution. A Resource Authorization
 Server that uses those claims lists them in its entries. Requiring
-<code>target_tenant</code> in a Tenant Object (<a href="#tenant-object" class="auto internal xref">Section 4.3</a>) is stricter
+<code>tenant_id</code> in a Tenant Object (<a href="#tenant-object" class="auto internal xref">Section 4.3</a>) is stricter
 than <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-4.4.1" class="relref">Section 4.4.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>, which also lets a Resource
 Authorization Server identify the target tenant from its trust
 relationship with the issuer.<a href="#section-7-2.12.1" class="pilcrow">¶</a></p>
@@ -4144,7 +4114,8 @@ provide it (<a href="#clients" class="auto internal xref">Section 5.4.1</a>).<a 
       <dd class="break"></dd>
 </dl>
 <p id="section-7-3">The following is an example of the claims of an ID-JAG issued for the
-Tenant Object <code>tenant-456</code> in <a href="#view-document" class="auto internal xref">Section 6.7</a>, using the entry in
+Tenant Object for <code>customer-acme-eu</code> in <a href="#view-document" class="auto internal xref">Section 6.7</a>, using the
+entry in
 <a href="#example-catalog" class="auto internal xref">Appendix A</a>:<a href="#section-7-3" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-7-4">
 <pre>
@@ -4604,9 +4575,9 @@ incorrect comparison would expand the approved subset.<a href="#section-9.8-1" c
         <h3 id="name-tenant-confusion">
 <a href="#section-9.9" class="section-number selfRef">9.9. </a><a href="#name-tenant-confusion" class="section-name selfRef">Tenant Confusion</a>
         </h3>
-<p id="section-9.9-1">If a Grant Issuer derived a grant's target tenant from a Tenant Object
-identifier, the number of Tenant Objects in a Relationship View, or the
-form of an issuer identifier, a grant intended for one tenant could be
+<p id="section-9.9-1">If a Grant Issuer derived a grant's target tenant from the number of
+Tenant Objects in a Relationship View or the form of an issuer
+identifier, a grant intended for one tenant could be
 accepted for another (<a href="#issuing" class="auto internal xref">Section 5.4</a>). An entry obtained for one Issuer
 Relationship is used only for grants whose issuer and issuer tenant
 identify that relationship (<a href="#issuing" class="auto internal xref">Section 5.4</a>), so that a catalog disclosed to
@@ -4630,7 +4601,7 @@ Authorization Server <span class="bcp14">SHOULD</span> make a tenant eligible fo
 Relationship only when the Onboarding Arrangement records agreement on
 the Grant Issuer side, for example by an administrator of the issuer
 tenant. An administrator of the Grant Issuer identifies a Tenant Object
-by its <code>target_tenant</code>, not by its <code>display</code> (<a href="#model-conventions" class="auto internal xref">Section 4.1</a>).<a href="#section-9.10-1" class="pilcrow">¶</a></p>
+by its <code>tenant_id</code>, not by its <code>display</code> (<a href="#model-conventions" class="auto internal xref">Section 4.1</a>).<a href="#section-9.10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-cross-jwt">
@@ -5168,16 +5139,16 @@ requests no registration for <code>authorization_grant_catalog.read</code>
       <h2 id="name-example-grant-catalog">
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-example-grant-catalog" class="section-name selfRef">Example Grant Catalog</a>
       </h2>
-<p id="appendix-A-1">The following Grant Catalog has one entry for the ID-JAG profile
-(<a href="#id-jag" class="auto internal xref">Section 7</a>). Every ID-JAG issued using the entry is bound to a DPoP key
-and contains the scope value <code>messages.read</code>, the <code>email</code> claim, and a
-<code>sub_id</code> claim in the <code>saml-nameid</code> format; it can also contain the
-scope value <code>messages.write</code> and authorization details objects of type
-<code>message_channel</code>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">The following Grant Catalog, from a Relationship View whose
+<code>authorization_server</code> is <code>https://ras.example/</code>, has one entry for the
+ID-JAG profile (<a href="#id-jag" class="auto internal xref">Section 7</a>). Every ID-JAG issued using the entry is
+bound to a DPoP key and contains the scope value <code>messages.read</code>, the
+<code>email</code> claim, and a <code>sub_id</code> claim in the <code>saml-nameid</code> format; it can
+also contain the scope value <code>messages.write</code> and authorization details
+objects of type <code>message_channel</code>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <div class="breakable lang-json sourcecode" id="appendix-A-2">
 <pre>
 {
-  "authorization_server": "https://ras.example/",
   "id": "standard",
   "display": "Standard API access",
   "entries": [
@@ -5246,11 +5217,10 @@ resource <code>https://api.example/reports</code> that carry either the scope va
 <code>reports.read</code> or <code>reports.export</code>, but not both, and requires the
 <code>department</code> claim only with <code>reports.export</code>. A single entry cannot
 express either rule (<a href="#envelope" class="auto internal xref">Section 4.6</a>), so the Resource Authorization
-Server publishes two entries:<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+Server <code>https://ras.example/</code> publishes two entries:<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="appendix-B-2">
 <pre>
 {
-  "authorization_server": "https://ras.example/",
   "id": "reports",
   "entries": [
     {
@@ -5308,14 +5278,14 @@ one entry (<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a hre
 <a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-example-approval-lifecycle" class="section-name selfRef">Example Approval Lifecycle</a>
       </h2>
 <p id="appendix-C-1">An approval of the entry in <a href="#example-catalog" class="auto internal xref">Appendix A</a> for the Tenant Object
-<code>tenant-456</code> changes as the Relationship View changes:<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+<code>customer-acme-eu</code> changes as the Relationship View changes:<a href="#appendix-C-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="appendix-C-2">
 <li id="appendix-C-2.1">
-          <p id="appendix-C-2.1.1">The Grant Issuer installs a Relationship View in which <code>tenant-456</code>
-references the Grant Catalog <code>standard</code>, whose entry
-<code>messages-api-id-jag</code> has the revision <code>5</code>. An administrator approves
-the scope value <code>messages.read</code> for that entry, and the Grant Issuer
-issues ID-JAGs with that scope value.<a href="#appendix-C-2.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-C-2.1.1">The Grant Issuer installs a Relationship View in which
+<code>customer-acme-eu</code> references the Grant Catalog <code>standard</code>, whose
+entry <code>messages-api-id-jag</code> has the revision <code>5</code>. An administrator
+approves the scope value <code>messages.read</code> for that entry, and the
+Grant Issuer issues ID-JAGs with that scope value.<a href="#appendix-C-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="appendix-C-2.2">
           <p id="appendix-C-2.2.1">A refresh fails with a transport error. The Grant Issuer installs
@@ -5323,14 +5293,14 @@ nothing and continues to issue ID-JAGs under the installed state,
 within the maximum age it has configured (<a href="#installation" class="auto internal xref">Section 5.5</a>).<a href="#appendix-C-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li id="appendix-C-2.3">
-          <p id="appendix-C-2.3.1">The Resource Authorization Server removes <code>tenant-456</code> from the
+          <p id="appendix-C-2.3.1">The Resource Authorization Server removes <code>customer-acme-eu</code> from the
 Issuer Relationship. The next refresh retrieves a Relationship View
-without it, and the Grant Issuer suspends issuance for <code>tenant-456</code>
-(<a href="#installation" class="auto internal xref">Section 5.5</a>).<a href="#appendix-C-2.3.1" class="pilcrow">¶</a></p>
+without it, and the Grant Issuer suspends issuance for
+<code>customer-acme-eu</code> (<a href="#installation" class="auto internal xref">Section 5.5</a>).<a href="#appendix-C-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li id="appendix-C-2.4">
-          <p id="appendix-C-2.4.1">The Resource Authorization Server restores <code>tenant-456</code> with the same
-<code>target_tenant</code> and <code>grant_catalog</code>, and the Grant Catalog still
+          <p id="appendix-C-2.4.1">The Resource Authorization Server restores <code>customer-acme-eu</code> with
+the same <code>grant_catalog</code>, and the Grant Catalog still
 contains revision <code>5</code> of the entry. The approval applies again
 without new approval (<a href="#installation" class="auto internal xref">Section 5.5</a>).<a href="#appendix-C-2.4.1" class="pilcrow">¶</a></p>
 </li>

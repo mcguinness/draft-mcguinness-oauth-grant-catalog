@@ -475,10 +475,10 @@ Table of Contents
       public metadata excludes (Section 5.3, Section 5.2, Section 5.5,
       Section 5.6).
 
-   *  When the revision of an entry, or the target_tenant or
-      grant_catalog of a Tenant Object, changes, issuance under
-      approvals made for the previous value stops, and resumes only
-      under an approval made for the new value (Section 5.5).
+   *  When the revision of an entry or the grant_catalog of a Tenant
+      Object changes, issuance under approvals made for the previous
+      value stops, and resumes only under an approval made for the new
+      value (Section 5.5).
 
    *  A Grant Issuer ignores members it does not understand, and a
       specification that defines a restrictive member also defines a
@@ -512,14 +512,12 @@ Table of Contents
      },
      "tenants": [
        {
-         "id": "tenant-123",
-         "target_tenant": "customer-acme",
+         "tenant_id": "customer-acme",
          "grant_catalog": "read-only"
        }
      ],
      "grant_catalogs": [
        {
-         "authorization_server": "https://ras.example/",
          "id": "read-only",
          "entries": [
            {
@@ -551,11 +549,9 @@ Table of Contents
     |-- authorization_server
     |-- grant_issuer
     |-- tenants[]: Tenant Object
-    |    |-- id
-    |    |-- target_tenant
+    |    |-- tenant_id
     |    `-- grant_catalog        (the id of a Grant Catalog)
     `-- grant_catalogs[]: Grant Catalog
-         |-- authorization_server
          |-- id
          `-- entries[]: entry
               |-- id, revision
@@ -581,9 +577,9 @@ Table of Contents
       Identifiers are opaque and case-sensitive, and are compared using
       simple string comparison (Section 6.2.1 of [RFC3986]).  The length
       limit bounds the identifiers that a Grant Issuer retains with each
-      approval (Section 5.5).  Tenant Object identifiers and Grant
-      Catalog identifiers are each unique within a Relationship View,
-      and entry identifiers are unique within a Grant Catalog.
+      approval (Section 5.5).  Grant Catalog identifiers are unique
+      within a Relationship View, and entry identifiers are unique
+      within a Grant Catalog.
 
    display:  OPTIONAL.  A JSON string containing a short, human-readable
       name for the object, intended for presentation to an
@@ -602,7 +598,7 @@ Table of Contents
    entry, each scope value within a values array, each type value within
    a types array, and each claim value within a claims array is unique
    and identifies an item.  Members that carry protocol values, such as
-   authorization_server, target_tenant, profile, resource, scope, type,
+   authorization_server, tenant_id, profile, resource, scope, type,
    claim, and the names in formats and methods, are compared using
    simple string comparison (Section 6.2.1 of [RFC3986]).
 
@@ -654,39 +650,34 @@ Table of Contents
    is eligible for an Issuer Relationship to the Grant Catalog that
    applies to it.
 
-    +===============+==========+=====================================+
-    | Member        | Status   | Description                         |
-    +===============+==========+=====================================+
-    | id            | REQUIRED | Identifier (Section 4.1)            |
-    +---------------+----------+-------------------------------------+
-    | display,      | OPTIONAL | See Section 4.1                     |
-    | description   |          |                                     |
-    +---------------+----------+-------------------------------------+
-    | target_tenant | OPTIONAL | String; the exact tenant identifier |
-    |               |          | (Section 2) that a grant issued for |
-    |               |          | this tenant conveys as its target   |
-    |               |          | tenant (Section 4.6)                |
-    +---------------+----------+-------------------------------------+
-    | grant_catalog | REQUIRED | String; the id of the Grant Catalog |
-    |               |          | that applies to this tenant         |
-    +---------------+----------+-------------------------------------+
+    +===============+==========+======================================+
+    | Member        | Status   | Description                          |
+    +===============+==========+======================================+
+    | tenant_id     | OPTIONAL | String; the exact tenant identifier  |
+    |               |          | (Section 2) of the Resource          |
+    |               |          | Authorization Server tenant, which a |
+    |               |          | grant issued for this tenant conveys |
+    |               |          | as its target tenant (Section 4.6)   |
+    +---------------+----------+--------------------------------------+
+    | display,      | OPTIONAL | See Section 4.1                      |
+    | description   |          |                                      |
+    +---------------+----------+--------------------------------------+
+    | grant_catalog | REQUIRED | String; the id of the Grant Catalog  |
+    |               |          | that applies to this tenant          |
+    +---------------+----------+--------------------------------------+
 
-                      Table 3: Tenant Object Members
+                       Table 3: Tenant Object Members
 
-   A Tenant Object identifier identifies one logical Resource
-   Authorization Server tenant.  The Resource Authorization Server MUST
-   NOT use the identifier of a Tenant Object for a different tenant in
-   any later Relationship View for the same Issuer Relationship.
+   A Tenant Object is identified by its tenant_id, or, for the one
+   Tenant Object that may omit it, by that absence.  An ID-JAG conveys
+   tenant_id in the aud_tenant claim (Section 7.1).  The Resource
+   Authorization Server MUST include tenant_id unless its issuer
+   identifier alone identifies the target tenant.  A Relationship View
+   MUST NOT contain more than one Tenant Object without tenant_id, or
+   two Tenant Objects with the same value of tenant_id.
 
-   An ID-JAG conveys target_tenant in the aud_tenant claim
-   (Section 7.1).  The Resource Authorization Server MUST include
-   target_tenant unless its issuer identifier alone identifies the
-   target tenant.  A Relationship View MUST NOT contain more than one
-   Tenant Object without target_tenant, or two Tenant Objects with the
-   same value of target_tenant.
-
-   A Tenant Object that contains target_tenant is usable only with
-   entries whose Grant Profile can convey a target tenant (Section 4.6,
+   A Tenant Object that contains tenant_id is usable only with entries
+   whose Grant Profile can convey a target tenant (Section 4.6,
    Section 5.4).
 
    Several Tenant Objects can reference the same Grant Catalog.  Tenant
@@ -695,15 +686,15 @@ Table of Contents
    has no default Grant Catalog, and Grant Catalogs have no inheritance,
    partial overrides, or merge rules.
 
-   Section 5.5 specifies how a change to target_tenant or grant_catalog
-   affects approvals.
+   Section 5.5 specifies how a change to grant_catalog affects
+   approvals; a Tenant Object with a different tenant_id is a different
+   Tenant Object.
 
    The following is an example of a Tenant Object:
 
    {
-     "id": "tenant-123",
+     "tenant_id": "customer-acme",
      "display": "Acme",
-     "target_tenant": "customer-acme",
      "grant_catalog": "read-only"
    }
 
@@ -712,25 +703,17 @@ Table of Contents
    A Grant Catalog is a complete set of entries and is never paged or
    assembled from parts.
 
-    +======================+==========+===============================+
-    | Member               | Status   | Description                   |
-    +======================+==========+===============================+
-    | authorization_server | REQUIRED | String; the issuer identifier |
-    |                      |          | [RFC8414] of the Resource     |
-    |                      |          | Authorization Server, which   |
-    |                      |          | is the audience of grants     |
-    |                      |          | issued using the Grant        |
-    |                      |          | Catalog (Section 4.6)         |
-    +----------------------+----------+-------------------------------+
-    | id                   | REQUIRED | Identifier (Section 4.1)      |
-    +----------------------+----------+-------------------------------+
-    | display, description | OPTIONAL | See Section 4.1               |
-    +----------------------+----------+-------------------------------+
-    | entries              | REQUIRED | Array of entries              |
-    |                      |          | (Section 4.5)                 |
-    +----------------------+----------+-------------------------------+
+   +======================+==========+================================+
+   | Member               | Status   | Description                    |
+   +======================+==========+================================+
+   | id                   | REQUIRED | Identifier (Section 4.1)       |
+   +----------------------+----------+--------------------------------+
+   | display, description | OPTIONAL | See Section 4.1                |
+   +----------------------+----------+--------------------------------+
+   | entries              | REQUIRED | Array of entries (Section 4.5) |
+   +----------------------+----------+--------------------------------+
 
-                       Table 4: Grant Catalog Members
+                      Table 4: Grant Catalog Members
 
    An empty entries array indicates that the Resource Authorization
    Server accepts no grants for the tenants whose Tenant Objects
@@ -1031,11 +1014,11 @@ Table of Contents
    Tenant Object that references the Grant Catalog containing the entry,
    when all of the following are true:
 
-   1.  The grant conveys the authorization_server of the Grant Catalog
-       as its only audience.
+   1.  The grant conveys the authorization_server of the Relationship
+       View that contains the Grant Catalog as its only audience.
 
-   2.  If the Tenant Object contains target_tenant, the grant conveys
-       that value as its target tenant.  Otherwise, the grant conveys no
+   2.  If the Tenant Object contains tenant_id, the grant conveys that
+       value as its target tenant.  Otherwise, the grant conveys no
        target tenant.
 
    3.  The grant conveys the entry's resource as its only protected
@@ -1154,12 +1137,12 @@ Table of Contents
    Before installing any part of a Relationship View, the Grant Issuer
    MUST verify the following:
 
-   1.  The authorization_server of the Relationship View and of every
-       Grant Catalog, and any other issuer identifier that the retrieval
-       protocol conveys, are identical to the issuer identifier of the
-       Resource Authorization Server with which the Grant Issuer
-       associates the Issuer Relationship, using simple string
-       comparison (Section 6.2.1 of [RFC3986]).
+   1.  The authorization_server of the Relationship View, and any other
+       issuer identifier that the retrieval protocol conveys, are
+       identical to the issuer identifier of the Resource Authorization
+       Server with which the Grant Issuer associates the Issuer
+       Relationship, using simple string comparison (Section 6.2.1 of
+       [RFC3986]).
 
    2.  The grant_issuer of the Relationship View identifies the Issuer
        Relationship for which the Grant Issuer retrieved it: the issuer
@@ -1173,15 +1156,14 @@ Table of Contents
        its entries satisfy their definitions: every REQUIRED member is
        present, and every member defined by this specification has the
        specified JSON type and meets the constraints stated for it.
-       Tenant Object, Grant Catalog, and entry identifiers satisfy
-       Section 4.1.
+       Grant Catalog and entry identifiers satisfy Section 4.1.
 
    4.  The grant_catalog of every Tenant Object identifies a Grant
        Catalog in the Relationship View, and every Grant Catalog in the
        Relationship View is referenced by at least one Tenant Object.
 
-   5.  At most one Tenant Object omits target_tenant, and no two Tenant
-       Objects have the same target_tenant.
+   5.  At most one Tenant Object omits tenant_id, and no two Tenant
+       Objects have the same tenant_id.
 
    6.  No entry has a Resource Authorization Server issuer identifier,
        Grant Catalog id, entry id, and revision that the Grant Issuer
@@ -1227,8 +1209,8 @@ Table of Contents
 
    1.  Retrieve and validate the Resource Authorization Server's
        Authorization Server Metadata (Section 3.3 of [RFC8414]), and
-       verify that its issuer identifier is identical to the Grant
-       Catalog authorization_server.
+       verify that its issuer identifier is identical to the
+       authorization_server of the Relationship View.
 
    2.  If the entry's resource is a URL that uses the https scheme
        (Section 1.2 of [RFC9728]), request its Protected Resource
@@ -1357,8 +1339,8 @@ Table of Contents
    Definition specifies (Section 8.1).
 
    The Grant Issuer MUST NOT derive a target tenant identifier from the
-   Tenant Object id, from the number of Tenant Objects in a Relationship
-   View, or from the form of an issuer identifier.
+   number of Tenant Objects in a Relationship View or from the form of
+   an issuer identifier.
 
    The Grant Issuer decides whether it releases a claim value.  If an
    entry requires a claim that the Grant Issuer's policy does not permit
@@ -1389,7 +1371,7 @@ Table of Contents
    2.  The entry is usable for issuance (Section 5.1) and does not
        conflict with public metadata (Section 5.2).
 
-   3.  If the Tenant Object contains target_tenant, the entry's Grant
+   3.  If the Tenant Object contains tenant_id, the entry's Grant
        Profile can convey a target tenant (Section 4.3).
 
    4.  An approval for the entry and the Tenant Object applies
@@ -1424,19 +1406,20 @@ Table of Contents
    replaces the installed state for the Issuer Relationship with the new
    Relationship View.  A Tenant Object, Grant Catalog, or entry that the
    new Relationship View omits, or contains with a different
-   target_tenant, grant_catalog, or revision, is withdrawn.
+   grant_catalog or revision, is withdrawn.
 
    A Grant Issuer retains, with each approval, the Resource
    Authorization Server issuer identifier, the Issuer Relationship, the
-   Tenant Object id and target_tenant, the Grant Catalog id, the entry
-   id and revision, the approved subset, and any client identifier
-   mapping that the Grant Profile requires.  The items of the approved
-   subset are identified by their protocol values.  State that is
-   specific to a retrieval protocol, such as a URI or an HTTP entity
-   tag, is retained separately and is not part of an approval.
+   Tenant Object's tenant_id, if any, the Grant Catalog id, the entry id
+   and revision, the approved subset, and any client identifier mapping
+   that the Grant Profile requires.  The items of the approved subset
+   are identified by their protocol values.  State that is specific to a
+   retrieval protocol, such as a URI or an HTTP entity tag, is retained
+   separately and is not part of an approval.
 
    An approval applies while the installed Relationship View contains a
-   Tenant Object with the approved id, target_tenant, and grant_catalog,
+   Tenant Object with the approved tenant_id, or without one if the
+   approved Tenant Object had none, and with the approved grant_catalog,
    and the Grant Catalog that the Tenant Object references contains an
    entry with the approved id and revision.  The Grant Issuer applies
    the rules in Table 16 when a retrieval completes or fails.
@@ -1463,10 +1446,9 @@ Table of Contents
    | Only members outside the    | Approvals that depend on the       |
    | normative semantics of an   | changed objects continue to apply. |
    | entry change (Section 4.7), |                                    |
-   | and every approved id,      |                                    |
-   | target_tenant,              |                                    |
-   | grant_catalog, and revision |                                    |
-   | is unchanged                |                                    |
+   | and every approved          |                                    |
+   | identifier, grant_catalog,  |                                    |
+   | and revision is unchanged   |                                    |
    +-----------------------------+------------------------------------+
    | A Tenant Object, Grant      | The Grant Issuer MUST stop issuing |
    | Catalog, or entry is        | grants that depend on it in its    |
@@ -1474,24 +1456,23 @@ Table of Contents
    |                             | issuance under the approvals that  |
    |                             | depend on it.                      |
    +-----------------------------+------------------------------------+
-   | The target_tenant or        | The Grant Issuer MUST NOT issue    |
-   | grant_catalog of a Tenant   | grants under an approval made for  |
-   | Object, or the revision of  | the previous value.  Issuance      |
-   | an entry, changes           | resumes only under an approval     |
+   | The grant_catalog of a      | The Grant Issuer MUST NOT issue    |
+   | Tenant Object, or the       | grants under an approval made for  |
+   | revision of an entry,       | the previous value.  Issuance      |
+   | changes                     | resumes only under an approval     |
    |                             | made for the new value.            |
    +-----------------------------+------------------------------------+
    | A later complete retrieval  | The approval applies again without |
    | contains a withdrawn object | new approval.                      |
    | again with the approved     |                                    |
-   | identifiers, target_tenant, |                                    |
-   | grant_catalog, and revision |                                    |
+   | identifiers, grant_catalog, |                                    |
+   | and revision                |                                    |
    +-----------------------------+------------------------------------+
 
     Table 16: Effects of a Retrieval on Installed State and Approvals
 
-   A change of target_tenant, grant_catalog, or revision also withdraws
-   the previous form of the object, so the withdrawal row applies to it
-   as well.
+   A change of grant_catalog or revision also withdraws the previous
+   form of the object, so the withdrawal row applies to it as well.
 
    These rules apply to every change of revision, including a change
    that only narrows an entry, such as the removal of a scope value
@@ -1948,26 +1929,22 @@ Table of Contents
      },
      "tenants": [
        {
-         "id": "tenant-123",
+         "tenant_id": "customer-acme",
          "display": "Acme",
-         "target_tenant": "customer-acme",
          "grant_catalog": "read-only"
        },
        {
-         "id": "tenant-456",
+         "tenant_id": "customer-acme-eu",
          "display": "Acme Europe",
-         "target_tenant": "customer-acme-eu",
          "grant_catalog": "standard"
        }
      ],
      "grant_catalogs": [
        {
-         "authorization_server": "https://ras.example/",
          "id": "read-only",
          "entries": [ ... ]
        },
        {
-         "authorization_server": "https://ras.example/",
          "id": "standard",
          "display": "Standard API access",
          "entries": [ ... ]
@@ -2078,10 +2055,10 @@ Table of Contents
       Section 3.1 of [ID-JAG] allows any claim valid in an ID Token and
       recommends the email and aud_sub claims for subject resolution.  A
       Resource Authorization Server that uses those claims lists them in
-      its entries.  Requiring target_tenant in a Tenant Object
-      (Section 4.3) is stricter than Section 4.4.1 of [ID-JAG], which
-      also lets a Resource Authorization Server identify the target
-      tenant from its trust relationship with the issuer.
+      its entries.  Requiring tenant_id in a Tenant Object (Section 4.3)
+      is stricter than Section 4.4.1 of [ID-JAG], which also lets a
+      Resource Authorization Server identify the target tenant from its
+      trust relationship with the issuer.
 
    Clients:  The IdP Authorization Server obtains the value of the
       client_id claim, the client's identifier at the Resource
@@ -2089,7 +2066,7 @@ Table of Contents
       catalog does not provide it (Section 5.4.1).
 
    The following is an example of the claims of an ID-JAG issued for the
-   Tenant Object tenant-456 in Section 6.7, using the entry in
+   Tenant Object for customer-acme-eu in Section 6.7, using the entry in
    Appendix A:
 
    {
@@ -2423,14 +2400,13 @@ Table of Contents
 
 9.9.  Tenant Confusion
 
-   If a Grant Issuer derived a grant's target tenant from a Tenant
-   Object identifier, the number of Tenant Objects in a Relationship
-   View, or the form of an issuer identifier, a grant intended for one
-   tenant could be accepted for another (Section 5.4).  An entry
-   obtained for one Issuer Relationship is used only for grants whose
-   issuer and issuer tenant identify that relationship (Section 5.4), so
-   that a catalog disclosed to one issuer tenant does not determine the
-   grants issued for subjects of another.
+   If a Grant Issuer derived a grant's target tenant from the number of
+   Tenant Objects in a Relationship View or the form of an issuer
+   identifier, a grant intended for one tenant could be accepted for
+   another (Section 5.4).  An entry obtained for one Issuer Relationship
+   is used only for grants whose issuer and issuer tenant identify that
+   relationship (Section 5.4), so that a catalog disclosed to one issuer
+   tenant does not determine the grants issued for subjects of another.
 
 9.10.  Tenant Eligibility
 
@@ -2445,8 +2421,8 @@ Table of Contents
    eligible for an Issuer Relationship only when the Onboarding
    Arrangement records agreement on the Grant Issuer side, for example
    by an administrator of the issuer tenant.  An administrator of the
-   Grant Issuer identifies a Tenant Object by its target_tenant, not by
-   its display (Section 4.1).
+   Grant Issuer identifies a Tenant Object by its tenant_id, not by its
+   display (Section 4.1).
 
 9.11.  Cross-JWT Confusion
 
@@ -2838,15 +2814,15 @@ Table of Contents
 
 Appendix A.  Example Grant Catalog
 
-   The following Grant Catalog has one entry for the ID-JAG profile
-   (Section 7).  Every ID-JAG issued using the entry is bound to a DPoP
-   key and contains the scope value messages.read, the email claim, and
-   a sub_id claim in the saml-nameid format; it can also contain the
-   scope value messages.write and authorization details objects of type
-   message_channel.
+   The following Grant Catalog, from a Relationship View whose
+   authorization_server is https://ras.example/, has one entry for the
+   ID-JAG profile (Section 7).  Every ID-JAG issued using the entry is
+   bound to a DPoP key and contains the scope value messages.read, the
+   email claim, and a sub_id claim in the saml-nameid format; it can
+   also contain the scope value messages.write and authorization details
+   objects of type message_channel.
 
    {
-     "authorization_server": "https://ras.example/",
      "id": "standard",
      "display": "Standard API access",
      "entries": [
@@ -2909,10 +2885,9 @@ Appendix B.  Example of Alternative Entries
    value reports.read or reports.export, but not both, and requires the
    department claim only with reports.export.  A single entry cannot
    express either rule (Section 4.6), so the Resource Authorization
-   Server publishes two entries:
+   Server https://ras.example/ publishes two entries:
 
    {
-     "authorization_server": "https://ras.example/",
      "id": "reports",
      "entries": [
        {
@@ -2966,28 +2941,28 @@ Appendix B.  Example of Alternative Entries
 Appendix C.  Example Approval Lifecycle
 
    An approval of the entry in Appendix A for the Tenant Object
-   tenant-456 changes as the Relationship View changes:
+   customer-acme-eu changes as the Relationship View changes:
 
-   1.  The Grant Issuer installs a Relationship View in which tenant-456
-       references the Grant Catalog standard, whose entry messages-api-
-       id-jag has the revision 5.  An administrator approves the scope
-       value messages.read for that entry, and the Grant Issuer issues
-       ID-JAGs with that scope value.
+   1.  The Grant Issuer installs a Relationship View in which customer-
+       acme-eu references the Grant Catalog standard, whose entry
+       messages-api-id-jag has the revision 5.  An administrator
+       approves the scope value messages.read for that entry, and the
+       Grant Issuer issues ID-JAGs with that scope value.
 
    2.  A refresh fails with a transport error.  The Grant Issuer
        installs nothing and continues to issue ID-JAGs under the
        installed state, within the maximum age it has configured
        (Section 5.5).
 
-   3.  The Resource Authorization Server removes tenant-456 from the
-       Issuer Relationship.  The next refresh retrieves a Relationship
-       View without it, and the Grant Issuer suspends issuance for
-       tenant-456 (Section 5.5).
+   3.  The Resource Authorization Server removes customer-acme-eu from
+       the Issuer Relationship.  The next refresh retrieves a
+       Relationship View without it, and the Grant Issuer suspends
+       issuance for customer-acme-eu (Section 5.5).
 
-   4.  The Resource Authorization Server restores tenant-456 with the
-       same target_tenant and grant_catalog, and the Grant Catalog still
-       contains revision 5 of the entry.  The approval applies again
-       without new approval (Section 5.5).
+   4.  The Resource Authorization Server restores customer-acme-eu with
+       the same grant_catalog, and the Grant Catalog still contains
+       revision 5 of the entry.  The approval applies again without new
+       approval (Section 5.5).
 
    5.  The Resource Authorization Server adds the optional scope value
        messages.archive to the entry and changes its revision to 6.  The
