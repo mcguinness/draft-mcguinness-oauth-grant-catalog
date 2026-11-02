@@ -5455,26 +5455,29 @@ Issuer Relationship is authorized to inspect discloses no inventory
       <h2 id="name-open-issues">
 <a href="#name-open-issues" class="section-name selfRef">Open Issues</a>
       </h2>
+<p id="appendix-E-1">RFC Editor: please remove this appendix before publication.<a href="#appendix-E-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-E-1.1">
-          <p id="appendix-E-1.1.1">Reapproval: every revision change suspends issuance until an
-administrator approves the changed entry (<a href="#installation" class="auto internal xref">Section 5.5</a>), even
-when the change only adds an item that no approval includes
+<li class="normal" id="appendix-E-2.1">
+          <p id="appendix-E-2.1.1">Reapproval: every revision change suspends issuance until an
+administrator approves the changed entry (<a href="#installation" class="auto internal xref">Section 5.5</a>), even when
+the change only adds an item that no approval includes
 (<a href="#example-lifecycle" class="auto internal xref">Appendix C</a>). The essential invariant is that no change
 expands an approval. Whether issuance can continue while the approved
 subset remains within the changed entry's Authorization Envelope, and
 what a Resource Authorization Server would publish to make that safe,
-are open.<a href="#appendix-E-1.1.1" class="pilcrow">¶</a></p>
+are open. Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/12">issue
+#12</a>.<a href="#appendix-E-2.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-1.2">
-          <p id="appendix-E-1.2.1">Token path: a catalog access token is issued only in response to a
+        <li class="normal" id="appendix-E-2.2">
+          <p id="appendix-E-2.2.1">Token path: a catalog access token is issued only in response to a
 catalog access assertion (<a href="#token-response" class="auto internal xref">Section 6.6</a>). Whether other token
 requests that establish the same Issuer Relationship with the same
 guarantees can also obtain one, so that existing authorization
-infrastructure can be used, is open.<a href="#appendix-E-1.2.1" class="pilcrow">¶</a></p>
+infrastructure can be used, is open. Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/13">issue
+#13</a>.<a href="#appendix-E-2.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-1.3">
-          <p id="appendix-E-1.3.1">Client-specific views for the Grant Issuer: a Relationship View is
+        <li class="normal" id="appendix-E-2.3">
+          <p id="appendix-E-2.3.1">Client-specific views for the Grant Issuer: a Relationship View is
 relationship-wide (<a href="#clients" class="auto internal xref">Section 5.4.1</a>). Whether Resource Authorization
 Servers restrict grant configurations by client often enough to need
 an optional view, retrieved by the Grant Issuer, for one identified
@@ -5489,10 +5492,12 @@ client registration (<span><a href="https://datatracker.ietf.org/doc/html/draft-
 would identify that context for comparison with the request. Installed
 state, revision comparisons, and approvals would be scoped to that
 context, and those approvals would apply only to grants identifying
-that client. The view would only narrow what the relationship permits.<a href="#appendix-E-1.3.1" class="pilcrow">¶</a></p>
+that client. The view would only narrow what the relationship permits.
+Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/14">issue
+#14</a>.<a href="#appendix-E-2.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-1.4">
-          <p id="appendix-E-1.4.1">Client-facing discovery: an application client retrieving its own
+        <li class="normal" id="appendix-E-2.4">
+          <p id="appendix-E-2.4.1">Client-facing discovery: an application client retrieving its own
 view, the protected discovery mechanism that <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.7" class="relref">Section 9.7</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>
 permits, is a different consumer from the Grant Issuer. A design
 considered for this draft has the client authenticate at a discovery
@@ -5506,43 +5511,50 @@ request. Such a view selects whole entries, so it cannot express a
 restriction for one client that is narrower than an entry, and the
 Grant Issuer can issue a grant using a different entry from the one
 the client used. Whether that contract is useful, and how it relates
-to the Grant Issuer's approvals, are open.<a href="#appendix-E-1.4.1" class="pilcrow">¶</a></p>
+to the Grant Issuer's approvals, are open. Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/15">issue
+#15</a>.<a href="#appendix-E-2.4.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-1.5">
-          <p id="appendix-E-1.5.1">Freshness and termination: a Grant Issuer stops issuing under state it
+        <li class="normal" id="appendix-E-2.5">
+          <p id="appendix-E-2.5.1">Freshness and termination: a Grant Issuer stops issuing under state it
 cannot refresh only after a maximum age that it configures, which is a
 recommendation (<a href="#installation" class="auto internal xref">Section 5.5</a>), so the Resource Authorization
 Server has no deadline it can rely on after it ends a relationship
 (<a href="#sec-stale" class="auto internal xref">Section 9.7</a>). Whether to require a maximum age, or to let the
-Resource Authorization Server publish one, is open.<a href="#appendix-E-1.5.1" class="pilcrow">¶</a></p>
+Resource Authorization Server publish one, is open. Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/16">issue
+#16</a>.<a href="#appendix-E-2.5.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-1.6">
-          <p id="appendix-E-1.6.1">Supporting metadata: how a Grant Issuer uses authorization details
+        <li class="normal" id="appendix-E-2.6">
+          <p id="appendix-E-2.6.1">Supporting metadata: how a Grant Issuer uses authorization details
 schemas to enforce policy, including retaining a schema and requiring
 new approval when it changes; how it matches authority metadata
 entries to the items of an entry; and how it uses declared attenuation
-when narrowing a request (<a href="#optional-metadata" class="auto internal xref">Section 5.6</a>).<a href="#appendix-E-1.6.1" class="pilcrow">¶</a></p>
+when narrowing a request (<a href="#optional-metadata" class="auto internal xref">Section 5.6</a>). Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/17">issue
+#17</a>.<a href="#appendix-E-2.6.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-1.7">
-          <p id="appendix-E-1.7.1">Registries: whether to establish registries for catalog members and
+        <li class="normal" id="appendix-E-2.7">
+          <p id="appendix-E-2.7.1">Registries: whether to establish registries for catalog members and
 grant binding methods, and with what registration policy, is open; a
 registry of members would record which members are part of the
-normative semantics of an entry.<a href="#appendix-E-1.7.1" class="pilcrow">¶</a></p>
+normative semantics of an entry. Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/18">issue
+#18</a>.<a href="#appendix-E-2.7.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-1.8">
-          <p id="appendix-E-1.8.1">Must-understand extensions: a mechanism by which an entry marks the
+        <li class="normal" id="appendix-E-2.8">
+          <p id="appendix-E-2.8.1">Must-understand extensions: a mechanism by which an entry marks the
 extension members that a Grant Issuer must implement to use it, so
 that restrictive extensions can be defined without a distinct Grant
 Profile identifier (<a href="#extensibility" class="auto internal xref">Section 8</a>). It is to be added before the
 format stabilizes, or with the first restrictive extension. A related
 question is whether every extension is to preserve the principles in
-<a href="#overview" class="auto internal xref">Section 3</a> for a Grant Issuer that does not implement it.<a href="#appendix-E-1.8.1" class="pilcrow">¶</a></p>
+<a href="#overview" class="auto internal xref">Section 3</a> for a Grant Issuer that does not implement it. Tracked as
+<a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/19">issue
+#19</a>.<a href="#appendix-E-2.8.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-1.9">
-          <p id="appendix-E-1.9.1">Implementation experience: evidence that a Resource Authorization
+        <li class="normal" id="appendix-E-2.9">
+          <p id="appendix-E-2.9.1">Implementation experience: evidence that a Resource Authorization
 Server can generate entries and revisions from the configuration it
 enforces, and that independent Grant Issuers configure the same
-integration from one catalog with less manual work.<a href="#appendix-E-1.9.1" class="pilcrow">¶</a></p>
+integration from one catalog with less manual work. Tracked as <a href="https://github.com/mcguinness/draft-mcguinness-oauth-grant-catalog/issues/20">issue
+#20</a>.<a href="#appendix-E-2.9.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
@@ -5561,10 +5573,11 @@ Grant <span>[<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span> and on the J
       <h2 id="name-document-history">
 <a href="#name-document-history" class="section-name selfRef">Document History</a>
       </h2>
-<p id="appendix-G-1">-00<a href="#appendix-G-1" class="pilcrow">¶</a></p>
+<p id="appendix-G-1">RFC Editor: please remove this appendix before publication.<a href="#appendix-G-1" class="pilcrow">¶</a></p>
+<p id="appendix-G-2">-00<a href="#appendix-G-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-G-2.1">
-          <p id="appendix-G-2.1.1">Initial version.<a href="#appendix-G-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-G-3.1">
+          <p id="appendix-G-3.1.1">Initial version.<a href="#appendix-G-3.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
