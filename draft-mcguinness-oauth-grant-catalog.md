@@ -545,29 +545,26 @@ the following members:
 
 `scope`:
 : OPTIONAL. A JSON object describing the scope values the entry permits
-  ({{entry-scope}}). If this member is absent, grants issued using the
-  entry convey no scope values.
+  ({{entry-scope}}).
 
 `authorization_details`:
 : OPTIONAL. A JSON object describing the authorization details types the
-  entry permits ({{entry-authorization-details}}). If this member is
-  absent, grants issued using the entry convey no authorization details.
+  entry permits ({{entry-authorization-details}}).
 
 `claims`:
 : OPTIONAL. A non-empty JSON array of claim objects ({{entry-claims}}).
-  If this member is absent, the entry permits no Catalog-Governed
-  Claims.
 
 `sub_id`:
 : OPTIONAL. A JSON object describing the subject identifier formats the
-  entry permits ({{entry-sub-id}}). If this member is absent, grants
-  issued using the entry convey no subject identifier of the kind this
-  member describes.
+  entry permits ({{entry-sub-id}}).
 
 `grant_binding`:
 : OPTIONAL. A JSON object describing the grant binding methods the entry
-  permits ({{entry-grant-binding}}). If this member is absent, grants
-  issued using the entry are not bound.
+  permits ({{entry-grant-binding}}).
+
+{{envelope}} specifies the grants that the `scope`,
+`authorization_details`, `claims`, `sub_id`, and `grant_binding` members
+permit, including when they are absent.
 
 The `profile` member identifies the Grant Profile, not the grant type
 used to redeem the grant, because several Grant Profiles share the JWT
@@ -576,7 +573,7 @@ bearer grant type `urn:ietf:params:oauth:grant-type:jwt-bearer`
 
 A Grant Catalog can contain entries for several resources, and several
 entries can name the same resource when they describe different grants
-({{combinations}}). A client that needs access to several resources
+({{envelope}}). A client that needs access to several resources
 obtains a separate grant for each.
 
 ### Requirement Levels {#requirement}
@@ -604,8 +601,8 @@ A member whose presence requirement is `optional` MUST NOT contain an
 item whose item requirement is `required`. The `formats` of the
 `sub_id` member and the `methods` of the `grant_binding` member are
 alternatives and have no item requirement: a presence requirement of
-`required` means that a grant uses one of them. {{combinations}}
-specifies how items combine.
+`required` means that a grant uses one of them. {{envelope}}
+specifies how a grant satisfies them.
 
 ### Scope {#entry-scope}
 
@@ -804,34 +801,23 @@ of the following are true:
 3. The grant conveys the entry's `resource` as its only protected
    resource.
 
-4. If the entry has no `scope` member, the grant conveys no scope
-   values. Otherwise, every scope value the grant conveys is the `scope`
-   of a scope value object of the entry, the grant conveys every scope
-   value whose item requirement is `required`, and the grant
-   conveys at least one scope value if the presence requirement is
-   `required`.
+4. For each input in {{tab-inputs}}, if the entry has no member for the
+   input, the grant conveys none of that input. Otherwise, every item of
+   the input that the grant conveys is listed in the member, the grant
+   conveys every listed item whose item requirement is `required`, and
+   the grant conveys at least one item if the member's presence
+   requirement is `required` (the `claims` member has no presence
+   requirement). A grant that is bound is bound using exactly one
+   method.
 
-5. If the entry has no `authorization_details` member, the grant conveys
-   no authorization details. Otherwise, the `type` of every
-   authorization details object the grant conveys is the `type` of an
-   authorization details type object of the entry, the grant conveys at
-   least one object of each type whose item requirement is
-   `required`, and the grant conveys at least one object if the
-   presence requirement is `required`.
-
-6. Every Catalog-Governed Claim the grant conveys is listed in the
-   entry's `claims` member, and the grant conveys every claim listed
-   with an item requirement of `required`.
-
-7. If the entry has no `sub_id` member, the grant conveys no subject
-   identifier of the kind that member describes. Otherwise, a subject
-   identifier the grant conveys uses one of the listed formats, and the
-   grant conveys one if the presence requirement is `required`.
-
-8. If the entry has no `grant_binding` member, the grant is not bound.
-   Otherwise, a binding the grant conveys uses exactly one of the listed
-   methods, and the grant is bound if the presence requirement is
-   `required`.
+| Input (Member) | Item | Conveyed When the Grant |
+| --- | --- | --- |
+| Scope values (`scope`, {{entry-scope}}) | The `scope` of each scope value object | Conveys that scope value |
+| Authorization details (`authorization_details`, {{entry-authorization-details}}) | The `type` of each authorization details type object | Conveys at least one authorization details object of that type |
+| Catalog-Governed Claims (`claims`, {{entry-claims}}) | The `claim` of each claim object | Conveys that claim |
+| Subject identifier (`sub_id`, {{entry-sub-id}}) | Each name in `formats` | Conveys a subject identifier in that format |
+| Grant binding (`grant_binding`, {{entry-grant-binding}}) | Each name in `methods` | Is bound using that method |
+{: #tab-inputs title="Inputs Governed by Members of an Entry"}
 
 When a Grant Issuer issues a grant using an entry, the Grant Issuer MUST
 ensure that the grant is within the Authorization Envelope of the subset
@@ -839,14 +825,9 @@ of that entry approved for the Tenant Object ({{narrowing}}). The Grant
 Issuer issues each grant using exactly one entry, and MUST NOT combine
 inputs permitted by different entries in one grant.
 
-### Combinations Across Members {#combinations}
-
-The Authorization Envelope of an entry is the product of the selections
-each member permits. The permitted selections for a member are all of
-its `required` items together with any subset of its `optional` items,
-subject to the presence requirement. Any selection permitted by one
-member is permitted together with any selection permitted by each other
-member.
+The inputs are independent: any selection of items that one member
+permits is permitted together with any selection that each other member
+permits.
 
 The catalog expresses no alternatives between sets of items, no
 exclusions, and no conditions, either within a member or between
@@ -2462,7 +2443,7 @@ A Resource Authorization Server accepts ID-JAGs for the protected
 resource `https://api.example/reports` that carry either the scope value
 `reports.read` or `reports.export`, but not both, and requires the
 `department` claim only with `reports.export`. A single entry cannot
-express either rule ({{combinations}}), so the Resource Authorization
+express either rule ({{envelope}}), so the Resource Authorization
 Server publishes two entries:
 
 ~~~ json
@@ -2582,7 +2563,7 @@ Authority in public metadata, eligibility in the catalog:
 
 Envelope without alternatives:
 : An Authorization Envelope that is a product of independent selections
-  ({{combinations}}) can be evaluated without a rule language, and a
+  ({{envelope}}) can be evaluated without a rule language, and a
   Grant Issuer cannot misread a rule that does not exist.
 
 Revision rather than digest:
