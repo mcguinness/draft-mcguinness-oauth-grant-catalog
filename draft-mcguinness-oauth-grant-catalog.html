@@ -1471,8 +1471,8 @@ into local configuration by hand.<a href="#section-1-2" class="pilcrow">¶</a></
 <p id="section-1-3">This specification makes that configuration available as authenticated
 metadata, called the catalog. The Resource Authorization Server
 publishes entries that describe the grants it accepts from one Grant
-Issuer. An administrator of the Grant Issuer approves a subset of those
-entries, and the Grant Issuer issues grants within that subset. A
+Issuer. An administrator of the Grant Issuer approves a subset of each
+entry it uses, and the Grant Issuer issues grants within that subset. A
 revision on each entry lets the Grant Issuer detect changes that need
 review.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">The catalog supports configuration and grant construction. It does not
@@ -1491,7 +1491,8 @@ registered at the application, to use ID-JAG to read messages through
 the application's Messages API on behalf of employees.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 <p id="section-1.1-2">Today, an administrator of the identity provider reads the application's
 documentation and enters the following by hand: the application's issuer
-identifier and the identifier of the enterprise's tenant; the resource
+identifier and the enterprise's tenant identifier at the application;
+the resource
 identifier of the Messages API; the scope value <code>messages.read</code>; and the
 requirement that each ID-JAG be bound to a DPoP key. A mistake surfaces
 only when the application rejects an ID-JAG, after the ID-JAG has
@@ -1834,7 +1835,7 @@ a Relationship View or none of it (<a href="#installation" class="auto internal 
           <p id="section-3-6.2.1">A grant is issued using one Tenant Object and one entry, and conveys
 an input that the entry governs only as the entry permits; every claim
 is either reserved by the Grant Profile or listed in the entry
-(<a href="#envelope" class="auto internal xref">Section 4.6</a>, <a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-3-6.2.1" class="pilcrow">¶</a></p>
+(<a href="#envelope" class="auto internal xref">Section 4.6</a>, <a href="#entry-claims" class="auto internal xref">Section 4.5.4</a>, <a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#section-3-6.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-6.3">
           <p id="section-3-6.3.1">Approval and runtime policy only narrow an entry. A new or changed
@@ -3196,7 +3197,8 @@ details types, claims, subject identifier formats, and grant binding.<a href="#s
         </h3>
 <p id="section-5.4-1">When a Grant Issuer issues a grant using an entry, the Grant Issuer <span class="bcp14">MUST</span>
 ensure that the grant is within the Authorization Envelope of the subset
-of that entry approved for the Tenant Object (<a href="#narrowing" class="auto internal xref">Section 5.3</a>). The Grant
+of that entry approved for the Tenant Object for which the grant is
+issued (<a href="#narrowing" class="auto internal xref">Section 5.3</a>). The Grant
 Issuer issues each grant using exactly one entry, and <span class="bcp14">MUST NOT</span> combine
 inputs permitted by different entries in one grant.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
 <p id="section-5.4-2">After authenticating the client and the subject and applying its policy,
@@ -3219,30 +3221,30 @@ tenant, identifies that issuer tenant, as the Grant Profile Definition
 specifies (<a href="#profile-definitions" class="auto internal xref">Section 8.1</a>).<a href="#section-5.4-3" class="pilcrow">¶</a></p>
 <p id="section-5.4-4">The Grant Issuer <span class="bcp14">MUST NOT</span> derive a target tenant identifier from
 the Tenant Object <code>id</code>, from the number of Tenant Objects in a
-Relationship View, or from the form of an issuer identifier.
-The Grant Issuer decides whether it releases a claim value. If an entry
+Relationship View, or from the form of an issuer identifier.<a href="#section-5.4-4" class="pilcrow">¶</a></p>
+<p id="section-5.4-5">The Grant Issuer decides whether it releases a claim value. If an entry
 requires a claim that the Grant Issuer's policy does not permit it to
 release for a subject, the Grant Issuer <span class="bcp14">MUST NOT</span> issue a grant using
-that entry for that subject.<a href="#section-5.4-4" class="pilcrow">¶</a></p>
-<p id="section-5.4-5">An entry does not create a binding. The Grant Issuer binds a grant only
+that entry for that subject.<a href="#section-5.4-5" class="pilcrow">¶</a></p>
+<p id="section-5.4-6">An entry does not create a binding. The Grant Issuer binds a grant only
 to a key or certificate whose possession the client has demonstrated,
 and selects the binding as the Grant Profile Definition specifies. Where
 the Grant Profile allows a choice of method, the Grant Issuer chooses a
 method that the entry permits. The Grant Issuer <span class="bcp14">MUST NOT</span> issue a grant
-using an entry in either of the following cases:<a href="#section-5.4-5" class="pilcrow">¶</a></p>
+using an entry in either of the following cases:<a href="#section-5.4-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.4-6.1">
-            <p id="section-5.4-6.1.1">the entry requires binding and the client has not demonstrated
-possession using any listed method; or<a href="#section-5.4-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.4-7.1">
+            <p id="section-5.4-7.1.1">the entry requires binding and the client has not demonstrated
+possession using any listed method; or<a href="#section-5.4-7.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.4-6.2">
-            <p id="section-5.4-6.2.1">the Grant Profile requires the Grant Issuer to bind the grant, and the
-entry permits none of the methods that would satisfy that requirement.<a href="#section-5.4-6.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.4-7.2">
+            <p id="section-5.4-7.2.1">the Grant Profile requires the Grant Issuer to bind the grant, and the
+entry permits none of the methods that would satisfy that requirement.<a href="#section-5.4-7.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-5.4-7">When the Grant Issuer does not issue a grant because no approved entry
+<p id="section-5.4-8">When the Grant Issuer does not issue a grant because no approved entry
 permits the request, it responds to the client as the Grant Profile
-Definition specifies.<a href="#section-5.4-7" class="pilcrow">¶</a></p>
+Definition specifies.<a href="#section-5.4-8" class="pilcrow">¶</a></p>
 <div id="clients">
 <section id="section-5.4.1">
           <h4 id="name-clients">
@@ -3289,7 +3291,7 @@ separately and is not part of an approval.<a href="#section-5.5-2" class="pilcro
 <p id="section-5.5-3">An approval applies while the installed Relationship View contains a
 Tenant Object with the approved <code>id</code>, <code>target_tenant</code>, and
 <code>grant_catalog</code>, and the Grant Catalog that the Tenant Object references
-contains an entry with the approved <code>id</code> and <code>revision</code>.  The
+contains an entry with the approved <code>id</code> and <code>revision</code>. The
 Grant Issuer applies the rules in <a href="#tab-transitions" class="auto internal xref">Table 16</a> when a retrieval
 completes or fails.<a href="#section-5.5-3" class="pilcrow">¶</a></p>
 <span id="name-effects-of-a-retrieval-on-i"></span><div id="tab-transitions">
@@ -3490,8 +3492,8 @@ indicator (<span><a href="https://rfc-editor.org/rfc/rfc8707#section-2" class="r
 </dl>
 <p id="section-6.3-3">A Resource Authorization Server that supports the OAuth retrieval
 protocol <span class="bcp14">MUST</span> publish this member. A Grant Issuer <span class="bcp14">MUST NOT</span> use the
-binding with a Resource Authorization Server whose metadata omits this
-member.<a href="#section-6.3-3" class="pilcrow">¶</a></p>
+OAuth retrieval protocol with a Resource Authorization Server whose
+metadata omits this member.<a href="#section-6.3-3" class="pilcrow">¶</a></p>
 <p id="section-6.3-4">The following is an example of Authorization Server Metadata for a
 Resource Authorization Server that supports ID-JAG and the OAuth
 retrieval protocol:<a href="#section-6.3-4" class="pilcrow">¶</a></p>
@@ -3978,13 +3980,12 @@ Resource Authorization Server <span class="bcp14">MUST</span> include <code>Cach
 retains the document and its entity tag as application state, keyed by
 the Resource Authorization Server's issuer identifier and the Issuer
 Relationship.<a href="#section-6.8-2" class="pilcrow">¶</a></p>
-<p id="section-6.8-3">This binding is designed for Relationship Views of up to several
-thousand Tenant Objects in one response, not for unbounded collections.
-The Grant
-Issuer <span class="bcp14">SHOULD</span> indicate support for content codings using
-<code>Accept-Encoding</code> (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.3" class="relref">Section 12.5.3</a> of [<a href="#RFC9110" class="cite xref">RFC9110</a>]</span>), and the Resource
-Authorization Server <span class="bcp14">SHOULD</span> compress responses when the Grant Issuer
-supports a content coding.<a href="#section-6.8-3" class="pilcrow">¶</a></p>
+<p id="section-6.8-3">This retrieval protocol is designed for Relationship Views of up to
+several thousand Tenant Objects in one response, not for unbounded
+collections. The Grant Issuer <span class="bcp14">SHOULD</span> indicate support for content
+codings using <code>Accept-Encoding</code> (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.3" class="relref">Section 12.5.3</a> of [<a href="#RFC9110" class="cite xref">RFC9110</a>]</span>), and the
+Resource Authorization Server <span class="bcp14">SHOULD</span> compress responses when the Grant
+Issuer supports a content coding.<a href="#section-6.8-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="errors">
@@ -4275,7 +4276,8 @@ performs the following checks in step 4 of <a href="#composition" class="auto in
       <h2 id="name-extensibility">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-extensibility" class="section-name selfRef">Extensibility</a>
       </h2>
-<p id="section-8-1">The extension points below preserve the principles in <a href="#overview" class="auto internal xref">Section 3</a>.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">The extension points below are designed to preserve the principles in
+<a href="#overview" class="auto internal xref">Section 3</a>.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-8-2">
         <dt id="section-8-2.1">Grant Profiles:</dt>
         <dd style="margin-left: 1.5em" id="section-8-2.2">
@@ -5180,10 +5182,7 @@ resource <code>https://api.example/reports</code> that carry either the scope va
 <code>reports.read</code> or <code>reports.export</code>, but not both, and requires the
 <code>department</code> claim only with <code>reports.export</code>. A single entry cannot
 express either rule (<a href="#envelope" class="auto internal xref">Section 4.6</a>), so the Resource Authorization
-Server publishes two entries. An administrator of the Grant Issuer
-approves each entry separately for each Tenant Object; for example, it
-can approve the <code>reports.read</code> entry for two tenants and the
-<code>reports.export</code> entry for only one of them:<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+Server publishes two entries:<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="appendix-B-2">
 <pre>
 {
@@ -5230,10 +5229,13 @@ can approve the <code>reports.read</code> entry for two tenants and the
 }
 </pre><a href="#appendix-B-2" class="pilcrow">¶</a>
 </div>
-<p id="appendix-B-3">An ID-JAG issued using <code>reports-read</code> does not contain the <code>department</code>
+<p id="appendix-B-3">An administrator of the Grant Issuer approves each entry separately for
+each Tenant Object; for example, it can approve the <code>reports.read</code> entry
+for two tenants and the <code>reports.export</code> entry for only one of them.<a href="#appendix-B-3" class="pilcrow">¶</a></p>
+<p id="appendix-B-4">An ID-JAG issued using <code>reports-read</code> does not contain the <code>department</code>
 claim, which that entry does not list (<a href="#entry-claims" class="auto internal xref">Section 4.5.4</a>), and no ID-JAG
 contains both scope values, because each grant is issued using exactly
-one entry (<a href="#envelope" class="auto internal xref">Section 4.6</a>).<a href="#appendix-B-3" class="pilcrow">¶</a></p>
+one entry (<a href="#issuing" class="auto internal xref">Section 5.4</a>).<a href="#appendix-B-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="example-lifecycle">

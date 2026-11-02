@@ -191,7 +191,7 @@ Table of Contents
    authenticated metadata, called the catalog.  The Resource
    Authorization Server publishes entries that describe the grants it
    accepts from one Grant Issuer.  An administrator of the Grant Issuer
-   approves a subset of those entries, and the Grant Issuer issues
+   approves a subset of each entry it uses, and the Grant Issuer issues
    grants within that subset.  A revision on each entry lets the Grant
    Issuer detect changes that need review.
 
@@ -211,12 +211,12 @@ Table of Contents
 
    Today, an administrator of the identity provider reads the
    application's documentation and enters the following by hand: the
-   application's issuer identifier and the identifier of the
-   enterprise's tenant; the resource identifier of the Messages API; the
-   scope value messages.read; and the requirement that each ID-JAG be
-   bound to a DPoP key.  A mistake surfaces only when the application
-   rejects an ID-JAG, after the ID-JAG has disclosed its claims to the
-   client.
+   application's issuer identifier and the enterprise's tenant
+   identifier at the application; the resource identifier of the
+   Messages API; the scope value messages.read; and the requirement that
+   each ID-JAG be bound to a DPoP key.  A mistake surfaces only when the
+   application rejects an ID-JAG, after the ID-JAG has disclosed its
+   claims to the client.
 
    With a catalog, the identity provider retrieves, under its
    relationship with the application, a Relationship View that lists the
@@ -455,7 +455,7 @@ Table of Contents
    *  A grant is issued using one Tenant Object and one entry, and
       conveys an input that the entry governs only as the entry permits;
       every claim is either reserved by the Grant Profile or listed in
-      the entry (Section 4.6, Section 5.4).
+      the entry (Section 4.6, Section 4.5.4, Section 5.4).
 
    *  Approval and runtime policy only narrow an entry.  A new or
       changed entry, public metadata, and authority metadata never
@@ -1305,10 +1305,10 @@ Table of Contents
 
    When a Grant Issuer issues a grant using an entry, the Grant Issuer
    MUST ensure that the grant is within the Authorization Envelope of
-   the subset of that entry approved for the Tenant Object
-   (Section 5.3).  The Grant Issuer issues each grant using exactly one
-   entry, and MUST NOT combine inputs permitted by different entries in
-   one grant.
+   the subset of that entry approved for the Tenant Object for which the
+   grant is issued (Section 5.3).  The Grant Issuer issues each grant
+   using exactly one entry, and MUST NOT combine inputs permitted by
+   different entries in one grant.
 
    After authenticating the client and the subject and applying its
    policy, the Grant Issuer issues a grant as specified by the Grant
@@ -1333,11 +1333,12 @@ Table of Contents
 
    The Grant Issuer MUST NOT derive a target tenant identifier from the
    Tenant Object id, from the number of Tenant Objects in a Relationship
-   View, or from the form of an issuer identifier.  The Grant Issuer
-   decides whether it releases a claim value.  If an entry requires a
-   claim that the Grant Issuer's policy does not permit it to release
-   for a subject, the Grant Issuer MUST NOT issue a grant using that
-   entry for that subject.
+   View, or from the form of an issuer identifier.
+
+   The Grant Issuer decides whether it releases a claim value.  If an
+   entry requires a claim that the Grant Issuer's policy does not permit
+   it to release for a subject, the Grant Issuer MUST NOT issue a grant
+   using that entry for that subject.
 
    An entry does not create a binding.  The Grant Issuer binds a grant
    only to a key or certificate whose possession the client has
@@ -1577,8 +1578,8 @@ Table of Contents
 
    A Resource Authorization Server that supports the OAuth retrieval
    protocol MUST publish this member.  A Grant Issuer MUST NOT use the
-   binding with a Resource Authorization Server whose metadata omits
-   this member.
+   OAuth retrieval protocol with a Resource Authorization Server whose
+   metadata omits this member.
 
    The following is an example of Authorization Server Metadata for a
    Resource Authorization Server that supports ID-JAG and the OAuth
@@ -1960,8 +1961,8 @@ Table of Contents
    keyed by the Resource Authorization Server's issuer identifier and
    the Issuer Relationship.
 
-   This binding is designed for Relationship Views of up to several
-   thousand Tenant Objects in one response, not for unbounded
+   This retrieval protocol is designed for Relationship Views of up to
+   several thousand Tenant Objects in one response, not for unbounded
    collections.  The Grant Issuer SHOULD indicate support for content
    codings using Accept-Encoding (Section 12.5.3 of [RFC9110]), and the
    Resource Authorization Server SHOULD compress responses when the
@@ -2159,7 +2160,8 @@ Table of Contents
 
 8.  Extensibility
 
-   The extension points below preserve the principles in Section 3.
+   The extension points below are designed to preserve the principles in
+   Section 3.
 
    Grant Profiles:  A specification can apply the catalog to another
       Grant Profile by providing a Grant Profile Definition
@@ -2838,10 +2840,7 @@ Appendix B.  Example of Alternative Entries
    value reports.read or reports.export, but not both, and requires the
    department claim only with reports.export.  A single entry cannot
    express either rule (Section 4.6), so the Resource Authorization
-   Server publishes two entries.  An administrator of the Grant Issuer
-   approves each entry separately for each Tenant Object; for example,
-   it can approve the reports.read entry for two tenants and the
-   reports.export entry for only one of them:
+   Server publishes two entries:
 
    {
      "issuer": "https://ras.example/",
@@ -2886,10 +2885,15 @@ Appendix B.  Example of Alternative Entries
      ]
    }
 
+   An administrator of the Grant Issuer approves each entry separately
+   for each Tenant Object; for example, it can approve the reports.read
+   entry for two tenants and the reports.export entry for only one of
+   them.
+
    An ID-JAG issued using reports-read does not contain the department
    claim, which that entry does not list (Section 4.5.4), and no ID-JAG
    contains both scope values, because each grant is issued using
-   exactly one entry (Section 4.6).
+   exactly one entry (Section 5.4).
 
 Appendix C.  Example Approval Lifecycle
 
