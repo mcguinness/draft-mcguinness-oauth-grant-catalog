@@ -169,8 +169,7 @@ Table of Contents
    has to know which tenants, protected resources, scope values,
    authorization details types [RFC9396], claims, subject identifiers,
    and grant bindings the receiving authorization server, called the
-   Resource Authorization Server, accepts from it.  The Resource
-   Authorization Server rejects any other grant.
+   Resource Authorization Server, accepts from it.
 
    Public metadata does not convey this information.  OAuth 2.0
    Authorization Server Metadata [RFC8414] and OAuth 2.0 Protected
@@ -271,8 +270,8 @@ Table of Contents
      |                       | authorize?                           |
      +-----------------------+--------------------------------------+
      | Relationship View     | Which grants does the Resource       |
-     |                       | Authorization Server accept from     |
-     |                       | this Issuer Relationship?            |
+     |                       | Authorization Server offer to this   |
+     |                       | Issuer Relationship?                 |
      +-----------------------+--------------------------------------+
      | Grant Issuer approval | Which of those grants may the Grant  |
      |                       | Issuer issue?                        |
@@ -582,10 +581,10 @@ Table of Contents
       JSON string of at most 255 octets when encoded in UTF-8.
       Identifiers are opaque and case-sensitive, and are compared using
       simple string comparison (Section 6.2.1 of [RFC3986]).  The length
-      limit bounds the identifiers that a Grant Issuer retains with each
-      approval (Section 5.5).  Grant Catalog identifiers are unique
-      within a Relationship View, and entry identifiers are unique
-      within a Grant Catalog.
+      limit bounds the Grant Catalog and entry identifiers that a Grant
+      Issuer retains with each approval (Section 5.5).  Grant Catalog
+      identifiers are unique within a Relationship View, and entry
+      identifiers are unique within a Grant Catalog.
 
    display:  OPTIONAL.  A JSON string containing a short, human-readable
       name for the object, intended for presentation to an
@@ -722,7 +721,7 @@ Table of Contents
                       Table 4: Grant Catalog Members
 
    An empty entries array indicates that the Resource Authorization
-   Server accepts no grants for the tenants whose Tenant Objects
+   Server offers no grants for the tenants whose Tenant Objects
    reference this Grant Catalog.  A Grant Catalog can contain entries
    for several Grant Profiles.
 
@@ -1508,7 +1507,7 @@ Table of Contents
    authority descriptions to enforce or narrow policy.
 
    The Grant Issuer MUST NOT send a credential obtained through a
-   retrieval protocol when dereferencing a schema_uri,
+   retrieval protocol when dereferencing a schema_uri ([RAR-METADATA]),
    documentation_uri, or definition_uri.
 
 6.  Retrieving a Catalog
@@ -1592,8 +1591,6 @@ Table of Contents
      ],
      "token_endpoint_auth_methods_supported": ["private_key_jwt"],
      "dpop_signing_alg_values_supported": ["ES256"],
-     "authorization_details_types_metadata_endpoint":
-       "https://ras.example/oauth2/authorization-details-types",
      "authorization_grant_catalog_endpoint":
        "https://ras.example/oauth2/grant-catalog"
    }
@@ -1906,9 +1903,10 @@ Table of Contents
    (Section 5.5).
 
    The following is an example of a Relationship View document request
-   and response for an Issuer Relationship with two eligible tenants.
-   The entries of each Grant Catalog are abbreviated; Appendix A shows
-   the Grant Catalog standard in full:
+   and response for another Issuer Relationship, with the issuer tenant
+   acme-workforce and two eligible tenants.  The entries of each Grant
+   Catalog are abbreviated; Appendix A shows the Grant Catalog standard
+   in full:
 
    GET /oauth2/grant-catalog HTTP/1.1
    Host: ras.example
@@ -2151,7 +2149,7 @@ Table of Contents
    or an actor.  The other claims that Section 3.1 of [ID-JAG] defines
    (auth_time, acr, amr, aud_sub, and email) are Catalog-Governed
    Claims.  An ID-JAG has the typ value oauth-id-jag+jwt (Section 3.1 of
-   [ID-JAG], Section 9.11).
+   [ID-JAG]); see Section 9.11.
 
 7.3.  Composition Checks
 
@@ -3002,7 +3000,7 @@ Appendix D.  Design Rationale
       values and authorization details types a relationship may use is
       specific to the relationship, so it belongs in the catalog.
       Entries identify items by the protocol values that authority
-      metadata uses, so the two compose without a mapping (Section 5.6).
+      metadata uses, so the two compose without a mapping.
 
    Envelope without alternatives:  An Authorization Envelope that is a
       product of independent selections (Section 4.6) can be evaluated
