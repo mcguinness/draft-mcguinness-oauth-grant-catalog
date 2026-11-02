@@ -1755,7 +1755,7 @@ protected resource (<a href="#entry" class="auto internal xref">Section 4.4</a>)
         <dd style="margin-left: 1.5em" id="section-2-4.26">
           <p id="section-2-4.26.1">A part of a grant whose permitted values an entry states: the
 protected resource, the scope values, the authorization details types,
-the Catalog-Governed Claims, the subject identifier, and the key
+the Catalog-Governed Claims, the subject identifier, and the grant
 binding.<a href="#section-2-4.26.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
@@ -2418,8 +2418,8 @@ registry (<span><a href="https://rfc-editor.org/rfc/rfc9493#section-8.1" class="
           <dd class="break"></dd>
 </dl>
 <p id="section-4.4.5-3">This member describes a subject identifier <span>[<a href="#RFC9493" class="cite xref">RFC9493</a>]</span> conveyed in
-addition to the subject of the grant; for JWT authorization grants, it
-is the <code>sub_id</code> claim (<a href="#jwt-representation" class="auto internal xref">Section 10.1</a>).<a href="#section-4.4.5-3" class="pilcrow">¶</a></p>
+addition to the subject of the grant; for an ID-JAG, it is the <code>sub_id</code>
+claim (<a href="#jwt-representation" class="auto internal xref">Section 10.1</a>).<a href="#section-4.4.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="entry-grant-binding">
@@ -2747,9 +2747,10 @@ A Relationship View is relationship-wide and does not establish
 eligibility for a particular application client: a Resource
 Authorization Server can permit a grant configuration for one
 application client and reject an otherwise equivalent configuration for
-another. A Grant Profile whose grants identify the client by its client
-identifier at the Resource Authorization Server specifies how the Grant
-Issuer obtains that identifier, as <a href="#id-jag" class="auto internal xref">Section 10</a> does for ID-JAG; such an
+another. The Grant Profile Definition of a Grant Profile whose grants
+identify the client by its client identifier at the Resource
+Authorization Server specifies how the Grant Issuer obtains that
+identifier, as <a href="#id-jag" class="auto internal xref">Section 10</a> does for ID-JAG; such an
 identifier can be shared across trust domains <span>[<a href="#CIMD" class="cite xref">CIMD</a>]</span>.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -3077,6 +3078,10 @@ only narrows an entry, such as the removal of a scope value
       <h2 id="name-relationship-authentication">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-relationship-authentication" class="section-name selfRef">Relationship Authentication</a>
       </h2>
+<p id="section-7-1">Before disclosing catalog content, the Resource Authorization Server
+establishes, through a Retrieval Binding (<a href="#extensibility" class="auto internal xref">Section 11</a>), which
+Issuer Relationship the disclosure serves, and verifies that the
+relationship is authorized and current.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <div id="relationship-identity">
 <section id="section-7.1">
         <h3 id="name-relationship-identity">
@@ -3441,7 +3446,7 @@ grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer
 &amp;client_id=https%3A%2F%2Fidp.example%2F
 &amp;client_assertion_type=
  urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
-&amp;client_assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6Imlzc3Vlci1rZXktMSJ9...
+&amp;client_assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6ImNsaWVudC1rZXktMSJ9...
 </pre><a href="#section-8.3-6" class="pilcrow">¶</a>
 </div>
 <p id="section-8.3-7">The Resource Authorization Server processes the request as follows:<a href="#section-8.3-7" class="pilcrow">¶</a></p>
@@ -3809,8 +3814,9 @@ Definition for another profile of the JWT authorization grant
         <dd style="margin-left: 1.5em" id="section-10-2.4">
           <p id="section-10-2.4.1">The IdP Authorization Server selects the binding as described in
 <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.11" class="relref">Section 9.11</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>. When the client presents a valid DPoP
-proof, ID-JAG requires it to bind the ID-JAG to the DPoP key or a
-client certificate (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.11.1.1" class="relref">Section 9.11.1.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>); either method
+proof, ID-JAG requires the IdP Authorization Server to bind the ID-JAG
+to the DPoP key or a client certificate
+(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-9.11.1.1" class="relref">Section 9.11.1.1</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>); either method
 satisfies that requirement if the approved subset permits it
 (<a href="#entry-grant-binding" class="auto internal xref">Section 4.4.6</a>).<a href="#section-10-2.4.1" class="pilcrow">¶</a></p>
 </dd>
@@ -4006,7 +4012,7 @@ client identifier or an actor. The other claims that
 Profile <span class="bcp14">MUST</span> include <code>grant_types_supported</code> in its Authorization Server
 Metadata; if it lists this Grant Profile in
 <code>authorization_grant_profiles_supported</code>, it also includes
-<code>urn:ietf:params:oauth:grant-type:jwt-bearer</code> there
+<code>urn:ietf:params:oauth:grant-type:jwt-bearer</code> in <code>grant_types_supported</code>
 (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant-06#section-7.2" class="relref">Section 7.2</a> of [<a href="#ID-JAG" class="cite xref">ID-JAG</a>]</span>). For each such entry, the Grant Issuer
 performs the following checks in step 4 of <a href="#composition" class="auto internal xref">Section 6.2</a>, interpreting
 <code>grant_types_supported</code> with the default value defined in
@@ -4112,7 +4118,7 @@ and <span>[<a href="#RFC9700" class="cite xref">RFC9700</a>]</span>, and of the 
         <h3 id="name-catalog-is-not-an-authoriza">
 <a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-catalog-is-not-an-authoriza" class="section-name selfRef">Catalog Is Not an Authorization Decision</a>
         </h3>
-<p id="section-12.1-1">A catalog does not authorize any request (<a href="#permitted" class="auto internal xref">Section 5.1</a>). Nor is it an
+<p id="section-12.1-1">A catalog does not authorize any request (<a href="#introduction" class="auto internal xref">Section 1</a>). Nor is it an
 exhaustive list of the grants that the Resource Authorization Server
 accepts: the Resource Authorization Server can accept grants issued
 under other arrangements, or under an entry that it has since withdrawn,
@@ -4308,7 +4314,8 @@ Resource Metadata the Grant Issuer requests during composition
 can alter catalog responses, chooses these URIs
 (<span><a href="https://rfc-editor.org/rfc/rfc9728#section-7.7" class="relref">Section 7.7</a> of [<a href="#RFC9728" class="cite xref">RFC9728</a>]</span>). A Grant Issuer that dereferences them
 does not send a credential obtained through a Retrieval Binding
-(<a href="#rar-metadata" class="auto internal xref">Section 6.2.1</a>), applies the protections against server-side request
+(<a href="#rar-metadata" class="auto internal xref">Section 6.2.1</a>, <a href="#view-document" class="auto internal xref">Section 8.5</a>), applies the protections against
+server-side request
 forgery that it applies to other URLs obtained from external parties,
 and treats the content, which the Retrieval Binding does not
 authenticate, as untrusted input and not as catalog content. A Grant

@@ -396,7 +396,7 @@ Table of Contents
    Catalog-Governed Input:  A part of a grant whose permitted values an
       entry states: the protected resource, the scope values, the
       authorization details types, the Catalog-Governed Claims, the
-      subject identifier, and the key binding.
+      subject identifier, and the grant binding.
 
    Authorization Envelope:  The set of grants that an entry, or an
       approved subset of an entry, permits (Section 5).
@@ -776,8 +776,8 @@ Table of Contents
       email or saml-nameid (Section 3.2.1 of [ID-JAG]).
 
    This member describes a subject identifier [RFC9493] conveyed in
-   addition to the subject of the grant; for JWT authorization grants,
-   it is the sub_id claim (Section 10.1).
+   addition to the subject of the grant; for an ID-JAG, it is the sub_id
+   claim (Section 10.1).
 
 4.4.6.  Grant Binding
 
@@ -1038,10 +1038,11 @@ Table of Contents
    eligibility for a particular application client: a Resource
    Authorization Server can permit a grant configuration for one
    application client and reject an otherwise equivalent configuration
-   for another.  A Grant Profile whose grants identify the client by its
-   client identifier at the Resource Authorization Server specifies how
-   the Grant Issuer obtains that identifier, as Section 10 does for ID-
-   JAG; such an identifier can be shared across trust domains [CIMD].
+   for another.  The Grant Profile Definition of a Grant Profile whose
+   grants identify the client by its client identifier at the Resource
+   Authorization Server specifies how the Grant Issuer obtains that
+   identifier, as Section 10 does for ID-JAG; such an identifier can be
+   shared across trust domains [CIMD].
 
 6.  Catalog Processing
 
@@ -1292,6 +1293,11 @@ Table of Contents
    (Appendix "Open Issues").
 
 7.  Relationship Authentication
+
+   Before disclosing catalog content, the Resource Authorization Server
+   establishes, through a Retrieval Binding (Section 11), which Issuer
+   Relationship the disclosure serves, and verifies that the
+   relationship is authorized and current.
 
 7.1.  Relationship Identity
 
@@ -1556,7 +1562,7 @@ Table of Contents
    &client_id=https%3A%2F%2Fidp.example%2F
    &client_assertion_type=
     urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
-   &client_assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6Imlzc3Vlci1rZXktMSJ9...
+   &client_assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6ImNsaWVudC1rZXktMSJ9...
 
    The Resource Authorization Server processes the request as follows:
 
@@ -1857,10 +1863,10 @@ Table of Contents
 
    Grant binding:  The IdP Authorization Server selects the binding as
       described in Section 9.11 of [ID-JAG].  When the client presents a
-      valid DPoP proof, ID-JAG requires it to bind the ID-JAG to the
-      DPoP key or a client certificate (Section 9.11.1.1 of [ID-JAG]);
-      either method satisfies that requirement if the approved subset
-      permits it (Section 4.4.6).
+      valid DPoP proof, ID-JAG requires the IdP Authorization Server to
+      bind the ID-JAG to the DPoP key or a client certificate
+      (Section 9.11.1.1 of [ID-JAG]); either method satisfies that
+      requirement if the approved subset permits it (Section 4.4.6).
 
    Resource selection:  ID-JAG does not require the resource parameter
       of the Token Exchange request (Section 4.3 of [ID-JAG]);
@@ -1987,9 +1993,9 @@ Table of Contents
    Profile MUST include grant_types_supported in its Authorization
    Server Metadata; if it lists this Grant Profile in
    authorization_grant_profiles_supported, it also includes
-   urn:ietf:params:oauth:grant-type:jwt-bearer there (Section 7.2 of
-   [ID-JAG]).  For each such entry, the Grant Issuer performs the
-   following checks in step 4 of Section 6.2, interpreting
+   urn:ietf:params:oauth:grant-type:jwt-bearer in grant_types_supported
+   (Section 7.2 of [ID-JAG]).  For each such entry, the Grant Issuer
+   performs the following checks in step 4 of Section 6.2, interpreting
    grant_types_supported with the default value defined in Section 2 of
    [RFC8414]:
 
@@ -2063,7 +2069,7 @@ Table of Contents
 
 12.1.  Catalog Is Not an Authorization Decision
 
-   A catalog does not authorize any request (Section 5.1).  Nor is it an
+   A catalog does not authorize any request (Section 1).  Nor is it an
    exhaustive list of the grants that the Resource Authorization Server
    accepts: the Resource Authorization Server can accept grants issued
    under other arrangements, or under an entry that it has since
@@ -2218,13 +2224,13 @@ Table of Contents
    (Section 6.2).  A Resource Authorization Server, or an attacker that
    can alter catalog responses, chooses these URIs (Section 7.7 of
    [RFC9728]).  A Grant Issuer that dereferences them does not send a
-   credential obtained through a Retrieval Binding (Section 6.2.1),
-   applies the protections against server-side request forgery that it
-   applies to other URLs obtained from external parties, and treats the
-   content, which the Retrieval Binding does not authenticate, as
-   untrusted input and not as catalog content.  A Grant Issuer can cache
-   Protected Resource Metadata and limit how many such requests one
-   refresh makes.
+   credential obtained through a Retrieval Binding (Section 6.2.1,
+   Section 8.5), applies the protections against server-side request
+   forgery that it applies to other URLs obtained from external parties,
+   and treats the content, which the Retrieval Binding does not
+   authenticate, as untrusted input and not as catalog content.  A Grant
+   Issuer can cache Protected Resource Metadata and limit how many such
+   requests one refresh makes.
 
    A Grant Issuer presents display, description, documentation_uri, and
    definition_uri to administrators as untrusted text.  These members
