@@ -381,6 +381,58 @@ Retrieval Binding:
 Steps (A) through (E) occur when the Grant Issuer is configured and when
 it refreshes the catalog, not for each grant.
 
+# Core Invariants {#invariants}
+
+The following properties hold throughout this specification. Each is
+stated normatively in the section cited; this section collects them so
+that implementers and authors of extensions ({{extensibility}}) can check
+a design against them. A catalog is input to policy authoring, not an
+authorization decision ({{introduction}}).
+
+1. Relationship scoping: the Resource Authorization Server determines a
+   Relationship View solely from the authenticated Issuer Relationship,
+   and discloses it only to an Issuer Relationship that an Onboarding
+   Arrangement authorizes ({{relationship-authorization}}).
+
+2. Whole views: a Relationship View is delivered complete, and the Grant
+   Issuer installs all of it or none of it. A failed retrieval leaves
+   earlier state in force, subject to a maximum age, and is never
+   treated as a withdrawal ({{installation}}).
+
+3. Closed world: a grant issued using an entry conveys a
+   Catalog-Governed Input only as the entry permits. An absent member
+   permits nothing, and every claim is either reserved by the Grant
+   Profile or listed in the entry ({{envelope}}, {{entry-claims}}).
+
+4. One entry per grant: each grant is issued using one Tenant Object and
+   one entry, for one audience and one protected resource. Inputs
+   permitted by different entries are never combined ({{envelope}}).
+
+5. No logic in entries: the catalog has no defaults, inheritance,
+   alternatives, exclusions, or conditions. A Resource Authorization
+   Server that accepts only some combinations publishes separate entries
+   ({{tenant-object}}, {{envelope}}).
+
+6. Narrowing only: approval and runtime policy only narrow an entry. A
+   new or changed entry, public metadata, and authority metadata never
+   broaden an approval ({{narrowing}}, {{reconciliation}},
+   {{authority-metadata}}).
+
+7. Public metadata prevails: an entry cannot enable a value that public
+   metadata excludes ({{composition}}).
+
+8. Revisions pin approvals: a change to the normative semantics of an
+   entry changes its `revision`. When the `revision` of an entry, or the
+   `target_tenant` or `grant_catalog` of a Tenant Object, changes,
+   issuance under approvals made for the previous value stops until an
+   administrator approves the changed object ({{revision}},
+   {{reconciliation}}).
+
+9. Safe extension: a Grant Issuer ignores members it does not
+   understand, and an extension member that narrows an entry also
+   prevents Grant Issuers that do not implement it from using the entry
+   ({{extensibility}}).
+
 # Catalog Data Model {#data-model}
 
 The objects in this section describe what a Resource Authorization
@@ -2648,7 +2700,9 @@ No client inventory:
   extension members that a Grant Issuer must implement to use it, so
   that restrictive extensions can be defined without a distinct Grant
   Profile identifier ({{extensibility}}). It is to be added before the
-  format stabilizes, or with the first restrictive extension.
+  format stabilizes, or with the first restrictive extension. A related
+  question is whether every extension is to preserve the invariants in
+  {{invariants}} for a Grant Issuer that does not implement it.
 
 * Implementation experience: evidence that a Resource Authorization
   Server can generate entries and revisions from the configuration it
