@@ -440,11 +440,62 @@ an authorization decision ({{introduction}}).
 # Catalog Data Model {#data-model}
 
 The objects in this section describe what a Resource Authorization
-Server accepts in grants from one Issuer Relationship. {{fig-model}}
-shows their structure, without the `display` and `description` members.
-A Tenant Object references a Grant Catalog by its `id`. The `scope`,
+Server accepts in grants from one Issuer Relationship. A Tenant Object
+references a Grant Catalog by its `id`. The `scope`,
 `authorization_details`, `claims`, `sub_id`, and `grant_binding` members
 of an entry govern the inputs listed in {{tab-inputs}}.
+
+{{fig-model-example}} shows a complete Relationship View with one Tenant
+Object and one Grant Catalog. The Tenant Object references the catalog
+`read-only`, whose single entry permits ID-JAGs for the Messages API.
+Grants issued using this entry contain the scope value `messages.read`
+and are bound to a DPoP key. The view describes what the Resource
+Authorization Server accepts; an administrator of the Grant Issuer still
+approves a subset before the entry is used ({{narrowing}}).
+
+~~~ json
+{
+  "issuer": "https://ras.example/",
+  "issuer_relationship": {
+    "issuer": "https://idp.example/",
+    "tenant": "org-acme"
+  },
+  "tenants": [
+    {
+      "id": "tenant-123",
+      "target_tenant": "customer-acme",
+      "grant_catalog": "read-only"
+    }
+  ],
+  "grant_catalogs": [
+    {
+      "issuer": "https://ras.example/",
+      "id": "read-only",
+      "entries": [
+        {
+          "id": "messages-read",
+          "revision": "1",
+          "profile": "urn:ietf:params:oauth:grant-profile:id-jag",
+          "resource": "https://api.example/messages",
+          "scope": {
+            "requirement": "required",
+            "values": [{"scope": "messages.read"}]
+          },
+          "grant_binding": {
+            "requirement": "required",
+            "methods": ["dpop"]
+          }
+        }
+      ]
+    }
+  ]
+}
+~~~
+{: #fig-model-example title="Example Relationship View"}
+
+{{fig-model}} shows the object structure, without the `display` and
+`description` members. {{example-catalog}} provides a fuller example of
+the inputs that an entry can govern.
 
 ~~~ ascii-art
 Relationship View
